@@ -1,0 +1,7 @@
+{
+    "/auth": {
+      "target": "https://find-out-portal.onrender.com",
+      "secure": false,
+      "changeOrigin": true
+    }
+  }

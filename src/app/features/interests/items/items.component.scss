@@ -1,0 +1,20 @@
+.interest-btn {
+    background: linear-gradient(135deg, #ff4081, #f50057);
+    color: white;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 6px 16px;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  
+    &:hover {
+      background: linear-gradient(135deg, #f50057, #c51162);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+    }
+  
+    .icon {
+      font-size: 18px;
+      margin-right: 6px;
+    }
+  }
+  

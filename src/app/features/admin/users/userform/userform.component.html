@@ -1,0 +1,41 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" style="max-width: 500px; margin: auto; padding: 16px;">
+
+  
+  <h2 style="text-align: center; font-size: 24px; color: #333;">{{ mode === 'edit' ? 'Edit User' : 'View User' }}</h2>
+
+  <!-- ID -->
+  <mat-form-field class="full-width" style="margin-bottom: 16px;">
+    <mat-label>ID</mat-label>
+    <input matInput formControlName="id" placeholder="Enter ID" [attr.disabled]="mode === 'view' ? true : null" readonly>
+  </mat-form-field>
+
+  <!-- Name -->
+  <mat-form-field class="full-width" style="margin-bottom: 16px;">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" placeholder="Enter Name" [attr.disabled]="mode === 'view' ? true : null">
+  </mat-form-field>
+
+  <!-- Email -->
+  <mat-form-field class="full-width" style="margin-bottom: 16px;">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" placeholder="Enter Email" [attr.disabled]="mode === 'view' ? true : null">
+  </mat-form-field>
+
+  <mat-form-field class="full-width" style="margin-bottom: 16px; display: block;">
+    <mat-label>Role</mat-label>
+    <mat-select formControlName="role" [attr.disabled]="mode === 'view' ? true : null">
+      <mat-option value="Admin">Admin</mat-option>
+      <mat-option value="User">User</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Action Buttons -->
+  <div style="text-align: center; margin-top: 20px;">
+    <button *ngIf="mode === 'view'" mat-raised-button color="accent" (click)="closeForm()" style="width: 150px; padding: 10px 20px; margin: 10px; font-size: 16px; border-radius: 4px;">
+      Close
+    </button>
+    <button *ngIf="mode === 'edit'" mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid" style="width: 150px; padding: 10px 20px; margin: 10px; font-size: 16px; border-radius: 4px;">
+      Submit
+    </button>
+  </div>
+</form>

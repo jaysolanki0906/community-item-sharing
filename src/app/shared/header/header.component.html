@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <span class="app-title">Community Item Sharing</span>
+  <span class="spacer"></span>
+
+  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/dashboard'">
+    <mat-icon>dashboard</mat-icon>
+    Dashboard
+  </button>
+
+  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/items'">
+    <mat-icon>view_list</mat-icon>
+    Items
+  </button>
+
+  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/interests'">
+    <mat-icon>favorite</mat-icon>
+    Interests
+  </button>
+  
+  <ng-container *ngIf="isAdmin">
+    <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/manage-users'">
+      <mat-icon>group</mat-icon>
+      Manage Users
+    </button>
+  </ng-container>
+  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/profile'">
+    <mat-icon>person</mat-icon>
+    Profile
+  </button>
+
+  <button mat-raised-button color="warn" class="toolbar-button" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+</mat-toolbar>
