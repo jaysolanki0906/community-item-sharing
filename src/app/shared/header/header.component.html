@@ -1,35 +1,56 @@
-<mat-toolbar color="primary">
-  <span class="app-title">Community Item Sharing</span>
-  <span class="spacer"></span>
-
-  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/dashboard'">
-    <mat-icon>dashboard</mat-icon>
-    Dashboard
-  </button>
-
-  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/items'">
-    <mat-icon>view_list</mat-icon>
-    Items
-  </button>
-
-  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/interests'">
-    <mat-icon>favorite</mat-icon>
-    Interests
-  </button>
-  
-  <ng-container *ngIf="isAdmin">
-    <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/manage-users'">
-      <mat-icon>group</mat-icon>
-      Manage Users
+<div class="main-content">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer mode="over" [opened]="false" class="sidenav" *ngIf="isSmallScreen">
+    <button mat-button routerLink="/dashboard" (click)="drawer.close()">
+      <mat-icon>dashboard</mat-icon> Dashboard
     </button>
-  </ng-container>
-  <button mat-raised-button color="accent" class="toolbar-button" [routerLink]="'/profile'">
-    <mat-icon>person</mat-icon>
-    Profile
-  </button>
+    <button mat-button routerLink="/items" (click)="drawer.close()">
+      <mat-icon>view_list</mat-icon> Items
+    </button>
+    <button mat-button routerLink="/interests" (click)="drawer.close()">
+      <mat-icon>favorite</mat-icon> Interests
+    </button>
+    <button *ngIf="isAdmin" mat-button routerLink="/manage-users" (click)="drawer.close()">
+      <mat-icon>group</mat-icon> Manage Users
+    </button>
+    <button mat-button routerLink="/profile" (click)="drawer.close()">
+      <mat-icon>person</mat-icon> Profile
+    </button>
+    <button mat-button color="warn" (click)="logout(); drawer.close()">
+      <mat-icon>logout</mat-icon> Logout
+    </button>
+  </mat-sidenav>
 
-  <button mat-raised-button color="warn" class="toolbar-button" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Logout
-  </button>
-</mat-toolbar>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="toolbar">
+      <button *ngIf="isSmallScreen" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="app-title">Community Item Sharing</span>
+
+      <span class="spacer"></span>
+
+      <ng-container *ngIf="!isSmallScreen">
+        <button mat-raised-button color="accent" routerLink="/dashboard">
+          <mat-icon>dashboard</mat-icon> Dashboard
+        </button>
+        <button mat-raised-button color="accent" routerLink="/items">
+          <mat-icon>view_list</mat-icon> Items
+        </button>
+        <button mat-raised-button color="accent" routerLink="/interests">
+          <mat-icon>favorite</mat-icon> Interests
+        </button>
+        <button *ngIf="isAdmin" mat-raised-button color="accent" routerLink="/manage-users">
+          <mat-icon>group</mat-icon> Manage Users
+        </button>
+        <button mat-raised-button color="accent" routerLink="/profile">
+          <mat-icon>person</mat-icon> Profile
+        </button>
+        <button mat-raised-button color="warn" (click)="logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+      </ng-container>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+</div>

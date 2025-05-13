@@ -42,7 +42,6 @@ export class ItemListComponent {
   pageSize = 5;
   totalItems = 0;
 
-
   constructor(private itemService: ItemService) {}
 
   ngOnInit(): void {
@@ -58,7 +57,6 @@ export class ItemListComponent {
     });
   }
   
-
   applyFilter(): void {
     const text = this.searchText.toLowerCase();
     this.filteredItems = this.items.filter(item =>

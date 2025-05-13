@@ -6,10 +6,11 @@ export const rolebaseGuard: CanActivateFn = (route, state) => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
 
-  if (token && role === 'admin') {
+  if (token && role === 'ADMIN') {
     return true;
   }
-
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
   router.navigate(['/auth/login']);
   return false;
 };

@@ -1,5 +1,5 @@
 <app-header/>
-<div class="count-cards">
+<div class="count-cards mat-responsive-table">
   <mat-card class="count-card lost">
     <div>Lost Items</div>
     <div class="count">{{ lostCount }}</div>
@@ -15,17 +15,18 @@
 </div>
 
 <mat-card>
-  <mat-button-toggle-group [(ngModel)]="selectedType" (change)="onTypeChange(selectedType)">
-    <mat-button-toggle value="LOST">Lost</mat-button-toggle>
-    <mat-button-toggle value="FOUND">Found</mat-button-toggle>
-    <mat-button-toggle value="FREE">Free</mat-button-toggle>
-  </mat-button-toggle-group>
-
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search</mat-label>
-    <input matInput [(ngModel)]="searchText" (input)="applyFilter()" placeholder="Search by title or description">
-  </mat-form-field>
-
+  <div class="controls-container">
+    <mat-button-toggle-group [(ngModel)]="selectedType" (change)="onTypeChange(selectedType)" class="type-toggle">
+      <mat-button-toggle value="LOST">Lost</mat-button-toggle>
+      <mat-button-toggle value="FOUND">Found</mat-button-toggle>
+      <mat-button-toggle value="FREE">Free</mat-button-toggle>
+    </mat-button-toggle-group>
+  
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="applyFilter()" placeholder="Search by title or description">
+    </mat-form-field>
+  </div>  
   <table mat-table [dataSource]="filteredItems" class="mat-elevation-z8">
 
     <ng-container matColumnDef="id">

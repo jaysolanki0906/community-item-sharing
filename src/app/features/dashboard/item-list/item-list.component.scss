@@ -34,5 +34,68 @@
       }
     }
   }
+  .count-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
   
+  .count-card {
+    flex: 1 1 200px;
+    min-width: 200px;
+    max-width: 300px;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
   
+  .search-field {
+    width: 100%;
+    margin: 1rem 0;
+  }
+  
+  mat-card {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .count-cards {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .mat-table {
+      overflow-x: auto;
+      display: block;
+    }
+  
+    table {
+      width: 100%;
+    }
+  
+    .mat-header-cell, .mat-cell {
+      white-space: nowrap;
+    }
+  }
+  .mat-responsive-table {
+    overflow-x: auto;
+  }
+  .controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  
+    .type-toggle {
+      flex: 1 1 250px;
+    }
+  
+    .search-field {
+      flex: 2 1 300px;
+    }
+  }
+      

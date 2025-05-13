@@ -12,6 +12,7 @@ import { UserformComponent } from './features/admin/users/userform/userform.comp
 import { GiveawayComponent } from './features/admin/giveaway/giveaway.component';
 import { ListusersComponent } from './features/admin/users/listusers/listusers.component';
 import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
+import { rolebaseGuard } from './core/guards/rolebase.guard';
 
 export const routes: Routes = [
   {
@@ -23,11 +24,13 @@ export const routes: Routes = [
   },
   {
     path:'manage-users',
-    component:ListusersComponent
+    component:ListusersComponent,
+    canActivate: [rolebaseGuard]
   },
   {
     path:'assign-items',
-    component:GiveawayComponent
+    component:GiveawayComponent,
+    canActivate: [rolebaseGuard]
   },
   {
     path: '',
@@ -36,29 +39,33 @@ export const routes: Routes = [
   },
   {
     path: 'profile', 
-    component:UserinfoComponent
+    component:UserinfoComponent,
+    canActivate: [authGuard]
   },
   {
     path:'interests',
-    component:ItemsComponent
+    component:ItemsComponent,
+    canActivate: [authGuard]
   },
   {
     path:'interested-users',
-    component:InterestedUsersComponent
+    component:InterestedUsersComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'dashboard',
     component: ItemListComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'items',
     component: MyitemsComponent,
-    children:[{path:'itemsform',component:ItemFormDialogComponent}]
+    children:[{path:'itemsform',component:ItemFormDialogComponent,canActivate: [authGuard]}],
+    canActivate: [authGuard]
   },
-  // {
-  //   path: '**',  
-  //   redirectTo: '/auth/login'  
-  // }
+  {
+    path: '**',  
+    redirectTo: '/auth/login'  
+  }
   
 ];

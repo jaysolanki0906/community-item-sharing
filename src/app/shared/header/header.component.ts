@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthServiceService } from '../../core/services/auth-service.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
+import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
+import { map, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,19 +18,32 @@ import { RouterLink } from '@angular/router';
     RouterLink,
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSidenavModule,
+    LayoutModule,
+
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('drawer') drawer!: MatSidenav;  
   isAdmin: boolean = false;
-
-  constructor(private authService: AuthServiceService, private router: Router) {}
+  isSmallScreen = false;
+  constructor(private authService: AuthServiceService, private router: Router,private breakpointObserver:BreakpointObserver) {}
 
   ngOnInit(): void {
     const role = localStorage.getItem('role');
     this.isAdmin = role === 'ADMIN';
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, '(max-width: 960px)'])
+      .pipe(
+        map(result => result.matches),
+        shareReplay()
+      )
+      .subscribe(isSmall => {
+        this.isSmallScreen = isSmall;
+      });
   }
 
   logout(): void {
