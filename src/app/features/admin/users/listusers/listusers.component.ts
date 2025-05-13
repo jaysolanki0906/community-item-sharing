@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AuthServiceService } from '../../../../core/services/auth-service.service';
 import { HeaderComponent } from '../../../../shared/header/header.component';
-import { MatCell, MatHeaderCell, MatTable, MatTableModule } from '@angular/material/table';
+import { MatCell, MatHeaderCell, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { UserformComponent } from '../userform/userform.component';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormField, MatFormFieldControl, MatLabel } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -15,21 +15,34 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-listusers',
-  imports: [HeaderComponent,MatTableModule,MatButtonModule,MatSlideToggle],
+  imports: [HeaderComponent,MatTableModule,MatButtonModule,MatSlideToggle,MatPaginator],
   templateUrl: './listusers.component.html',
   styleUrl: './listusers.component.scss'
 })
 export class ListusersComponent {
   users: User[] = [];
   displayedColumns: string[] = ['id', 'name', 'email', 'role','action'];
+  pageIndex: number = 0;
+  pageSize: number = 5;
+  totalItems: number = 0;
 
   constructor(private authService: AuthServiceService,private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.authService.getAllUsers().subscribe((data: User[]) => {
-      this.users = data;
+    this.fetchItems();
+  }
+  fetchItems(): void {
+    this.authService.getPaginatedUsers(this.pageIndex + 1, this.pageSize).subscribe((response: any) => {
+      this.users = response.data;     
+      this.totalItems = response.total; 
     });
   }
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchItems(); 
+  }
+
   viewItem(item: User): void {
       this.dialog.open(UserformComponent, {
         width: '500px',

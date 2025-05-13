@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ItemService } from '../../../core/services/item.service';
@@ -11,6 +11,8 @@ import { InterestService } from '../../../core/services/intrest.service';
 import { Interest } from '../../../core/models/interest.model';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-items',
@@ -23,6 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatTabsModule,
     MatButtonModule,
     HeaderComponent,
+    MatCard,
+    MatPaginator
   ],
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.scss']
@@ -30,32 +34,54 @@ import { MatButtonModule } from '@angular/material/button';
 export class ItemsComponent implements OnInit {
   items: Item[] = [];
   interestedItems: string[] = [];
+  dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'imageUrl', 'status', 'actions'];
   interestedUsers: Interest[] = [];
   userRole: string = '';
+  selectedType: string = 'LOST';
+  searchText: string = '';
+  totalItems: number = 0;
+  pageSize: number = 5;
+  pageIndex: number = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   constructor(
     private itemService: ItemService,
     private interestService: InterestService,
-    private router: Router
+    private router: Router,
+
   ) {
     this.userRole = (localStorage.getItem('role') || '').toLowerCase();
   }
 
   ngOnInit(): void {
-    this.fetchAllItems();
+    this.fetchItems();
   }
 
-  fetchAllItems(): void {
-    this.itemService.getItems('FREE').subscribe({
-      next: (response: any) => {
+  fetchItems(): void {
+    const page = this.pageIndex + 1; 
+    const limit = this.pageSize;
+    const type = 'FREE';
+    const status = 'ACTIVE';
+    const search = this.searchText;
+  
+    this.itemService.getItemsWithPagination(page, limit, type, status, search)
+      .subscribe((response: { data: Item[], total: number }) => {
         this.items = response.data;
-      },
-      error: (err) => {
-        console.error('Failed to fetch items:', err);
-      }
-    });
+        this.totalItems = response.total; 
+        this.dataSource.data = this.items; 
+      });
   }
+  
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex; 
+    this.pageSize = event.pageSize; 
+    this.fetchItems(); 
+  }
+  
 
   markInterest(itemId: string): void {
     if (!this.interestedItems.includes(itemId)) {

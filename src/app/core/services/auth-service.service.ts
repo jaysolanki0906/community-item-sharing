@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiServiceService } from './api-service.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,10 @@ export class AuthServiceService {
 getAllUsers() {
   return this.api.get<any[]>('users');
 }
+getPaginatedUsers(page: number, limit: number): Observable<any> {
+  return this.api.get<any>(`users?page=${page}&limit=${limit}`);
+}
+
 
 getUserById(id: string) {
   return this.api.get(`users/${id}`);

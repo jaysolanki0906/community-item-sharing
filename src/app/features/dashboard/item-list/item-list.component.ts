@@ -10,6 +10,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { HeaderComponent } from "../../../shared/header/header.component";
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-item-list',
@@ -23,7 +24,8 @@ import { HeaderComponent } from "../../../shared/header/header.component";
     MatButtonModule,
     MatButtonToggleModule,
     FormsModule,
-    HeaderComponent
+    HeaderComponent,
+    MatPaginator
   ],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
@@ -33,19 +35,29 @@ export class ItemListComponent {
   filteredItems: Item[] = [];
   selectedType: 'LOST' | 'FOUND' | 'FREE' = 'LOST';
   searchText: string = '';
+  lostCount: number = 0;
+  foundCount: number = 0;
+  freeCount: number = 0;
+  currentPage = 1;
+  pageSize = 5;
+  totalItems = 0;
+
 
   constructor(private itemService: ItemService) {}
 
   ngOnInit(): void {
     this.loadItems();
+    this.itemcard();
   }
 
   loadItems(): void {
-    this.itemService.getItems(this.selectedType).subscribe(response => {
-      this.items = response.data; // ✅ use response.data instead of response
+    this.itemService.getItems(this.selectedType, this.currentPage, this.pageSize).subscribe(response => {
+      this.items = response.data;
+      this.totalItems = response.total;
       this.applyFilter();
     });
   }
+  
 
   applyFilter(): void {
     const text = this.searchText.toLowerCase();
@@ -59,4 +71,27 @@ export class ItemListComponent {
     this.selectedType = type;
     this.loadItems();
   }
+  itemcard() {
+    const page = 1;
+    const limit = 1;
+  
+    this.itemService.getItems('LOST', page, limit).subscribe(response => {
+      this.lostCount = response.total;
+    });
+  
+    this.itemService.getItems('FOUND', page, limit).subscribe(response => {
+      this.foundCount = response.total;
+    });
+  
+    this.itemService.getItems('FREE', page, limit).subscribe(response => {
+      this.freeCount = response.total;
+    });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex + 1; 
+    this.loadItems();
+  }
+  
 }

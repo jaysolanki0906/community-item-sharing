@@ -56,9 +56,9 @@ export const routes: Routes = [
     component: MyitemsComponent,
     children:[{path:'itemsform',component:ItemFormDialogComponent}]
   },
-  {
-    path: '**',  
-    redirectTo: '/auth/login'  
-  }
+  // {
+  //   path: '**',  
+  //   redirectTo: '/auth/login'  
+  // }
   
 ];

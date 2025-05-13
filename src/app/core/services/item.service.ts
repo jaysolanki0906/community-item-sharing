@@ -12,8 +12,18 @@ export class ItemService {
 
   constructor(private api: ApiServiceService) {}
 
-  getSharedItems(): Observable<{ data: Item[]; total: number }> {
-    return this.api.get<{ data: Item[]; total: number }>('items/shared');
+  getSharedItems(
+    page: number,
+    limit: number,
+    status: string,
+    search: string
+  ): Observable<{ data: Item[], total: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('status', status)
+      .set('search', search);
+    return this.api.get<{ data: Item[], total: number }>('items/shared', { params });
   }
 
   getItemsWithPagination(page: number, limit: number, type: string, status: string, search: string): Observable<{ data: Item[], total: number }> {
@@ -27,13 +37,32 @@ export class ItemService {
     return this.api.get<{ data: Item[], total: number }>('items', { params });
   }  
 
-  getItems(type: string): Observable<{ data: Item[]; total: number }> {
-    return this.api.get<{ data: Item[]; total: number }>(`items?type=${type}`);
+  getItems(
+    type: string,
+    page: number = 1,
+    limit: number = 10
+  ): Observable<{ data: Item[]; total: number }> {
+    return this.api.get<{ data: Item[]; total: number }>(
+      `items?type=${type}&page=${page}&limit=${limit}`
+    );
   }
+  
 
-  getMyItems(): Observable<{ data: Item[]; total: number }> {
-    return this.api.get<{ data: Item[]; total: number }>('items/my');
+  getMyItems(
+    page: number,
+    limit: number,
+    status: string,
+    search: string
+  ): Observable<{ data: Item[], total: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('status', status)
+      .set('search', search);
+  
+    return this.api.get<{ data: Item[]; total: number }>('items/my', { params });
   }
+  
 
   addItem(itemData: FormData) {
     return this.api.post<Item>('items', itemData);

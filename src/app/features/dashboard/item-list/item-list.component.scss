@@ -12,4 +12,27 @@
     width: 100%;
     margin-top: 20px;
   }
+  .count-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  
+    .count-card {
+      flex: 1;
+      text-align: center;
+      padding: 16px;
+      border-radius: 8px;
+  
+      &.lost { background-color: #ffe0e0; }
+      &.found { background-color: #e0f7fa; }
+      &.free { background-color: #e8f5e9; }
+  
+      .count {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 8px;
+      }
+    }
+  }
+  
   

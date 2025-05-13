@@ -1,4 +1,19 @@
 <app-header/>
+<div class="count-cards">
+  <mat-card class="count-card lost">
+    <div>Lost Items</div>
+    <div class="count">{{ lostCount }}</div>
+  </mat-card>
+  <mat-card class="count-card found">
+    <div>Found Items</div>
+    <div class="count">{{ foundCount }}</div>
+  </mat-card>
+  <mat-card class="count-card free">
+    <div>Free Items</div>
+    <div class="count">{{ freeCount }}</div>
+  </mat-card>
+</div>
+
 <mat-card>
   <mat-button-toggle-group [(ngModel)]="selectedType" (change)="onTypeChange(selectedType)">
     <mat-button-toggle value="LOST">Lost</mat-button-toggle>
@@ -46,4 +61,10 @@
     <tr mat-header-row *matHeaderRowDef="['id', 'type', 'title', 'description', 'location', 'status']"></tr>
     <tr mat-row *matRowDef="let row; columns: ['id', 'type', 'title', 'description', 'location', 'status'];"></tr>
   </table>
+  <mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
 </mat-card>

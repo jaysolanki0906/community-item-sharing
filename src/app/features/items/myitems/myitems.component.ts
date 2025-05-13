@@ -55,18 +55,35 @@ export class MyitemsComponent implements OnInit {
   }
 
   fetchItems(): void {
-    const page = this.pageIndex + 1; // Page index is 0-based
+    const page = this.pageIndex + 1;
     const limit = this.pageSize;
     const type = this.selectedType;
-    const status = 'ACTIVE'; // You can dynamically change this as needed
+    const status = 'ACTIVE';
     const search = this.searchText;
-
-    this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe((response: { data: Item[], total: number }) => {
-      this.items = response.data;
-      this.filteredItems = this.items; // apply any filtering logic here if needed
-      this.totalItems = response.total;
-    });
+  
+    if (type === 'My items') {
+      this.itemService.getMyItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
+        this.items = response.data;
+        this.filteredItems = this.items;
+        this.totalItems = response.total;
+      });
+    } 
+    else if (type === 'Shared By Me') {
+      this.itemService.getSharedItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
+        this.items = response.data;
+        this.filteredItems = this.items;
+        this.totalItems = response.total;
+      });
+    }
+    else {
+      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe((response: { data: Item[], total: number }) => {
+        this.items = response.data;
+        this.filteredItems = this.items;
+        this.totalItems = response.total;
+      });
+    }
   }
+  
 
   applyFilter(): void {
     this.pageIndex = 0; 
