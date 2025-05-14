@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatCard, MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import {  MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatCellDef, MatHeaderCell, MatHeaderRow, MatHeaderRowDef, MatRowDef, MatTableModule } from '@angular/material/table';
+import { MatCellDef, MatHeaderRowDef, MatRowDef, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tabledesign2',
-  imports: [MatMenu,MatMenuTrigger,CommonModule,MatCardModule,MatTableModule,FormsModule,MatIconModule,MatPaginator,MatHeaderRowDef,MatRowDef,MatCellDef],
+  imports: [MatTooltipModule,MatButtonModule,CommonModule,MatCardModule,MatTableModule,FormsModule,MatIconModule,MatPaginator,MatHeaderRowDef,MatRowDef,MatCellDef],
   templateUrl: './tabledesign2.component.html',
   styleUrl: './tabledesign2.component.scss'
 })
@@ -20,6 +20,8 @@ export class Tabledesign2Component {
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;
   @Input() showFilterMenu = false;
+  @Input() actionButtons: { label: string, icon?: string, type: string }[] = [];
+@Output() actionClicked = new EventEmitter<{ action: string, row: any }>();
 
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() filterSelected = new EventEmitter<string>();
@@ -31,4 +33,19 @@ export class Tabledesign2Component {
   filterClick(type: string) {
     this.filterSelected.emit(type);
   }
+  filterOptions = [
+    { label: 'Lost', value: 'LOST' },
+    { label: 'Found', value: 'FOUND' },
+    { label: 'Free', value: 'FREE' },
+    { label: 'My Items', value: 'MY_ITEMS' },
+    { label: 'Shared By Me', value: 'SHARED' }
+  ];
+  
+  selectedFilter = 'LOST'; 
+  
+  selectFilter(value: string) {
+    this.selectedFilter = value;
+    this.filterClick(value); 
+  }
+  
 }

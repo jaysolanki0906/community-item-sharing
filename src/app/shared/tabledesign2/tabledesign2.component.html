@@ -1,36 +1,43 @@
-<mat-card>
-    <div class="controls-container">
-      <div *ngIf="showFilterMenu" class="menu-header">
-        <button mat-icon-button [matMenuTriggerFor]="itemMenu">
-          <mat-icon>menu</mat-icon>
+<mat-card class="table-container">
+    <div class="segmented-button-group">
+        <button 
+          *ngFor="let option of filterOptions"
+          [class.active]="selectedFilter === option.value"
+          (click)="selectFilter(option.value)">
+          <mat-icon *ngIf="selectedFilter === option.value">check</mat-icon>
+          {{ option.label }}
         </button>
-        <mat-menu #itemMenu="matMenu">
-          <button mat-menu-item (click)="filterClick('LOST')">Lost</button>
-          <button mat-menu-item (click)="filterClick('FOUND')">Found</button>
-          <button mat-menu-item (click)="filterClick('FREE')">Free</button>
-        </mat-menu>
       </div>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 custom-table">
+        <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef class="custom-header">{{ col | titlecase }}</th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'imageUrl'; else normalCell">
+                <img [src]="element[col]" alt="Image" class="thumbnail" height="80px" width="60px" *ngIf="element[col]; else noImage" />
+                <ng-template #noImage><span>No Image</span></ng-template>
+              </ng-container>
+              <ng-template #normalCell>
+                <ng-container *ngIf="col === 'actions'; else textCell">
+                  <button *ngFor="let btn of actionButtons"
+                          mat-icon-button
+                          [color]="btn.type === 'delete' ? 'warn' : 'primary'"
+                          matTooltip="{{ btn.label }}"
+                          (click)="actionClicked.emit({ action: btn.type, row: element })">
+                    <mat-icon>{{ btn.icon || 'more_vert' }}</mat-icon>
+                  </button>
+                </ng-container>
+                <ng-template #textCell>{{ element[col] }}</ng-template>
+              </ng-template>
+            </td>
+          </ng-container>
+          
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </div>
   
-    <!-- Table -->
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
-        <th mat-header-cell *matHeaderCellDef>{{ col | titlecase }}</th>
-        <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="col === 'imageUrl'; else normalCell">
-            <img [src]="element[col]" alt="Image" width="80" height="80" *ngIf="element[col]; else noImage" />
-            <ng-template #noImage><span>No Image</span></ng-template>
-          </ng-container>
-          <ng-template #normalCell>{{ element[col] }}</ng-template>
-        </td>
-      </ng-container>
-  
-      <!-- Rows -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <!-- Paginator -->
+
     <mat-paginator
       [length]="totalItems"
       [pageSize]="pageSize"

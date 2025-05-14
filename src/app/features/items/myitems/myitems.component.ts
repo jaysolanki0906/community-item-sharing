@@ -16,6 +16,7 @@ import { MatButton } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatCard } from '@angular/material/card';
+import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
 
 @Component({
   selector: 'app-myitems',
@@ -31,15 +32,13 @@ import { MatCard } from '@angular/material/card';
     MatInputModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatButton,
     HeaderComponent,
     CommonModule,
-    MatPaginator,
-    MatCard
-  ]
+    Tabledesign2Component
+]
 })
 export class MyitemsComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'image', 'actions'];
+  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
   selectedType: string = 'LOST';
@@ -60,15 +59,16 @@ export class MyitemsComponent implements OnInit {
     const type = this.selectedType;
     const status = 'ACTIVE';
     const search = this.searchText;
+    console.log(this.filteredItems);
   
-    if (type === 'My items') {
+    if (type === 'MY_ITEMS') {
       this.itemService.getMyItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
         this.items = response.data;
         this.filteredItems = this.items;
         this.totalItems = response.total;
       });
     } 
-    else if (type === 'Shared By Me') {
+    else if (type === 'SHARED') {
       this.itemService.getSharedItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
         this.items = response.data;
         this.filteredItems = this.items;
@@ -83,13 +83,12 @@ export class MyitemsComponent implements OnInit {
       });
     }
   }
-  
-
-  applyFilter(): void {
-    this.pageIndex = 0; 
-    this.fetchItems(); 
-  }
-
+  applyFilter(selectedType: string): void {
+    console.log('Filter applied:', selectedType); 
+    this.selectedType = selectedType;
+    this.pageIndex = 0;
+    this.fetchItems();
+  }  
   onPageChange(event: any): void {
     this.pageIndex = event.pageIndex; 
     this.pageSize = event.pageSize; 
@@ -120,6 +119,19 @@ export class MyitemsComponent implements OnInit {
         this.fetchItems();
       }
     });
+  }
+  handleAction(event: { action: string, row: any }) {
+    switch (event.action) {
+      case 'edit':
+        this.editItem(event.row);
+        break;
+      case 'delete':
+        this.deleteItem(event.row);
+        break;
+      case 'view':
+        this.viewItem(event.row);
+        break;
+    }
   }
 
   viewItem(item: Item): void {
