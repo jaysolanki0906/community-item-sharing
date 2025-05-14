@@ -11,6 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { HeaderComponent } from "../../../shared/header/header.component";
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { DataTableComponent } from '../../../shared/data-table/data-table.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-item-list',
@@ -25,7 +28,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
     MatButtonToggleModule,
     FormsModule,
     HeaderComponent,
-    MatPaginator
+    DataTableComponent,
+    MatMenuModule,
+    MatIconModule
   ],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
@@ -34,6 +39,7 @@ export class ItemListComponent {
   items: Item[] = [];
   filteredItems: Item[] = [];
   selectedType: 'LOST' | 'FOUND' | 'FREE' = 'LOST';
+  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status'];
   searchText: string = '';
   lostCount: number = 0;
   foundCount: number = 0;
@@ -65,10 +71,14 @@ export class ItemListComponent {
     );
   }
 
-  onTypeChange(type: 'LOST' | 'FOUND' | 'FREE'): void {
-    this.selectedType = type;
-    this.loadItems();
+  onTypeChange(type: string): void {
+    const allowedTypes: ('LOST' | 'FOUND' | 'FREE')[] = ['LOST', 'FOUND', 'FREE'];
+    if (allowedTypes.includes(type as any)) {
+      this.selectedType = type as 'LOST' | 'FOUND' | 'FREE';
+      this.loadItems();
+    }
   }
+  
   itemcard() {
     const page = 1;
     const limit = 1;
@@ -91,5 +101,8 @@ export class ItemListComponent {
     this.currentPage = event.pageIndex + 1; 
     this.loadItems();
   }
-  
+  onSearchChange(value: string) {
+    this.searchText = value;
+    this.applyFilter();
+  }
 }
