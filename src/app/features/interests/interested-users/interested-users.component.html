@@ -1,44 +1,12 @@
 <app-header></app-header>
 
-<table mat-table [dataSource]="interestedUsers" class="mat-elevation-z8" style="width: 100%;">
-
-  <ng-container matColumnDef="userId">
-    <th mat-header-cell *matHeaderCellDef>User ID</th>
-    <td mat-cell *matCellDef="let element">{{ element.user.id }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.user.name }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef>Email</th>
-    <td mat-cell *matCellDef="let element">{{ element.user.email }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef>Role</th>
-    <td mat-cell *matCellDef="let element">{{ element.user.role }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="interestedOn">
-    <th mat-header-cell *matHeaderCellDef>Interested On</th>
-    <td mat-cell *matCellDef="let element">{{ element.createdAt | date:'medium' }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef>Action</th>
-    <td mat-cell *matCellDef="let element">
-        <button mat-raised-button color="primary" (click)="assignReceiver(element.user.id)">
-            Assign Receiver
-          </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-</table>
-
-<p *ngIf="interestedUsers.length === 0">No users have shown interest.</p>
+<app-tabledesign2
+  [dataSource]="interestedUsers"
+  [displayedColumns]="displayedColumns"
+  [actionButtons]="actionButtons"
+  [totalItems]="totalItems"
+  [pageSize]="pageSize"
+  [showFilterMenu]="false"
+  (pageChange)="onPageChange($event)"
+  (actionClicked)="handleAction($event)">
+</app-tabledesign2>

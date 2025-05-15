@@ -8,8 +8,6 @@ import { MyitemsComponent } from './features/items/myitems/myitems.component';
 import { ItemFormDialogComponent } from './features/items/item-form-dialog/item-form-dialog.component';
 import { UserinfoComponent } from './features/userinformation/userinfo/userinfo.component';
 import { ItemsComponent } from './features/interests/items/items.component';
-import { UserformComponent } from './features/admin/users/userform/userform.component';
-import { GiveawayComponent } from './features/admin/giveaway/giveaway.component';
 import { ListusersComponent } from './features/admin/users/listusers/listusers.component';
 import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { rolebaseGuard } from './core/guards/rolebase.guard';
@@ -27,11 +25,7 @@ export const routes: Routes = [
     component:ListusersComponent,
     canActivate: [rolebaseGuard]
   },
-  {
-    path:'assign-items',
-    component:GiveawayComponent,
-    canActivate: [rolebaseGuard]
-  },
+  
   {
     path: '',
     redirectTo: '/auth/login',  

@@ -10,10 +10,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { HeaderComponent } from "../../../shared/header/header.component";
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { DataTableComponent } from '../../../shared/data-table/data-table.component';
+import { PageEvent } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
 
 @Component({
   selector: 'app-item-list',
@@ -28,10 +28,11 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonToggleModule,
     FormsModule,
     HeaderComponent,
-    DataTableComponent,
+    CommonModule,
     MatMenuModule,
-    MatIconModule
-  ],
+    MatIconModule,
+    Tabledesign2Component
+],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
 })
@@ -47,6 +48,7 @@ export class ItemListComponent {
   currentPage = 1;
   pageSize = 5;
   totalItems = 0;
+  loading = true;
 
   constructor(private itemService: ItemService) {}
 
@@ -56,10 +58,19 @@ export class ItemListComponent {
   }
 
   loadItems(): void {
-    this.itemService.getItems(this.selectedType, this.currentPage, this.pageSize).subscribe(response => {
-      this.items = response.data;
+    this.loading = true;
+    this.itemService.getItems(this.selectedType, this.currentPage, this.pageSize).subscribe({
+       next: (response)=>{
       this.totalItems = response.total;
+      this.items = response.data;
+      this.filteredItems = this.items;
       this.applyFilter();
+      this.loading = false;
+    },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
   
@@ -78,21 +89,47 @@ export class ItemListComponent {
       this.loadItems();
     }
   }
+  myFilterOptions = [
+    { label: 'Lost', value: 'LOST' },
+    { label: 'Found', value: 'FOUND' },
+    { label: 'Free', value: 'FREE' }
+  ];
   
   itemcard() {
     const page = 1;
     const limit = 1;
   
-    this.itemService.getItems('LOST', page, limit).subscribe(response => {
+    this.itemService.getItems('LOST', page, limit).subscribe({
+       next: (response)=>{
       this.lostCount = response.total;
+      this.loading = false;
+    },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   
-    this.itemService.getItems('FOUND', page, limit).subscribe(response => {
+    this.itemService.getItems('FOUND', page, limit).subscribe({
+       next: (response)=>{
       this.foundCount = response.total;
+      this.loading = false;
+    },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   
-    this.itemService.getItems('FREE', page, limit).subscribe(response => {
+    this.itemService.getItems('FREE', page, limit).subscribe({
+       next: (response)=>{
       this.freeCount = response.total;
+      this.loading = false;
+    },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 

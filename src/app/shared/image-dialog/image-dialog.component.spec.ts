@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GiveawayComponent } from './giveaway.component';
+import { ImageDialogComponent } from './image-dialog.component';
 
-describe('GiveawayComponent', () => {
-  let component: GiveawayComponent;
-  let fixture: ComponentFixture<GiveawayComponent>;
+describe('ImageDialogComponent', () => {
+  let component: ImageDialogComponent;
+  let fixture: ComponentFixture<ImageDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GiveawayComponent]
+      imports: [ImageDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GiveawayComponent);
+    fixture = TestBed.createComponent(ImageDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

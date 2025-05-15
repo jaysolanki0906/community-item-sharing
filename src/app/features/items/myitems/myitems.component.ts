@@ -12,7 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatCard } from '@angular/material/card';
@@ -34,7 +34,8 @@ import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2
     MatFormFieldModule,
     HeaderComponent,
     CommonModule,
-    Tabledesign2Component
+    Tabledesign2Component,
+    MatButtonModule
 ]
 })
 export class MyitemsComponent implements OnInit {
@@ -46,6 +47,7 @@ export class MyitemsComponent implements OnInit {
   totalItems: number = 0;
   pageSize: number = 5;
   pageIndex: number = 0;
+  isLoading: boolean = true;
 
   constructor(private itemService: ItemService, private dialog: MatDialog) {}
 
@@ -53,33 +55,63 @@ export class MyitemsComponent implements OnInit {
     this.fetchItems();
   }
 
+  myFilterOptions = [
+    { label: 'Lost', value: 'LOST' },
+    { label: 'Found', value: 'FOUND' },
+    { label: 'Free', value: 'FREE' },
+    { label: 'My Items', value: 'MY_ITEMS' },
+    { label: 'Shared By Me', value: 'SHARED' }
+  ];
+
   fetchItems(): void {
     const page = this.pageIndex + 1;
     const limit = this.pageSize;
+    this.isLoading= true;
     const type = this.selectedType;
     const status = 'ACTIVE';
     const search = this.searchText;
-    console.log(this.filteredItems);
   
     if (type === 'MY_ITEMS') {
-      this.itemService.getMyItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
-        this.items = response.data;
-        this.filteredItems = this.items;
-        this.totalItems = response.total;
+      this.itemService.getMyItems(page, limit, status, search)
+      .subscribe({
+          next: (response: { data: Item[], total: number }) => {
+            this.items = response.data;
+            this.filteredItems = this.items;
+            this.totalItems = response.total;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.isLoading = false;
+          }
       });
     } 
     else if (type === 'SHARED') {
-      this.itemService.getSharedItems(page, limit, status, search).subscribe((response: { data: Item[], total: number }) => {
-        this.items = response.data;
-        this.filteredItems = this.items;
-        this.totalItems = response.total;
+      this.itemService.getSharedItems(page, limit, status, search).subscribe({
+          next: (response: { data: Item[], total: number }) => {
+            this.items = response.data;
+            this.filteredItems = this.items;
+            this.totalItems = response.total;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.isLoading = false;
+          }
       });
     }
     else {
-      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe((response: { data: Item[], total: number }) => {
-        this.items = response.data;
-        this.filteredItems = this.items;
-        this.totalItems = response.total;
+      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe({
+          next: (response: { data: Item[], total: number }) => {
+            this.items = response.data;
+            this.filteredItems = this.items;
+            this.totalItems = response.total;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.isLoading = false;
+          }
       });
     }
   }

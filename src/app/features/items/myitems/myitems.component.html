@@ -1,4 +1,12 @@
 <app-header/>
+
+<div class="add-item-container" style="text-align: right; margin: 10px 20px;">
+  <button mat-raised-button color="primary" (click)="addItem()">
+    <mat-icon>add</mat-icon>
+    Add Item
+  </button>
+</div>
+
 <app-tabledesign2
   [dataSource]="filteredItems"
   [displayedColumns]="['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions']"
@@ -10,6 +18,8 @@
   [totalItems]="totalItems"
   [pageSize]="pageSize"
   [showFilterMenu]="true"
+  [filterOptions]="myFilterOptions"
+  [Loading]="isLoading"
   (pageChange)="onPageChange($event)"
   (filterSelected)="applyFilter($event)"
   (actionClicked)="handleAction($event)">

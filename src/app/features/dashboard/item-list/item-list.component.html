@@ -1,3 +1,4 @@
+<ng-container >
 <app-header />
 <div class="count-cards mat-responsive-table">
 
@@ -17,14 +18,14 @@
   </mat-card>
 
 </div>
-
-<app-data-table
+</ng-container>
+<app-tabledesign2
   [displayedColumns]="displayedColumns"
   [dataSource]="filteredItems"
-  [searchText]="searchText"
   [totalItems]="totalItems"
   [pageSize]="pageSize"
-  (searchChanged)="onSearchChange($event)"
+  [Loading]="loading"
   (filterSelected)="onTypeChange($event)"
-  (pageChanged)="onPageChange($event)">
-</app-data-table>
+  [filterOptions]="myFilterOptions"
+  >
+</app-tabledesign2>

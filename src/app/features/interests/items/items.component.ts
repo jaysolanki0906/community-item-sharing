@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
+import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
 
 @Component({
   selector: 'app-items',
@@ -25,9 +26,8 @@ import { MatPaginator } from '@angular/material/paginator';
     MatTabsModule,
     MatButtonModule,
     HeaderComponent,
-    MatCard,
-    MatPaginator
-  ],
+    Tabledesign2Component
+],
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.scss']
 })
@@ -43,16 +43,36 @@ export class ItemsComponent implements OnInit {
   totalItems: number = 0;
   pageSize: number = 5;
   pageIndex: number = 0;
+  loading: boolean = true;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  actionButtons = [
+  { label: 'Interest', icon: 'favorite', type: 'interest' },
+  { label: 'View Interested', icon: 'visibility', type: 'viewInterested', showIfAdmin: true }
+];
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+
+  applyFilter(filter: string) {
+  this.searchText = filter;
+  this.pageIndex = 0;
+  this.fetchItems();
+}
+
+  handleAction(event: { action: string, row: any }) {
+  if (event.action === 'interest') {
+    this.markInterest(event.row.id);
+  } else if (event.action === 'viewInterested' && this.userRole === 'admin') {
+    this.viewInterested(event.row.id);
+  }
+}
 
   constructor(
     private itemService: ItemService,
     private interestService: InterestService,
     private router: Router,
-
   ) {
     this.userRole = (localStorage.getItem('role') || '').toLowerCase();
   }
@@ -67,13 +87,20 @@ export class ItemsComponent implements OnInit {
     const type = 'FREE';
     const status = 'ACTIVE';
     const search = this.searchText;
+    this.loading = true;
   
     this.itemService.getItemsWithPagination(page, limit, type, status, search)
-      .subscribe((response: { data: Item[], total: number }) => {
+      .subscribe({
+        next:(response: { data: Item[], total: number }) => {
         this.items = response.data;
         this.totalItems = response.total; 
         this.dataSource.data = this.items; 
-      });
+        this.loading = false;
+      },
+    error: (err) => {
+      this.loading = false;
+        console.error(err);}
+    });
   }
   
   onPageChange(event: any): void {
@@ -110,4 +137,5 @@ export class ItemsComponent implements OnInit {
       }
     });
   }
+  
 }

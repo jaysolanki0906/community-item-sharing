@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Item Image</h2>
+<mat-dialog-content>
+  <img [src]="data.imageUrl" alt="Item Image" style="width: 100%;" *ngIf="data.imageUrl; else noImage">
+  <ng-template #noImage><p>No image available</p></ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
+
