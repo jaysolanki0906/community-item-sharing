@@ -9,8 +9,7 @@ import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2
 
 @Component({
   selector: 'app-interested-users',
-  standalone: true,
-  imports: [HeaderComponent, CommonModule, MatTableModule, Tabledesign2Component],
+  standalone: false,
   templateUrl: './interested-users.component.html',
   styleUrls: ['./interested-users.component.scss']
 })

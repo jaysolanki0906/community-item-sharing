@@ -3,40 +3,15 @@ import { Item } from '../../../core/models/item.model';
 import { ItemService } from '../../../core/services/item.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.component';
-import { HeaderComponent } from '../../../shared/header/header.component';
+import { HttpResponse } from '@angular/common/http';
 
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButton, MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatCard } from '@angular/material/card';
-import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-myitems',
   templateUrl: './myitems.component.html',
   styleUrls: ['./myitems.component.scss'],
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatTableModule,
-    MatInputModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    HeaderComponent,
-    CommonModule,
-    Tabledesign2Component,
-    MatButtonModule
-]
+  standalone: false,
 })
 export class MyitemsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
@@ -66,65 +41,43 @@ export class MyitemsComponent implements OnInit {
   fetchItems(): void {
     const page = this.pageIndex + 1;
     const limit = this.pageSize;
-    this.isLoading= true;
+    this.isLoading = true;
     const type = this.selectedType;
     const status = 'ACTIVE';
     const search = this.searchText;
-  
+
+    const callback = {
+      next: (response: { data: Item[], total: number }) => {
+        this.items = response.data;
+        this.filteredItems = this.items;
+        this.totalItems = response.total;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    };
+
     if (type === 'MY_ITEMS') {
-      this.itemService.getMyItems(page, limit, status, search)
-      .subscribe({
-          next: (response: { data: Item[], total: number }) => {
-            this.items = response.data;
-            this.filteredItems = this.items;
-            this.totalItems = response.total;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.isLoading = false;
-          }
-      });
-    } 
-    else if (type === 'SHARED') {
-      this.itemService.getSharedItems(page, limit, status, search).subscribe({
-          next: (response: { data: Item[], total: number }) => {
-            this.items = response.data;
-            this.filteredItems = this.items;
-            this.totalItems = response.total;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.isLoading = false;
-          }
-      });
-    }
-    else {
-      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe({
-          next: (response: { data: Item[], total: number }) => {
-            this.items = response.data;
-            this.filteredItems = this.items;
-            this.totalItems = response.total;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.isLoading = false;
-          }
-      });
+      this.itemService.getMyItems(page, limit, status, search).subscribe(callback);
+    } else if (type === 'SHARED') {
+      this.itemService.getSharedItems(page, limit, status, search).subscribe(callback);
+    } else {
+      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe(callback);
     }
   }
+
   applyFilter(selectedType: string): void {
-    console.log('Filter applied:', selectedType); 
     this.selectedType = selectedType;
     this.pageIndex = 0;
     this.fetchItems();
-  }  
+  }
+
   onPageChange(event: any): void {
-    this.pageIndex = event.pageIndex; 
-    this.pageSize = event.pageSize; 
-    this.fetchItems(); 
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchItems();
   }
 
   addItem(): void {
@@ -152,13 +105,14 @@ export class MyitemsComponent implements OnInit {
       }
     });
   }
+
   handleAction(event: { action: string, row: any }) {
     switch (event.action) {
       case 'edit':
         this.editItem(event.row);
         break;
       case 'delete':
-        this.deleteItem(event.row);
+        this.deleteItem(event.row.id);
         break;
       case 'view':
         this.viewItem(event.row);
@@ -174,10 +128,30 @@ export class MyitemsComponent implements OnInit {
   }
 
   deleteItem(id: string): void {
-    if (confirm('Are you sure you want to delete this item?')) {
-      this.itemService.deleteItem(id).subscribe(() => {
-        this.fetchItems();
-      });
-    }
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this item?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.itemService.deleteItem(id).subscribe({
+  next: () => {
+    Swal.fire('Deleted!', 'The item has been deleted.', 'success').then(() => {
+      this.fetchItems();
+    });
+  },
+  error: (error) => {
+    console.error('Delete error:', error);
+    this.isLoading = false;
+    Swal.fire('Error', 'Failed to delete item.', 'error');
   }
+});
+    }
+  });
+}
+
 }

@@ -12,17 +12,7 @@ import { map, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSidenavModule,
-    LayoutModule,
-
-  ],
+  standalone: false,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

@@ -9,7 +9,7 @@ import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-userinfo',
-  imports: [CommonModule,MatCard,MatCardTitle,MatCardContent,MatCardHeader,MatIcon,MatCardSubtitle,MatDivider,HeaderComponent],
+  standalone:false,
   templateUrl: './userinfo.component.html',
   styleUrl: './userinfo.component.scss'
 })

@@ -8,8 +8,8 @@ import { AuthServiceService } from '../../../core/services/auth-service.service'
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule,ReactiveFormsModule,RouterModule],
   templateUrl: './login.component.html',
+  standalone:false,
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
@@ -32,7 +32,6 @@ export class LoginComponent {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.data.role);
-          alert('Login successful!');
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

@@ -7,20 +7,30 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { SharedModule } from '../../shared/shared.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { DashboardRoutingModule } from './dashboard-routing.module';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [ItemListComponent],
   imports: [
     CommonModule,
-    FormsModule,
-    MatButtonToggleModule,
-    MatInputModule,
     MatCardModule,
     MatTableModule,
-    ItemListComponent,
-    SharedModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    FormsModule,
+    CommonModule,
+    MatMenuModule,
+    MatIconModule,
+    SharedModule,
+    DashboardRoutingModule
   ]
 })
 export class DashboardModule { }

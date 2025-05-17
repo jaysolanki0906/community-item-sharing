@@ -17,22 +17,7 @@ import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2
 
 @Component({
   selector: 'app-item-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    FormsModule,
-    HeaderComponent,
-    CommonModule,
-    MatMenuModule,
-    MatIconModule,
-    Tabledesign2Component
-],
+  standalone: false,
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
 })

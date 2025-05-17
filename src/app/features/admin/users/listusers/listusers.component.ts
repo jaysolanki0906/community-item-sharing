@@ -16,7 +16,7 @@ import { Tabledesign2Component } from "../../../../shared/tabledesign2/tabledesi
 
 @Component({
   selector: 'app-listusers',
-  imports: [HeaderComponent, MatTableModule, MatButtonModule, Tabledesign2Component],
+  standalone:false,
   templateUrl: './listusers.component.html',
   styleUrl: './listusers.component.scss'
 })

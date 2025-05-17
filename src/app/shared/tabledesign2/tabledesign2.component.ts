@@ -1,19 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import {  MatCardModule } from '@angular/material/card';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatCellDef, MatHeaderRowDef, MatRowDef, MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { PageEvent } from '@angular/material/paginator';
 import { ImageDialogComponent } from '../image-dialog/image-dialog.component';
-import { MatSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-tabledesign2',
-  imports: [MatTooltipModule,MatButtonModule,MatSpinner,CommonModule,MatCardModule,MatTableModule,FormsModule,MatIconModule,MatPaginator,MatHeaderRowDef,MatRowDef,MatCellDef],
+  standalone:false,
   templateUrl: './tabledesign2.component.html',
   styleUrl: './tabledesign2.component.scss'
 })
@@ -26,7 +18,7 @@ export class Tabledesign2Component {
   @Input() actionButtons: { label: string, icon?: string, type: string }[] = [];
   @Input() Loading = false;
   @Output() actionClicked = new EventEmitter<{ action: string, row: any }>();
-  @Input() filterOptions: { label: string, value: string }[] = [];
+  @Input() filterOptions: any[]=[];
   constructor(private dialog: MatDialog) {}
 
   @Output() pageChange = new EventEmitter<PageEvent>();

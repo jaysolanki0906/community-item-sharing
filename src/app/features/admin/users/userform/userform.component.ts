@@ -11,7 +11,7 @@ import { ApiServiceService } from '../../../../core/services/api-service.service
 
 @Component({
   selector: 'app-userform',
-  imports:[ReactiveFormsModule,MatFormField,MatSelect,MatOption,MatLabel,MatOption,CommonModule,ReactiveFormsModule,MatInput],
+  standalone:false,
   templateUrl: './userform.component.html',
   styleUrl: './userform.component.scss'
 })

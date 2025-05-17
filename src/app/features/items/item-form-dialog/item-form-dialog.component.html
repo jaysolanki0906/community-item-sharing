@@ -1,11 +1,13 @@
 <h1 mat-dialog-title class="form-title">{{ modeTitle }}</h1>
 <div mat-dialog-content class="form-container">
   <form [formGroup]="itemForm" (ngSubmit)="submit()">
-
     <div class="form-group">
       <label class="field-label">Title</label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="title">
+        <mat-error *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched">
+          Title is required.
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -13,6 +15,9 @@
       <label class="field-label">Description</label>
       <mat-form-field appearance="fill" class="full-width">
         <textarea matInput formControlName="description"></textarea>
+        <mat-error *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched">
+          Description is required.
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -20,6 +25,9 @@
       <label class="field-label">Location</label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="location">
+        <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">
+          Location is required.
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -30,6 +38,9 @@
           <mat-option value="LOST">Lost</mat-option>
           <mat-option value="FOUND">Found</mat-option>
         </mat-select>
+        <mat-error *ngIf="itemForm.get('type')?.hasError('required') && itemForm.get('type')?.touched">
+          Type is required.
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -40,19 +51,23 @@
           <mat-option value="ACTIVE">Active</mat-option>
           <mat-option value="RESOLVED">Resolved</mat-option>
         </mat-select>
+        <mat-error *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched">
+          Status is required.
+        </mat-error>
       </mat-form-field>
     </div>
 
     <div class="form-group">
       <label class="field-label">Image</label>
       <input type="file" (change)="onFileChange($event)" accept="image/*" />
+      <div *ngIf="selectedFile">
+        <small>Selected Image: {{ selectedFile.name }}</small>
+      </div>
     </div>
-    
 
     <div mat-dialog-actions align="end" class="dialog-actions">
       <button mat-button type="button" (click)="cancel()" class="cancel-button">Cancel</button>
       <button mat-button color="primary" type="submit" *ngIf="!isViewMode" class="save-button">Save</button>
     </div>
-
   </form>
 </div>

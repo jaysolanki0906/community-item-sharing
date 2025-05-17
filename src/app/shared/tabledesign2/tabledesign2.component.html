@@ -55,6 +55,9 @@
     <mat-spinner diameter="40"></mat-spinner>
   </div>
 </ng-template>
+<div *ngIf="!Loading && dataSource.length === 0" class="no-data-message">
+  Sorry! There is no data.
+</div>
 
   <mat-paginator
     [length]="totalItems"

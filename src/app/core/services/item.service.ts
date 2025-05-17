@@ -3,7 +3,7 @@ import { ApiServiceService } from './api-service.service';
 import { Item } from '../models/item.model';
 import { Interest } from '../models/interest.model';
 import { Observable } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -72,9 +72,10 @@ export class ItemService {
     return this.api.patch<Item>(`items/${id}`, item);
   }
 
-  deleteItem(id: string) {
-    return this.api.delete(`items/${id}`);
-  }
+  deleteItem(id: string): Observable<HttpResponse<any>> {
+  return this.api.delete<any>(`items/${id}`);
+}
+
 
   getAllItems(): Observable<{ data: Item[]; total: number }> {
     return this.api.get<{ data: Item[]; total: number }>('items');

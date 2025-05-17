@@ -5,8 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogActions, MatDialogContent } fro
 
 @Component({
   selector: 'app-image-dialog',
-  standalone: true,
-  imports: [MatDialogContent, MatDialogActions, CommonModule, MatButtonModule],
+  standalone: false,
   templateUrl: './image-dialog.component.html',
   styleUrl: './image-dialog.component.scss'
 })
