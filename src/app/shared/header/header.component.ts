@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthServiceService } from '../../core/services/auth-service.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,15 @@ export class HeaderComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatSidenav;  
   isAdmin: boolean = false;
   isSmallScreen = false;
-  constructor(private authService: AuthServiceService, private router: Router,private breakpointObserver:BreakpointObserver) {}
+  transalte:TranslateService=inject(TranslateService);
+  constructor(private authService: AuthServiceService, private router: Router,private breakpointObserver:BreakpointObserver,private translate: TranslateService) 
+  {
+    this.translate.setDefaultLang('en');
+  this.translate.use('en');
+  }
+  changeLanguage(lang: string) {
+  this.translate.use(lang);
+}
 
   ngOnInit(): void {
     const role = localStorage.getItem('role');
@@ -39,7 +48,7 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     localStorage.clear(); 
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
     console.log('User logged out successfully.');
   }
 }

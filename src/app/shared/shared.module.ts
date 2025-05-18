@@ -16,6 +16,9 @@ import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ImageDialogComponent } from './image-dialog/image-dialog.component';
 import { Tabledesign2Component } from './tabledesign2/tabledesign2.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -23,6 +26,7 @@ import { Tabledesign2Component } from './tabledesign2/tabledesign2.component';
   declarations: [HeaderComponent,ImageDialogComponent,Tabledesign2Component],
   imports: [
     CommonModule,
+    HttpClientModule,
   MatToolbarModule,
   MatButtonModule,
   MatIconModule,
@@ -36,11 +40,14 @@ import { Tabledesign2Component } from './tabledesign2/tabledesign2.component';
   MatTableModule,
   FormsModule,
   MatPaginatorModule,
+  MatMenuModule,
+  TranslateModule
   ],
   exports:[HeaderComponent,
     TitleCasePipe,
     HeaderComponent,
     ImageDialogComponent,
-    Tabledesign2Component]
+    Tabledesign2Component,
+    TranslateModule]
 })
 export class SharedModule { }

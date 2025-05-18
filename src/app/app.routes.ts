@@ -6,9 +6,12 @@ import {  } from './features/dashboard/item-list/item-list.component';
 import { ListusersComponent } from './features/admin/users/listusers/listusers.component';
 import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { rolebaseGuard } from './core/guards/rolebase.guard';
+import { loginGuard } from './core/guards/login.guard';
 
 export const routes: Routes = [
-  { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
+  { path: 'auth',
+    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
+    canActivate: [loginGuard]},
   {
     path:'manage-users',
     component:ListusersComponent,
@@ -17,7 +20,8 @@ export const routes: Routes = [
   
   {
     path: '',
-    redirectTo: '/auth/login',  
+    redirectTo: '/auth/login', 
+     
     pathMatch: 'full'
   },
   {

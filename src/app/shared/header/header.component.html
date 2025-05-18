@@ -2,22 +2,22 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer mode="over" [opened]="false" class="sidenav" *ngIf="isSmallScreen">
     <button mat-button routerLink="/dashboard" (click)="drawer.close()">
-      <mat-icon>dashboard</mat-icon> Dashboard
+      <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
     </button>
     <button mat-button routerLink="/items" (click)="drawer.close()">
-      <mat-icon>view_list</mat-icon> Items
+      <mat-icon>view_list</mat-icon> {{'Items'|translate}}
     </button>
     <button mat-button routerLink="/interests" (click)="drawer.close()">
-      <mat-icon>favorite</mat-icon> Interests
+      <mat-icon>favorite</mat-icon> {{'Interests'|translate}}
     </button>
     <button *ngIf="isAdmin" mat-button routerLink="/manage-users" (click)="drawer.close()">
-      <mat-icon>group</mat-icon> Manage Users
+      <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
     </button>
     <button mat-button routerLink="/profile" (click)="drawer.close()">
-      <mat-icon>person</mat-icon> Profile
+      <mat-icon>person</mat-icon> {{'Profile'|translate}}
     </button>
     <button mat-button color="warn" (click)="logout(); drawer.close()">
-      <mat-icon>logout</mat-icon> Logout
+      <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
     </button>
   </mat-sidenav>
 
@@ -26,28 +26,37 @@
       <button *ngIf="isSmallScreen" mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="app-title">Community Item Sharing</span>
+      <span class="app-title">{{ 'COMMUNITY_ITEM_SHARING' | translate }}</span>
 
       <span class="spacer"></span>
 
       <ng-container *ngIf="!isSmallScreen">
         <button mat-raised-button color="accent" routerLink="/dashboard">
-          <mat-icon>dashboard</mat-icon> Dashboard
+          <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
         </button>
         <button mat-raised-button color="accent" routerLink="/items">
-          <mat-icon>view_list</mat-icon> Items
+          <mat-icon>view_list</mat-icon> {{'Items'|translate}}
         </button>
         <button mat-raised-button color="accent" routerLink="/interests">
-          <mat-icon>favorite</mat-icon> Interests
+          <mat-icon>favorite</mat-icon> {{'Interests'|translate}}
         </button>
         <button *ngIf="isAdmin" mat-raised-button color="accent" routerLink="/manage-users">
-          <mat-icon>group</mat-icon> Manage Users
+          <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
         </button>
         <button mat-raised-button color="accent" routerLink="/profile">
-          <mat-icon>person</mat-icon> Profile
+          <mat-icon>person</mat-icon> {{'Profile'|translate}}
         </button>
+        <mat-menu #langMenu="matMenu">
+  <button mat-menu-item (click)="changeLanguage('en')">English</button>
+  <button mat-menu-item (click)="changeLanguage('hi')">हिंदी</button>
+</mat-menu>
+
+      <button mat-icon-button [matMenuTriggerFor]="langMenu">
+        <mat-icon>language</mat-icon>
+      </button>
+
         <button mat-raised-button color="warn" (click)="logout()">
-          <mat-icon>logout</mat-icon> Logout
+          <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
         </button>
       </ng-container>
     </mat-toolbar>
