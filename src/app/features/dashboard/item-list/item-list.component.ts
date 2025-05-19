@@ -34,6 +34,16 @@ export class ItemListComponent {
   pageSize = 5;
   totalItems = 0;
   loading = true;
+  columnHeaders = {
+    id: 'TABLE.ID',
+    type: 'TABLE.TYPE',
+    title: 'TABLE.TITLE',
+    description: 'TABLE.DESCRIPTION',
+    location: 'TABLE.LOCATION',
+    imageUrl: 'TABLE.IMAGE',
+    status: 'TABLE.STATUS',
+    actions: 'TABLE.ACTIONS'
+  };
 
   constructor(private itemService: ItemService) {}
 

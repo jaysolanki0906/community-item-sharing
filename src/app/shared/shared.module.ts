@@ -41,7 +41,7 @@ import { HttpClientModule } from '@angular/common/http';
   FormsModule,
   MatPaginatorModule,
   MatMenuModule,
-  TranslateModule
+  TranslateModule,
   ],
   exports:[HeaderComponent,
     TitleCasePipe,

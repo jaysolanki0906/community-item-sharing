@@ -1,19 +1,24 @@
 <div class="main-content">
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer mode="over" [opened]="false" class="sidenav" *ngIf="isSmallScreen">
-    <button mat-button routerLink="/dashboard" (click)="drawer.close()">
+    <button mat-button routerLink="/dashboard" routerLinkActive="active" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
       <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
     </button>
-    <button mat-button routerLink="/items" (click)="drawer.close()">
+    <button mat-button routerLink="/items" routerLinkActive="active" 
+        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
       <mat-icon>view_list</mat-icon> {{'Items'|translate}}
     </button>
-    <button mat-button routerLink="/interests" (click)="drawer.close()">
+    <button mat-button routerLink="/interests" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }" (click)="drawer.close()">
       <mat-icon>favorite</mat-icon> {{'Interests'|translate}}
     </button>
-    <button *ngIf="isAdmin" mat-button routerLink="/manage-users" (click)="drawer.close()">
+    <button *ngIf="isAdmin" mat-button routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/manage-users" (click)="drawer.close()">
       <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
     </button>
-    <button mat-button routerLink="/profile" (click)="drawer.close()">
+    <button mat-button routerLink="/profile" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
       <mat-icon>person</mat-icon> {{'Profile'|translate}}
     </button>
     <mat-menu #langMenu="matMenu">
@@ -23,7 +28,7 @@
       <button mat-icon-button [matMenuTriggerFor]="langMenu">
         <mat-icon>language</mat-icon> Select language
       </button>
-    <button mat-button color="warn" (click)="logout(); drawer.close()">
+    <button mat-button color="warn" routerLinkActive="active" (click)="logout(); drawer.close()">
       <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
     </button>
   </mat-sidenav>
@@ -38,19 +43,28 @@
       <span class="spacer"></span>
 
       <ng-container *ngIf="!isSmallScreen">
-        <button mat-raised-button color="accent" routerLink="/dashboard">
+        <button mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/dashboard">
           <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
         </button>
-        <button mat-raised-button color="accent" routerLink="/items">
+        <button mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/items">
           <mat-icon>view_list</mat-icon> {{'Items'|translate}}
         </button>
-        <button mat-raised-button color="accent" routerLink="/interests">
+        <button mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false}" routerLink="/interests">
           <mat-icon>favorite</mat-icon> {{'Interests'|translate}}
         </button>
-        <button *ngIf="isAdmin" mat-raised-button color="accent" routerLink="/manage-users">
+        <button *ngIf="isAdmin" mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/manage-users">
           <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
         </button>
-        <button mat-raised-button color="accent" routerLink="/profile">
+        <button *ngIf="isAdmin" mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/rolesandpermission">
+          <mat-icon>group</mat-icon> {{'Roles Permission'|translate}}
+        </button>
+        <button mat-raised-button color="accent" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" routerLink="/profile">
           <mat-icon>person</mat-icon> {{'Profile'|translate}}
         </button>
         <mat-menu #langMenu="matMenu">
@@ -58,11 +72,11 @@
   <button mat-menu-item (click)="changeLanguage('hi')">हिंदी</button>
 </mat-menu>
 
-      <button mat-icon-button [matMenuTriggerFor]="langMenu">
+      <button mat-icon-button routerLinkActive="active" [matMenuTriggerFor]="langMenu">
         <mat-icon>language</mat-icon>
       </button>
 
-        <button mat-raised-button color="warn" (click)="logout()">
+        <button mat-raised-button routerLinkActive="active" color="warn" (click)="logout()">
           <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
         </button>
       </ng-container>

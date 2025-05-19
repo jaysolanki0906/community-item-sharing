@@ -3,8 +3,6 @@ import { Item } from '../../../core/models/item.model';
 import { ItemService } from '../../../core/services/item.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.component';
-import { HttpResponse } from '@angular/common/http';
-
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,18 +15,14 @@ export class MyitemsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
+
   selectedType: string = 'LOST';
   searchText: string = '';
+
   totalItems: number = 0;
   pageSize: number = 5;
   pageIndex: number = 0;
   isLoading: boolean = true;
-
-  constructor(private itemService: ItemService, private dialog: MatDialog) {}
-
-  ngOnInit(): void {
-    this.fetchItems();
-  }
 
   myFilterOptions = [
     { label: 'Lost', value: 'LOST' },
@@ -37,14 +31,30 @@ export class MyitemsComponent implements OnInit {
     { label: 'My Items', value: 'MY_ITEMS' },
     { label: 'Shared By Me', value: 'SHARED' }
   ];
+  columnHeaders = {
+    id: 'TABLE.ID',
+    type: 'TABLE.TYPE',
+    title: 'TABLE.TITLE',
+    description: 'TABLE.DESCRIPTION',
+    location: 'TABLE.LOCATION',
+    imageUrl: 'TABLE.IMAGE',
+    status: 'TABLE.STATUS',
+    actions: 'TABLE.ACTIONS'
+  };
+
+  constructor(private itemService: ItemService, private dialog: MatDialog) {}
+
+  ngOnInit(): void {
+    this.fetchItems();
+  }
 
   fetchItems(): void {
     const page = this.pageIndex + 1;
     const limit = this.pageSize;
-    this.isLoading = true;
     const type = this.selectedType;
     const status = 'ACTIVE';
     const search = this.searchText;
+    this.isLoading = true;
 
     const callback = {
       next: (response: { data: Item[], total: number }) => {
@@ -70,6 +80,11 @@ export class MyitemsComponent implements OnInit {
 
   applyFilter(selectedType: string): void {
     this.selectedType = selectedType;
+    this.pageIndex = 0;
+    this.fetchItems();
+  }
+
+  onSearchChange(): void {
     this.pageIndex = 0;
     this.fetchItems();
   }
@@ -106,6 +121,40 @@ export class MyitemsComponent implements OnInit {
     });
   }
 
+  viewItem(item: Item): void {
+    this.dialog.open(ItemFormDialogComponent, {
+      width: '500px',
+      data: { item: item, mode: 'view' }
+    });
+  }
+
+  deleteItem(id: string): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.itemService.deleteItem(id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'The item has been deleted.', 'success').then(() => {
+              this.fetchItems();
+            });
+          },
+          error: (error) => {
+            console.error('Delete error:', error);
+            this.isLoading = false;
+            Swal.fire('Error', 'Failed to delete item.', 'error');
+          }
+        });
+      }
+    });
+  }
+
   handleAction(event: { action: string, row: any }) {
     switch (event.action) {
       case 'edit':
@@ -119,39 +168,4 @@ export class MyitemsComponent implements OnInit {
         break;
     }
   }
-
-  viewItem(item: Item): void {
-    this.dialog.open(ItemFormDialogComponent, {
-      width: '500px',
-      data: { item: item, mode: 'view' }
-    });
-  }
-
-  deleteItem(id: string): void {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this item?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.itemService.deleteItem(id).subscribe({
-  next: () => {
-    Swal.fire('Deleted!', 'The item has been deleted.', 'success').then(() => {
-      this.fetchItems();
-    });
-  },
-  error: (error) => {
-    console.error('Delete error:', error);
-    this.isLoading = false;
-    Swal.fire('Error', 'Failed to delete item.', 'error');
-  }
-});
-    }
-  });
-}
-
 }

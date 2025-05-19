@@ -1,9 +1,23 @@
 {
   "DASHBOARD": "Dashboard",
-  "ITEMS": "Items",
-  "INTERESTS": "Interests",
-  "MANAGE_USERS": "Manage Users",
-  "PROFILE": "Profile",
+  "Items": "Items",
+  "Interests": "Interests",
+  "Manage Users": "Manage Users",
+  "Profile": "Profile",
   "LOGOUT": "Logout",
-  "COMMUNITY_ITEM_SHARING": "Community Item Sharing"
+  "COMMUNITY_ITEM_SHARING": "Community Item Sharing",
+  "Roles Permission": "Roles Permission",
+  "TABLE": {
+    "ID": "ID",
+    "TYPE": "Type",
+    "TITLE": "Title",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Location",
+    "IMAGE": "Image",
+    "STATUS": "Status",
+    "ACTIONS": "Actions",
+    "name": "Name",
+  "email": "Email",
+  "role": "Role"
+  }
 }

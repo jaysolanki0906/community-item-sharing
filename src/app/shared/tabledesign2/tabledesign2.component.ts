@@ -19,12 +19,15 @@ export class Tabledesign2Component {
   @Input() actionButtons: { label: string, icon?: string, type: string }[] = [];
   @Input() Loading = false;
   @Input() filterOptions: any[] = [];
+@Input() columnHeaders: { [key: string]: string } = {};
+
 
   @Output() actionClicked = new EventEmitter<{ action: string, row: any }>();
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() filterSelected = new EventEmitter<string>();
 
   selectedFilter = 'LOST';
+  
 
   constructor(private dialog: MatDialog) {}
 

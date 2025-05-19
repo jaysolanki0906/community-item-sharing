@@ -28,6 +28,14 @@ export class ListusersComponent {
   totalItems: number = 0;
   loading: boolean = true;
 
+  columnHeaders = {
+    id: 'ID',
+    actions: 'ACTIONS',
+    name: 'NAME',
+    email: 'EMAIL',
+    role: 'ROLE'
+  };
+
   actionButtons = [
     { label: 'View', icon: 'visibility', type: 'view' },
     { label: 'Update', icon: 'edit', type: 'update' },

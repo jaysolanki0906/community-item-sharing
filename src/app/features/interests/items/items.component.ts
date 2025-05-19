@@ -41,6 +41,17 @@ export class ItemsComponent implements OnInit {
   { label: 'View Interested', icon: 'visibility', type: 'viewInterested', showIfAdmin: true }
 ];
 
+columnHeaders = {
+    id: 'TABLE.ID',
+    type: 'TABLE.TYPE',
+    title: 'TABLE.TITLE',
+    description: 'TABLE.DESCRIPTION',
+    location: 'TABLE.LOCATION',
+    imageUrl: 'TABLE.IMAGE',
+    status: 'TABLE.STATUS',
+    actions: 'TABLE.ACTIONS'
+  };
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }

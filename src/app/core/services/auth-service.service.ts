@@ -11,7 +11,7 @@ export class AuthServiceService {
 
   constructor(private api: ApiServiceService, private router: Router,private permissionsService: NgxPermissionsService) {}
 setUserRole(role: string) {
-  this.permissionsService.loadPermissions([role]); // e.g. ['ADMIN']
+  this.permissionsService.loadPermissions([role]); 
 }
 
 clearPermissions() {

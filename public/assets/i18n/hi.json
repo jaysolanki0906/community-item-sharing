@@ -1,9 +1,23 @@
 {
   "DASHBOARD": "डैशबोर्ड",
-  "ITEMS": "आइटम्स",
-  "INTERESTS": "रुचियां",
-  "MANAGE_USERS": "उपयोगकर्ता प्रबंधन",
-  "PROFILE": "प्रोफ़ाइल",
+  "Items": "आइटम्स",
+  "Interests": "रुचियां",
+  "Manage Users": "उपयोगकर्ता प्रबंधन",
+  "Profile": "प्रोफ़ाइल",
   "LOGOUT": "लॉग आउट",
-  "COMMUNITY_ITEM_SHARING": "सामुदायिक वस्तु साझाकरण"
+  "COMMUNITY_ITEM_SHARING": "सामुदायिक वस्तु साझाकरण",
+  "Roles Permission": "भूमिकाएँ और अनुमतियाँ",
+  "TABLE": {
+    "ID": "आईडी",
+    "TYPE": "प्रकार",
+    "TITLE": "शीर्षक",
+    "DESCRIPTION": "विवरण",
+    "LOCATION": "स्थान",
+    "IMAGE": "छवि",
+    "STATUS": "स्थिति",
+    "ACTIONS": "क्रियाएं",
+    "name": "नाम",
+  "email": "ईमेल",
+  "role": "भूमिका"
+  }
 }

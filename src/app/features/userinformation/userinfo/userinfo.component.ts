@@ -25,6 +25,8 @@ export class UserinfoComponent {
   //   };
   // }
 
+
+  
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe({
       next: (data) => {
