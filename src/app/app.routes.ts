@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { CanMatchFn, Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { authGuard } from './core/guards/auth.guard';
@@ -7,6 +7,13 @@ import { ListusersComponent } from './features/admin/users/listusers/listusers.c
 import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { rolebaseGuard } from './core/guards/rolebase.guard';
 import { loginGuard } from './core/guards/login.guard';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { inject } from '@angular/core';
+
+const roleGuard: CanMatchFn = () => {
+  const permissionsService = inject(NgxPermissionsService);
+  return permissionsService.hasPermission('ADMIN');
+};
 
 export const routes: Routes = [
   { path: 'auth',

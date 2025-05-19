@@ -2,14 +2,21 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiServiceService } from './api-service.service';
 import { Observable } from 'rxjs';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
 
-  constructor(private api: ApiServiceService, private router: Router) {}
+  constructor(private api: ApiServiceService, private router: Router,private permissionsService: NgxPermissionsService) {}
+setUserRole(role: string) {
+  this.permissionsService.loadPermissions([role]); // e.g. ['ADMIN']
+}
 
+clearPermissions() {
+  this.permissionsService.flushPermissions();
+}
   login(credentials: { email: string; password: string }) {
     return this.api.post('auth/login', credentials);
   }
@@ -31,7 +38,6 @@ getPaginatedUsers(page: number, limit: number): Observable<any> {
   return this.api.get<any>(`users?page=${page}&limit=${limit}`);
 }
 
-
 getUserById(id: string) {
   return this.api.get(`users/${id}`);
 }
@@ -46,5 +52,4 @@ updateUser(id: string, data: any) {
     const url = `users/${userId}/status`;
     return this.api.patch(url, { isActive: isActive });
   }
-  
 }

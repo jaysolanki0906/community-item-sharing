@@ -16,6 +16,13 @@
     <button mat-button routerLink="/profile" (click)="drawer.close()">
       <mat-icon>person</mat-icon> {{'Profile'|translate}}
     </button>
+    <mat-menu #langMenu="matMenu">
+  <button mat-menu-item (click)="changeLanguage('en');drawer.close()">English</button>
+  <button mat-menu-item (click)="changeLanguage('hi');drawer.close()">हिंदी</button>
+</mat-menu>
+      <button mat-icon-button [matMenuTriggerFor]="langMenu">
+        <mat-icon>language</mat-icon> Select language
+      </button>
     <button mat-button color="warn" (click)="logout(); drawer.close()">
       <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
     </button>

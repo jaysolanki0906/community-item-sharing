@@ -24,12 +24,14 @@ export class HeaderComponent implements OnInit {
   transalte:TranslateService=inject(TranslateService);
   constructor(private authService: AuthServiceService, private router: Router,private breakpointObserver:BreakpointObserver,private translate: TranslateService) 
   {
-    this.translate.setDefaultLang('en');
-  this.translate.use('en');
+    const savedLang = localStorage.getItem('lang') || 'en';
+    this.translate.setDefaultLang(savedLang);
+    this.translate.use(savedLang);
   }
   changeLanguage(lang: string) {
-  this.translate.use(lang);
-}
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang); 
+  }
 
   ngOnInit(): void {
     const role = localStorage.getItem('role');
@@ -47,7 +49,7 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    localStorage.clear(); 
+    localStorage.clear();
     this.router.navigate(['/auth/login']);
     console.log('User logged out successfully.');
   }
