@@ -1,38 +1,44 @@
-import { inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-  HttpInterceptorFn,
+  HttpInterceptor,
   HttpRequest,
-  HttpHandlerFn,
+  HttpHandler,
   HttpEvent,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-export const HttpInspectorService: HttpInterceptorFn = (
-  req: HttpRequest<any>,
-  next: HttpHandlerFn
-): Observable<HttpEvent<any>> => {
-  const token = localStorage.getItem('token');
-  const router = inject(Router);
+@Injectable()
+export class HttpInspectorService implements HttpInterceptor {
+  constructor(private router: Router) {}
 
-  if (token && req.url.includes('/auth/login')) {
-    router.navigate(['/dashboard']);
-    return new Observable<HttpEvent<any>>();
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
+
+    if (token && req.url.includes('/auth/login')) {
+      this.router.navigate(['/dashboard']);
+      return new Observable<HttpEvent<any>>();
+    }
+
+    const cloned = token
+      ? req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${token}`)
+        })
+      : req;
+
+    return next.handle(cloned).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.router.navigate(['/notfound']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
-  const cloned = token
-    ? req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
-      })
-    : req;
-
-  return next(cloned).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 404) {
-        router.navigate(['/notfound']);
-      }
-      return throwError(() => error);
-    })
-  );
-};
+}

@@ -63,7 +63,7 @@ export class MyitemsComponent implements OnInit {
         this.totalItems = response.total;
         this.isLoading = false;
       },
-      error: (err: any) => {
+      error: (err:any) => {
         console.error(err);
         this.isLoading = false;
       }

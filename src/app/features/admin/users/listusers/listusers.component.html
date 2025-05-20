@@ -1,5 +1,11 @@
 <app-header></app-header>
 
+<div style="text-align: right;">
+<button mat-raised-button color="primary" (click)="goToRolesPermissions()">
+  Manage Roles & Permissions
+</button>
+</div>
+
 <app-tabledesign2
   [dataSource]="users"
   [displayedColumns]="displayedColumns"

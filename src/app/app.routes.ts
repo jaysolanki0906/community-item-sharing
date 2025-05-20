@@ -1,62 +1,70 @@
-import { CanMatchFn, Routes } from '@angular/router';
-import { LoginComponent } from './features/auth/login/login.component';
-import { RegisterComponent } from './features/auth/register/register.component';
+import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import {  } from './features/dashboard/item-list/item-list.component';
-import { ListusersComponent } from './features/admin/users/listusers/listusers.component';
-import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { rolebaseGuard } from './core/guards/rolebase.guard';
 import { loginGuard } from './core/guards/login.guard';
-import { NgxPermissionsService } from 'ngx-permissions';
-import { inject } from '@angular/core';
-
-const roleGuard: CanMatchFn = () => {
-  const permissionsService = inject(NgxPermissionsService);
-  return permissionsService.hasPermission('ADMIN');
-};
+import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
-  { path: 'auth',
-    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
-    canActivate: [loginGuard]},
-  {
-    path:'manage-users',
-    component:ListusersComponent,
-    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
-  },
-  
   {
     path: '',
-    redirectTo: '/auth/login', 
-     
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
-    path: 'profile', 
-    loadChildren: () => import('./features/userinformation/userinformation.module').then(m => m.UserinformationModule),
-    canActivate: [authGuard]
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [loginGuard]
   },
   {
-    path:'interests',
-    loadChildren: () => import('./features/interests/interests.module').then(m => m.InterestsModule),
-    canActivate: [authGuard]
+    path: 'register',
+    component: RegisterComponent
   },
   {
-    path:'interested-users',
-    component:InterestedUsersComponent,
-    canActivate: [authGuard]
+    path: 'manage-users',
+    loadChildren: () =>
+      import('./features/admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [authGuard, rolebaseGuard],
   },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('./features/userinformation/userinformation.module').then(
+        (m) => m.UserinformationModule
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'interests',
+    loadChildren: () =>
+      import('./features/interests/interests.module').then(
+        (m) => m.InterestsModule
+      ),
+    canActivate: [authGuard],
+  },
+  
   {
     path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule),
-    canActivate: [authGuard]
+    loadChildren: () =>
+      import('./features/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
+      ),
+    canActivate: [authGuard],
   },
   {
-  path: 'items',
-  loadChildren: () => import('./features/items/items.module').then(m => m.ItemsModule),
-  canActivate: [authGuard]
-},
-  { path: '**',
-    loadChildren: () => import('./features/notfound/notfound.module').then(m => m.NotfoundModule) 
+    path: 'items',
+    loadChildren: () =>
+      import('./features/items/items.module').then((m) => m.ItemsModule),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'not-found',
+    loadChildren: () =>
+      import('./features/notfound/notfound.module').then((m) => m.NotfoundModule),
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found',
   }
 ];

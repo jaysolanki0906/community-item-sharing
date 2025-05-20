@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataTableComponent } from './data-table.component';
+import { RolepermissionComponent } from './rolepermission.component';
 
-describe('DataTableComponent', () => {
-  let component: DataTableComponent;
-  let fixture: ComponentFixture<DataTableComponent>;
+describe('RolepermissionComponent', () => {
+  let component: RolepermissionComponent;
+  let fixture: ComponentFixture<RolepermissionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataTableComponent]
+      imports: [RolepermissionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DataTableComponent);
+    fixture = TestBed.createComponent(RolepermissionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

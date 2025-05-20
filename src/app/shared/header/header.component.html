@@ -59,10 +59,7 @@
         [routerLinkActiveOptions]="{ exact: true }" routerLink="/manage-users">
           <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
         </button>
-        <button *ngIf="isAdmin" mat-raised-button color="accent" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" routerLink="/rolesandpermission">
-          <mat-icon>group</mat-icon> {{'Roles Permission'|translate}}
-        </button>
+        
         <button mat-raised-button color="accent" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }" routerLink="/profile">
           <mat-icon>person</mat-icon> {{'Profile'|translate}}

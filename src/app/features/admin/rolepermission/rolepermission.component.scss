@@ -1,0 +1,37 @@
+.role-container {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+
+  .role-list {
+    flex: 1;
+    max-width: 300px;
+    border-right: 1px solid #ddd;
+    padding-right: 1rem;
+
+    .selected {
+      background-color: #c8e6c9;
+    }
+
+    mat-list-item {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .role-details {
+    flex: 3;
+    padding-left: 1rem;
+
+    h4 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .permission-item {
+      margin-left: 1rem;
+    }
+  }
+}

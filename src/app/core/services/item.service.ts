@@ -76,7 +76,6 @@ export class ItemService {
   return this.api.delete<any>(`items/${id}`);
 }
 
-
   getAllItems(): Observable<{ data: Item[]; total: number }> {
     return this.api.get<{ data: Item[]; total: number }>('items');
   }

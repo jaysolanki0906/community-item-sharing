@@ -14,7 +14,7 @@ export class Tabledesign2Component {
   @Input() displayedColumns: string[] = [];
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;
-  @Input() pageIndex: number = 0; // NEW
+  @Input() pageIndex: number = 0; 
   @Input() showFilterMenu = false;
   @Input() actionButtons: { label: string, icon?: string, type: string }[] = [];
   @Input() Loading = false;

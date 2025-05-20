@@ -126,13 +126,13 @@ columnHeaders = {
   }
 
   viewInterested(itemId: string): void {
-    localStorage.setItem('selectedItemId', itemId);
-    this.itemService.getItemInterests(itemId).subscribe({
-      next: (response) => {
-        this.router.navigate(['/interested-users'], {
-          state: { users: response, itemId: itemId }
-        });
-      },
+  localStorage.setItem('selectedItemId', itemId);
+  this.itemService.getItemInterests(itemId).subscribe({
+    next: (response) => {
+      this.router.navigate(['/interests/interested-users'], {
+        state: { users: response, itemId: itemId }
+      });
+    },
       error: (error) => {
         console.error('Failed to fetch interests:', error);
       }

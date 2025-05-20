@@ -3,10 +3,16 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
-  standalone: false,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    HttpClientModule
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'], // Fixed typo: `styleUrl` -> `styleUrls`
 })

@@ -13,6 +13,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { Tabledesign2Component } from "../../../../shared/tabledesign2/tabledesign2.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listusers',
@@ -42,7 +43,9 @@ export class ListusersComponent {
     { label: 'Toggle Status', icon: 'toggle_on', type: 'toggleStatus' }
   ];
 
-  constructor(private authService: AuthServiceService, private dialog: MatDialog,private cdr: ChangeDetectorRef) {}
+  constructor(private authService: AuthServiceService, private dialog: MatDialog,private cdr: ChangeDetectorRef,private router: Router
+
+  ) {}
 
   ngOnInit() {
     this.fetchItems();
@@ -86,6 +89,9 @@ export class ListusersComponent {
         break;
     }
   }
+  goToRolesPermissions(): void {
+  this.router.navigate(['/manage-users/rolesandpermission']);
+}
 
   toggleStatus(user: User): void {
   const updatedStatus = !user.isActive;

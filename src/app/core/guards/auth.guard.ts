@@ -1,8 +1,11 @@
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthServiceService } from '../services/auth-service.service'; // adjust path based on your project
+import { AuthServiceService } from '../services/auth-service.service';
 
-export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const authGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
   const router = inject(Router);
   const authService = inject(AuthServiceService);
   const token = localStorage.getItem('token');
@@ -10,19 +13,18 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
 
   const publicRoutes = ['/auth/login', '/auth/register'];
 
-
-  if (publicRoutes.includes(requestedUrl)) {
+  if (publicRoutes.some((path) => requestedUrl.startsWith(path))) {
     if (token) {
       router.navigate(['/dashboard']);
       return false;
     }
     return true;
   }
+
   if (!token) {
     router.navigate(['/auth/login']);
     return false;
   }
-
 
   const allowedRoles = route.data['roles'] as string[];
 
@@ -30,11 +32,10 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
     return true;
   }
 
-  // if (authService.isAuthorized(allowedRoles)) {
-  //   return true;
-  // }
+  if (authService.isAuthorized(allowedRoles)) {
+    return true;
+  }
 
-  
-  router.navigate(['/unauthorized']); // Or fallback to /auth/login
+  router.navigate(['/unauthorized']);
   return false;
 };

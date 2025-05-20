@@ -21,6 +21,13 @@ clearPermissions() {
     return this.api.post('auth/login', credentials);
   }
 
+  isAuthorized(allowedRoles: string[]): boolean {
+  const userRole = localStorage.getItem('role'); 
+
+  return allowedRoles.includes(userRole || '');
+}
+
+
   register(data: any) {
     return this.api.post('auth/register', data);
   }
@@ -52,4 +59,5 @@ updateUser(id: string, data: any) {
     const url = `users/${userId}/status`;
     return this.api.patch(url, { isActive: isActive });
   }
+  
 }
