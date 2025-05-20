@@ -5,8 +5,6 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
 
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,7 +12,6 @@ import { AuthServiceService } from '../../../core/services/auth-service.service'
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule
   ],
   styleUrls: ['./login.component.scss']
 })

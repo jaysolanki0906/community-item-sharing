@@ -10,11 +10,7 @@
 <app-tabledesign2
   [dataSource]="filteredItems"
   [displayedColumns]="['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions']"
-  [actionButtons]="[
-    { label: 'Edit', icon: 'edit', type: 'edit' },
-    { label: 'Delete', icon: 'delete', type: 'delete' },
-    { label: 'View', icon: 'visibility', type: 'view' }
-  ]"
+  [actionButtons]="permittedActionButtons"
   [totalItems]="totalItems"
   [pageSize]="pageSize"
   [showFilterMenu]="true"

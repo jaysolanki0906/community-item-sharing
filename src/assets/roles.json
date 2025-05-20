@@ -1,0 +1,82 @@
+[
+  {
+    "title":"ADMIN",
+    "auth_items": {
+      "items": {
+        "items_create": true,
+        "items_edit": true,
+        "items_delete": true,
+        "items_view": true,
+        "mark_interest": true,
+        "view_interest": true
+      },
+      "manage_user": {
+        "manage_user_view": true,
+        "manage_user_edit": true,
+        "mark_active": true,
+        "mark_inactive": true
+      },
+      "user": {
+        "user_create": true,
+        "user_view": true,
+        "user_edit": true,
+        "user_delete": true,
+        "user_resendPassword": true
+      }
+    }
+  },
+  {
+    "title": "USER",
+    "auth_items": {
+      "items": {
+        "items_create": true,
+        "items_edit": true,
+        "items_delete": false,
+        "items_view": true,
+        "mark_interest": true,
+        "view_interest": false
+      },
+      "manage_user": {
+        "manage_user_view": true,
+        "manage_user_edit": false,
+        "mark_active": false,
+        "mark_inactive": false
+      },
+      "user": {
+        "user_create": false,
+        "user_view": true,
+        "user_edit": true,
+        "user_delete": false,
+        "user_resendPassword": true
+      }
+    }
+  },
+  {
+    "id": "c3e7cfd2-80e2-4916-91ee-6657f5b8d9e7",
+    "org_id": "aca5341c-391d-44f8-bf6f-2ec8ee402c00",
+    "title": "Guest",
+    "auth_items": {
+      "items": {
+        "items_create": false,
+        "items_edit": false,
+        "items_delete": false,
+        "items_view": true,
+        "mark_interest": true,
+        "view_interest": true
+      },
+      "manage_user": {
+        "manage_user_view": false,
+        "manage_user_edit": false,
+        "mark_active": false,
+        "mark_inactive": false
+      },
+      "user": {
+        "user_create": false,
+        "user_view": false,
+        "user_edit": false,
+        "user_delete": false,
+        "user_resendPassword": false
+      }
+    }
+  }
+]

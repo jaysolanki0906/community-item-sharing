@@ -1,19 +1,7 @@
 import { Component } from '@angular/core';
 import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/models/item.model';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
-import { HeaderComponent } from "../../../shared/header/header.component";
 import { PageEvent } from '@angular/material/paginator';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
 
 @Component({
   selector: 'app-item-list',
@@ -30,10 +18,10 @@ export class ItemListComponent {
   lostCount: number = 0;
   foundCount: number = 0;
   freeCount: number = 0;
-  currentPage = 1;
-  pageSize = 5;
-  totalItems = 0;
-  loading = true;
+  currentPage:number = 1;
+  pageSize:number = 5;
+  totalItems:number = 0;
+  loading:boolean = true;
   columnHeaders = {
     id: 'TABLE.ID',
     type: 'TABLE.TYPE',

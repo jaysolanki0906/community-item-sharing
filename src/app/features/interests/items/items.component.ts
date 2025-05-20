@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
-import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
+
 
 @Component({
   selector: 'app-items',

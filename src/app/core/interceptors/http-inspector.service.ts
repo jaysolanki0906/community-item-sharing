@@ -20,11 +20,6 @@ export class HttpInspectorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
 
-    if (token && req.url.includes('/auth/login')) {
-      this.router.navigate(['/dashboard']);
-      return new Observable<HttpEvent<any>>();
-    }
-
     const cloned = token
       ? req.clone({
           headers: req.headers.set('Authorization', `Bearer ${token}`)
@@ -33,9 +28,6 @@ export class HttpInspectorService implements HttpInterceptor {
 
     return next.handle(cloned).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          this.router.navigate(['/notfound']);
-        }
         return throwError(() => error);
       })
     );

@@ -96,7 +96,7 @@ export class ListusersComponent {
     }
   }
   goToRolesPermissions(): void {
-  this.router.navigate(['/manage-users/rolesandpermission']);
+  this.router.navigate(['/manage-users/roleandpermission']);
 }
 
   toggleStatus(user: User): void {

@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -11,10 +10,9 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule
   ],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'], // Fixed typo: `styleUrl` -> `styleUrls`
+  styleUrls: ['./register.component.scss'], 
 })
 export class RegisterComponent {
   registerForm: FormGroup;
@@ -33,28 +31,21 @@ export class RegisterComponent {
     });
   }
 
-  // Method to handle form submission
   onSubmit() {
     console.log("Register button clicked");
-    this.submitted = true; // Mark the form as submitted
-
-    // If the form is invalid, exit the function
+    this.submitted = true; 
     if (this.registerForm.invalid) {
       return;
     }
-
-    // Extract form data
     const formData = this.registerForm.value;
-
-    // Call the register method from the AuthServiceService
     this.authService.register(formData).subscribe({
       next: (response) => {
-        console.log('Registration successful:', response); // Log success response
-        this.router.navigate(['/login']); // Navigate to the login page
+        console.log('Registration successful:', response); 
+        this.router.navigate(['/login']); 
       },
       error: (error) => {
-        console.error('Registration failed:', error); // Log error response
-        alert(`Error: ${error.message}`); // Display error message to the user
+        console.error('Registration failed:', error); 
+        alert(`Error: ${error.message}`); 
       },
     });
   }

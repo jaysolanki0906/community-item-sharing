@@ -4,6 +4,7 @@ import { ItemService } from '../../../core/services/item.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.component';
 import Swal from 'sweetalert2';
+import { RolePermissionService } from '../../../core/services/role-permission.service';
 
 @Component({
   selector: 'app-myitems',
@@ -42,7 +43,9 @@ export class MyitemsComponent implements OnInit {
     actions: 'TABLE.ACTIONS'
   };
 
-  constructor(private itemService: ItemService, private dialog: MatDialog) {}
+  constructor(private itemService: ItemService, 
+    private dialog: MatDialog,
+  public rolePermissionService: RolePermissionService) {}
 
   ngOnInit(): void {
     this.fetchItems();
@@ -167,5 +170,20 @@ export class MyitemsComponent implements OnInit {
         this.viewItem(event.row);
         break;
     }
+  }
+  get permittedActionButtons() {
+    const actions = [];
+     
+    if (this.rolePermissionService.getPermission('items', 'items_edit')) {
+      actions.push({ label: 'Edit', icon: 'edit', type: 'edit' });
+    }
+    if (this.rolePermissionService.getPermission('items', 'items_delete')) {
+      actions.push({ label: 'Delete', icon: 'delete', type: 'delete' });
+    }
+    if (this.rolePermissionService.getPermission('items', 'items_view')) {
+      actions.push({ label: 'View', icon: 'visibility', type: 'view' });
+    }
+    console.log('Permitted actions:', actions);
+    return actions;
   }
 }
