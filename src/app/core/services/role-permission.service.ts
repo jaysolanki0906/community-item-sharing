@@ -1,4 +1,4 @@
-// src/app/core/services/role-permission.service.ts
+
 
 import { Injectable } from '@angular/core';
 
@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class RolePermissionService {
-  // Global roles array object
+
   public roles: any[] = [];
 
   constructor() {}

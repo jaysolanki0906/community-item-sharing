@@ -23,7 +23,7 @@ export class UserformComponent implements OnInit {
     private fb: FormBuilder,
     private api: ApiServiceService,  // Injecting the ApiService
     public dialogRef: MatDialogRef<UserformComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: { item: User, mode: string }
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +59,7 @@ export class UserformComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  updateUser(id: string, data: any) {
-    return this.api.patch(`users/${id}`, data);
+    updateUser(id: string, data: Partial<User>) {
+    return this.api.patch<User>(`users/${id}`, data);
   }
 }

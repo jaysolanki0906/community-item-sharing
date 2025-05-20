@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiServiceService } from './api-service.service';
 import { Observable } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,18 +40,18 @@ clearPermissions() {
   }
 
 getAllUsers() {
-  return this.api.get<any[]>('users');
+  return this.api.get<User[]>('users');
 }
-getPaginatedUsers(page: number, limit: number): Observable<any> {
-  return this.api.get<any>(`users?page=${page}&limit=${limit}`);
-}
-
-getUserById(id: string) {
-  return this.api.get(`users/${id}`);
+getPaginatedUsers(page: number, limit: number): Observable<{ data: User[], total: number }> {
+  return this.api.get<{ data: User[], total: number }>(`users?page=${page}&limit=${limit}`);
 }
 
-updateUser(id: string, data: any) {
-  return this.api.patch(`users/${id}`, data);
+getUserById(id: string): Observable<User> {
+  return this.api.get<User>(`users/${id}`);
+}
+
+updateUser(id: string, data: Partial<User>) {
+  return this.api.patch<User>(`users/${id}`, data);
 }
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');

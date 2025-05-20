@@ -24,7 +24,7 @@ import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2
 export class ItemsComponent implements OnInit {
   items: Item[] = [];
   interestedItems: string[] = [];
-  dataSource = new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<Item>();
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'imageUrl', 'status', 'actions'];
   interestedUsers: Interest[] = [];
   userRole: string = '';
@@ -62,7 +62,7 @@ columnHeaders = {
   this.fetchItems();
 }
 
-  handleAction(event: { action: string, row: any }) {
+  handleAction(event: { action: string, row: Item }) {
   if (event.action === 'interest') {
     this.markInterest(event.row.id);
   } else if (event.action === 'viewInterested' && this.userRole === 'admin') {
@@ -104,13 +104,12 @@ columnHeaders = {
     });
   }
   
-  onPageChange(event: any): void {
-    this.pageIndex = event.pageIndex; 
-    this.pageSize = event.pageSize; 
-    this.fetchItems(); 
-  }
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
+  this.pageIndex = event.pageIndex; 
+  this.pageSize = event.pageSize; 
+  this.fetchItems(); 
+}
   
-
   markInterest(itemId: string): void {
     if (!this.interestedItems.includes(itemId)) {
       this.interestService.showInterest(itemId).subscribe({

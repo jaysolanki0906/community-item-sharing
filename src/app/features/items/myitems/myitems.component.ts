@@ -89,11 +89,11 @@ export class MyitemsComponent implements OnInit {
     this.fetchItems();
   }
 
-  onPageChange(event: any): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.fetchItems();
-  }
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
+  this.pageIndex = event.pageIndex;
+  this.pageSize = event.pageSize;
+  this.fetchItems();
+}
 
   addItem(): void {
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {

@@ -72,7 +72,7 @@ export class ItemService {
     return this.api.patch<Item>(`items/${id}`, item);
   }
 
-  deleteItem(id: string): Observable<HttpResponse<any>> {
+  deleteItem(id: string): Observable<HttpResponse<Item>> {
   return this.api.delete<any>(`items/${id}`);
 }
 

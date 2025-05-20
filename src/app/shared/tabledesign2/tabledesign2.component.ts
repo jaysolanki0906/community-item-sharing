@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ImageDialogComponent } from '../image-dialog/image-dialog.component';
+import { Item } from '../../core/models/item.model';
 
 @Component({
   selector: 'app-tabledesign2',
@@ -10,7 +11,7 @@ import { ImageDialogComponent } from '../image-dialog/image-dialog.component';
   styleUrls: ['./tabledesign2.component.scss']
 })
 export class Tabledesign2Component {
-  @Input() dataSource: any[] = [];
+  @Input() dataSource: Item[] = [];
   @Input() displayedColumns: string[] = [];
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;
@@ -22,7 +23,7 @@ export class Tabledesign2Component {
 @Input() columnHeaders: { [key: string]: string } = {};
 
 
-  @Output() actionClicked = new EventEmitter<{ action: string, row: any }>();
+  @Output() actionClicked = new EventEmitter<{ action: string, row: Item }>();
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() filterSelected = new EventEmitter<string>();
 

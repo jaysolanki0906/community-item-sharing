@@ -69,7 +69,7 @@ export class ListusersComponent {
     this.fetchItems();
   }
 
-  handleAction(event: { action: string, row: User }): void {
+  handleAction(event: any): void {
     const user = event.row;
     switch (event.action) {
       case 'view':
