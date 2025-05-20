@@ -63,7 +63,7 @@ export class MyitemsComponent implements OnInit {
         this.totalItems = response.total;
         this.isLoading = false;
       },
-      error: (err:any) => {
+      error: (err: unknown) => {
         console.error(err);
         this.isLoading = false;
       }
@@ -155,7 +155,7 @@ export class MyitemsComponent implements OnInit {
     });
   }
 
-  handleAction(event: { action: string, row: any }) {
+  handleAction(event: { action: string, row: Item }) {
     switch (event.action) {
       case 'edit':
         this.editItem(event.row);

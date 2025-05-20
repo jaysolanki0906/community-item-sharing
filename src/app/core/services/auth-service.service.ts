@@ -36,7 +36,8 @@ clearPermissions() {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    this.router.navigate(['/auth/login']);
+    console.log('Logging out');
+    this.router.navigate(['login']);
   }
 
 getAllUsers() {

@@ -21,6 +21,14 @@ export class InterestedUsersComponent {
   loding = true;
   totalItems = 0;
   pageSize = 10;
+  columnHeaders = {
+  userId: 'User ID',
+  name: 'Name',
+  email: 'Email',
+  role: 'Role',
+  interestedOn: 'Interested On',
+  actions: 'Actions'
+};
 
   constructor(private router: Router, private interestService: InterestService) {
   const nav = this.router.getCurrentNavigation();

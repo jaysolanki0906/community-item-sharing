@@ -11,7 +11,7 @@ import { Item } from '../../core/models/item.model';
   styleUrls: ['./tabledesign2.component.scss']
 })
 export class Tabledesign2Component {
-  @Input() dataSource: Item[] = [];
+  @Input() dataSource: any[] = [];
   @Input() displayedColumns: string[] = [];
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;

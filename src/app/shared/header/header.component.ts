@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     localStorage.clear();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/login']);
     console.log('User logged out successfully.');
   }
 }

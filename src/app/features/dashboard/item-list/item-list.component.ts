@@ -79,7 +79,7 @@ export class ItemListComponent {
 
   onTypeChange(type: string): void {
     const allowedTypes: ('LOST' | 'FOUND' | 'FREE')[] = ['LOST', 'FOUND', 'FREE'];
-    if (allowedTypes.includes(type as any)) {
+    if (allowedTypes.includes(type as 'LOST' | 'FOUND' | 'FREE')) {
       this.selectedType = type as 'LOST' | 'FOUND' | 'FREE';
       this.loadItems();
     }

@@ -47,7 +47,6 @@ export class ItemService {
     );
   }
   
-
   getMyItems(
     page: number,
     limit: number,
@@ -63,7 +62,6 @@ export class ItemService {
     return this.api.get<{ data: Item[]; total: number }>('items/my', { params });
   }
   
-
   addItem(itemData: FormData) {
     return this.api.post<Item>('items', itemData);
   }
@@ -72,8 +70,8 @@ export class ItemService {
     return this.api.patch<Item>(`items/${id}`, item);
   }
 
-  deleteItem(id: string): Observable<HttpResponse<Item>> {
-  return this.api.delete<any>(`items/${id}`);
+deleteItem(id: string): Observable<void> {
+  return this.api.delete<void>(`items/${id}`);
 }
 
   getAllItems(): Observable<{ data: Item[]; total: number }> {
