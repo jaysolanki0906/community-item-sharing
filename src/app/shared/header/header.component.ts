@@ -1,13 +1,8 @@
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthServiceService } from '../../core/services/auth-service.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
-import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
+import { MatSidenav } from '@angular/material/sidenav';
+import { BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 

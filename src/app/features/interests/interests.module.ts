@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { InterestedUsersComponent } from './interested-users/interested-users.component';
 import { InterestsRoutingModule } from './interests-routing.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { InterestsRoutingModule } from './interests-routing.module';
     MatIconModule,
     MatTabsModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     SharedModule,
     InterestsRoutingModule
   ],

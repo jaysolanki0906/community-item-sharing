@@ -1,11 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/models/item.model';
 import { InterestService } from '../../../core/services/intrest.service';
 import { Interest } from '../../../core/models/interest.model';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
+import { RolePermissionService } from '../../../core/services/role-permission.service';
 
 
 @Component({
@@ -67,12 +72,14 @@ columnHeaders = {
     private itemService: ItemService,
     private interestService: InterestService,
     private router: Router,
+    private permissionService: RolePermissionService
   ) {
     this.userRole = (localStorage.getItem('role') || '').toLowerCase();
   }
 
   ngOnInit(): void {
     this.fetchItems();
+    this.permissionService.setRoleFromStorage(); 
   }
 
   fetchItems(): void {
@@ -104,6 +111,10 @@ columnHeaders = {
 }
   
   markInterest(itemId: string): void {
+    if (!this.permissionService.getPermission('items', 'mark_interest')) {
+    console.warn('User does not have permission to mark interest.');
+    return;
+  }
     if (!this.interestedItems.includes(itemId)) {
       this.interestService.showInterest(itemId).subscribe({
         next: () => {
@@ -118,6 +129,10 @@ columnHeaders = {
   }
 
   viewInterested(itemId: string): void {
+    if (!this.permissionService.getPermission('items', 'view_interest')) {
+    console.warn('User does not have permission to mark interest.');
+    return;
+  }
   localStorage.setItem('selectedItemId', itemId);
   this.itemService.getItemInterests(itemId).subscribe({
     next: (response) => {

@@ -91,10 +91,10 @@ export class RolePermissionService {
   console.log('Current role after setting:', this.currentRole);
   this.updateRoleAuth();
 }
-
-
   updateRoleAuth() {
     this.roleAuth = this.rolesMap[this.currentRole] || {};
+    const permissions = this.generatePermissions(this.roleAuth);
+    localStorage.setItem('permissions', JSON.stringify(permissions));
   }
 
   getRoles() {
@@ -115,10 +115,25 @@ export class RolePermissionService {
     this.updateRoleAuth();
   }
 
-  getPermission(resource: string, action: string): boolean {
-    return this.roleAuth[resource]?.[action] || false;
+  private generatePermissions(authItems: any): { [key: string]: string[] } {
+    const permissions: { [key: string]: string[] } = {};
+    for (const module of Object.keys(authItems)) {
+      permissions[module] = [];
+      for (const perm of Object.keys(authItems[module])) {
+        if (authItems[module][perm] === true) {
+          permissions[module].push(perm);
+        }
+      }
+    }
+    return permissions;
   }
 
+  getPermission(module: string, permission: string): boolean {
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '{}');
+  console.log('Permissions from localStorage:', permissions);
+  console.log('Module:', module);
+return permissions[module]?.includes(permission);
+}
   getRoles$() {
     return this.rolesSubject.asObservable();
   }
