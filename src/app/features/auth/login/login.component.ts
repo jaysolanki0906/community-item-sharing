@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
+import { RolePermissionService } from '../../../core/services/role-permission.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ import { AuthServiceService } from '../../../core/services/auth-service.service'
 export class LoginComponent {
   loginForm:FormGroup;
   submitted = false;
-  constructor(private fb:FormBuilder,private http: HttpClient,private router: Router,private authService: AuthServiceService )
+  constructor(private fb:FormBuilder,private http: HttpClient,private router: Router,private authService: AuthServiceService ,private rolePermissionService:RolePermissionService)
   {
     this.loginForm=this.fb.group({
       email:['',[Validators.required,Validators.email]],
@@ -35,6 +36,7 @@ export class LoginComponent {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.data.role);
+          this.rolePermissionService.setRoleFromStorage();
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

@@ -1,17 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableDataSource } from '@angular/material/table';
 import { ItemService } from '../../../core/services/item.service';
-import { HeaderComponent } from '../../../shared/header/header.component';
 import { Item } from '../../../core/models/item.model';
 import { InterestService } from '../../../core/services/intrest.service';
 import { Interest } from '../../../core/models/interest.model';
 import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
 
 

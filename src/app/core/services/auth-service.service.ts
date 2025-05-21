@@ -19,13 +19,11 @@ export class AuthServiceService {
     private permissionsService: NgxPermissionsService
   ) {}
 
-  // Store role in ngx-permissions
   setUserRole(role: string) {
     localStorage.setItem('role', role);
     this.permissionsService.loadPermissions([role]);
   }
 
-  // Clear role
   clearPermissions() {
     this.permissionsService.flushPermissions();
     localStorage.removeItem('role');

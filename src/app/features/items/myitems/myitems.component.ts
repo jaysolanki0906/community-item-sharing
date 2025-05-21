@@ -13,9 +13,12 @@ import { RolePermissionService } from '../../../core/services/role-permission.se
   standalone: false,
 })
 export class MyitemsComponent implements OnInit {
+  
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
+  actionButtons: any[] = [];
+  
 
   selectedType: string = 'LOST';
   searchText: string = '';
@@ -49,6 +52,7 @@ export class MyitemsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchItems();
+    this.setPermittedActionButtons();
   }
 
   fetchItems(): void {
@@ -171,7 +175,7 @@ export class MyitemsComponent implements OnInit {
         break;
     }
   }
-  get permittedActionButtons() {
+  setPermittedActionButtons():void {
     const actions = [];
      
     if (this.rolePermissionService.getPermission('items', 'items_edit')) {
@@ -183,7 +187,6 @@ export class MyitemsComponent implements OnInit {
     if (this.rolePermissionService.getPermission('items', 'items_view')) {
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
-    console.log('Permitted actions:', actions);
-    return actions;
+    this.actionButtons = actions;
   }
 }

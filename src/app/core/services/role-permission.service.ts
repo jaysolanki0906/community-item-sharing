@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs";
 
 const ROLES_DATA = [
   {
-    "title":"ADMIN",
+    "title": "ADMIN",
     "auth_items": {
       "items": {
         "items_create": true,
@@ -53,34 +53,6 @@ const ROLES_DATA = [
         "user_resendPassword": true
       }
     }
-  },
-  {
-    "id": "c3e7cfd2-80e2-4916-91ee-6657f5b8d9e7",
-    "org_id": "aca5341c-391d-44f8-bf6f-2ec8ee402c00",
-    "title": "Guest",
-    "auth_items": {
-      "items": {
-        "items_create": false,
-        "items_edit": false,
-        "items_delete": false,
-        "items_view": true,
-        "mark_interest": true,
-        "view_interest": true
-      },
-      "manage_user": {
-        "manage_user_view": false,
-        "manage_user_edit": false,
-        "mark_active": false,
-        "mark_inactive": false
-      },
-      "user": {
-        "user_create": false,
-        "user_view": false,
-        "user_edit": false,
-        "user_delete": false,
-        "user_resendPassword": false
-      }
-    }
   }
 ];
 
@@ -89,8 +61,8 @@ export class RolePermissionService {
   private rolesArray: any[] = [];
   private rolesMap: any = {};
   private rolesSubject = new BehaviorSubject<any[]>([]);
-  private currentRole: string = 'GUEST';
-  public roleAuth: any = {}; // <-- Store current role's permissions here
+  private currentRole: string = 'USER';
+  public roleAuth: any = {}; 
 
   constructor() {
     this.loadRoles();
@@ -104,29 +76,25 @@ export class RolePermissionService {
       this.rolesMap[role.title.toUpperCase()] = role.auth_items;
     }
     this.rolesSubject.next(this.rolesArray);
-
-    // Update roleAuth after loading roles
     this.updateRoleAuth();
   }
 
   setRoleFromStorage() {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        this.currentRole = (user.role || 'GUEST').toUpperCase();
-      } catch {
-        this.currentRole = 'GUEST';
-      }
-    } else {
-      this.currentRole = 'GUEST';
-    }
-    this.updateRoleAuth();
+  const storedRole = localStorage.getItem('role'); 
+  console.log('Stored role:', storedRole);
+  console.log('Current role before setting:', this.currentRole);
+  if (storedRole) {
+    this.currentRole = storedRole.toUpperCase(); 
+  } else {
+    this.currentRole = 'USER'; 
   }
+  console.log('Current role after setting:', this.currentRole);
+  this.updateRoleAuth();
+}
+
 
   updateRoleAuth() {
     this.roleAuth = this.rolesMap[this.currentRole] || {};
-    // (Optional) Debug: console.log('roleAuth updated:', this.roleAuth);
   }
 
   getRoles() {
@@ -148,7 +116,6 @@ export class RolePermissionService {
   }
 
   getPermission(resource: string, action: string): boolean {
-    // Use the stored roleAuth property for lookup
     return this.roleAuth[resource]?.[action] || false;
   }
 
