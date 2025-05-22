@@ -1,32 +1,37 @@
-<ng-container >
-<app-header />
-<div class="count-cards mat-responsive-table">
+<ng-container>
+  <app-header />
+  <div class="count-cards mat-responsive-table">
 
-  <mat-card class="count-card lost" (click)="onTypeChange('LOST')">
-    <div>Lost Items</div>
-    <div class="count">{{ lostCount }}</div>
-  </mat-card>
+    <mat-card class="count-card lost" (click)="onTypeChange('LOST')">
+      <div>Lost Items</div>
+      <div class="count">{{ lostCount }}</div>
+    </mat-card>
 
-  <mat-card class="count-card found" (click)="onTypeChange('FOUND')">
-    <div>Found Items</div>
-    <div class="count">{{ foundCount }}</div>
-  </mat-card>
+    <mat-card class="count-card found" (click)="onTypeChange('FOUND')">
+      <div>Found Items</div>
+      <div class="count">{{ foundCount }}</div>
+    </mat-card>
 
-  <mat-card class="count-card free" (click)="onTypeChange('FREE')">
-    <div>Free Items</div>
-    <div class="count">{{ freeCount }}</div>
-  </mat-card>
+    <mat-card class="count-card free" (click)="onTypeChange('FREE')">
+      <div>Free Items</div>
+      <div class="count">{{ freeCount }}</div>
+    </mat-card>
 
-</div>
+  </div>
 </ng-container>
 <app-tabledesign2
   [displayedColumns]="displayedColumns"
-  [dataSource]="filteredItems"
+  [dataSource]="items"
   [totalItems]="totalItems"
   [pageSize]="pageSize"
   [Loading]="loading"
   (filterSelected)="onTypeChange($event)"
   [filterOptions]="myFilterOptions"
   [columnHeaders]="columnHeaders"
-  >
+  (page)="onPageChange($event)" 
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [totalItems]="totalItems"
+  (pageChange)="onPageChange($event)"
+>
 </app-tabledesign2>

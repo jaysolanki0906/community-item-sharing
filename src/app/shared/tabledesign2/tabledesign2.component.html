@@ -28,11 +28,14 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'actions'">
-              <button *ngFor="let btn of actionButtons"
-                      mat-icon-button
-                      [color]="btn.type === 'delete' ? 'warn' : 'primary'"
-                      matTooltip="{{ btn.label }}"
-                      (click)="actionClicked.emit({ action: btn.type, row: element })">
+               <button *ngFor="let btn of actionButtons"
+          mat-icon-button
+          [color]="btn.type === 'delete' ? 'warn' : null"
+          matTooltip="{{ btn.label }}"
+          (click)="actionClicked.emit({ action: btn.type, row: element })"
+          [ngStyle]="btn.type === 'toggleStatus' 
+            ? { 'color': element.isActive ? 'green' : 'red' } 
+            : null">
                 <mat-icon>
       {{ btn.type === 'toggleStatus' ? (element.isActive ? 'toggle_on' : 'toggle_off') : (btn.icon || 'more_vert') }}
     </mat-icon>

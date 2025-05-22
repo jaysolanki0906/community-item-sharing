@@ -81,14 +81,11 @@ export class RolePermissionService {
 
   setRoleFromStorage() {
   const storedRole = localStorage.getItem('role'); 
-  console.log('Stored role:', storedRole);
-  console.log('Current role before setting:', this.currentRole);
   if (storedRole) {
     this.currentRole = storedRole.toUpperCase(); 
   } else {
     this.currentRole = 'USER'; 
   }
-  console.log('Current role after setting:', this.currentRole);
   this.updateRoleAuth();
 }
   updateRoleAuth() {
@@ -101,19 +98,12 @@ export class RolePermissionService {
     return this.rolesArray;
   }
 
-  addRole(role: any) {
-    this.rolesArray.push(role);
-    this.rolesMap[role.title.toUpperCase()] = role.auth_items;
-    this.rolesSubject.next(this.rolesArray);
-    this.updateRoleAuth();
-  }
-
-  deleteRole(index: number) {
-    const [removed] = this.rolesArray.splice(index, 1);
-    if (removed) delete this.rolesMap[removed.title.toUpperCase()];
-    this.rolesSubject.next(this.rolesArray);
-    this.updateRoleAuth();
-  }
+ getallRolesandpermission() {
+    return this.rolesArray.map(role => ({
+      title: role.title,
+      auth_items: this.generatePermissions(role.auth_items)
+    }));
+ }
 
   private generatePermissions(authItems: any): { [key: string]: string[] } {
     const permissions: { [key: string]: string[] } = {};

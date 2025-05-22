@@ -47,7 +47,6 @@ export class AuthServiceService {
     localStorage.removeItem('user');
     localStorage.removeItem('role');
     this.clearPermissions();
-    console.log('Logging out');
     this.router.navigate(['login']);
   }
 

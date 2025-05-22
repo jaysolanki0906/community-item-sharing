@@ -12,7 +12,6 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 })
 export class ItemListComponent {
   items: Item[] = [];
-  filteredItems: Item[] = [];
   selectedType: 'LOST' | 'FOUND' | 'FREE' = 'LOST';
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status'];
   searchText: string = '';
@@ -23,6 +22,7 @@ export class ItemListComponent {
   pageSize:number = 5;
   totalItems:number = 0;
   loading:boolean = true;
+  pageIndex = 0;
   columnHeaders = {
     id: 'TABLE.ID',
     type: 'TABLE.TYPE',
@@ -45,87 +45,81 @@ export class ItemListComponent {
 
   loadItems(): void {
     this.loading = true;
-    this.itemService.getItems(this.selectedType, this.currentPage, this.pageSize).subscribe({
-       next: (response)=>{
-      this.totalItems = response.total;
-      this.items = response.data;
-      this.filteredItems = this.items;
-      this.applyFilter();
-      this.loading = false;
-    },
-      error: (err) => {
-        this.errorHandler.handleError(err, 'ItemsComponent');
+    this.itemService.getItemsWithPagination(
+      this.pageIndex + 1, // 1-based for API
+      this.pageSize,
+      this.selectedType,
+      'ACTIVE',
+      this.searchText
+    ).subscribe({
+      next: res => {
+        this.items = res.data;
+        this.totalItems = res.total;
+        this.loading = false;
+      },
+      error: err => {
         this.loading = false;
       }
     });
   }
-  
-  applyFilter(): void {
-    const text = this.searchText.toLowerCase();
-    this.filteredItems = this.items.filter(item =>
-      item.title.toLowerCase().includes(text) ||
-      item.description.toLowerCase().includes(text)
-    );
-  }
+
+
 
   onTypeChange(type: string): void {
     const allowedTypes: ('LOST' | 'FOUND' | 'FREE')[] = ['LOST', 'FOUND', 'FREE'];
     if (allowedTypes.includes(type as 'LOST' | 'FOUND' | 'FREE')) {
       this.selectedType = type as 'LOST' | 'FOUND' | 'FREE';
+      this.currentPage = 1; 
       this.loadItems();
     }
   }
+
   myFilterOptions = [
     { label: 'Lost', value: 'LOST' },
     { label: 'Found', value: 'FOUND' },
     { label: 'Free', value: 'FREE' }
   ];
-  
-  itemcard() {
-    const page = 1;
-    const limit = 1;
-  
-    this.itemService.getItems('LOST', page, limit).subscribe({
-       next: (response)=>{
-      this.lostCount = response.total;
-      this.loading = false;
-    },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  
-    this.itemService.getItems('FOUND', page, limit).subscribe({
-       next: (response)=>{
-      this.foundCount = response.total;
-      this.loading = false;
-    },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  
-    this.itemService.getItems('FREE', page, limit).subscribe({
-       next: (response)=>{
-      this.freeCount = response.total;
-      this.loading = false;
-    },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  }
 
-  onPageChange(event: PageEvent): void {
+ itemcard() {
+  const page = 1;
+  const limit = 1;
+  this.itemService.getItemsWithPagination(page, limit, 'LOST', 'ACTIVE', '').subscribe({
+    next: (response)=>{
+      this.lostCount = response.total;
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+
+  this.itemService.getItemsWithPagination(page, limit, 'FOUND', 'ACTIVE', '').subscribe({
+    next: (response)=>{
+      this.foundCount = response.total;
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+
+  this.itemService.getItemsWithPagination(page, limit, 'FREE', 'ACTIVE', '').subscribe({
+    next: (response)=>{
+      this.freeCount = response.total;
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
+
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex + 1; 
     this.loadItems();
   }
+
   onSearchChange(value: string) {
     this.searchText = value;
-    this.applyFilter();
+    this.currentPage = 1; 
+    this.loadItems();
   }
 }

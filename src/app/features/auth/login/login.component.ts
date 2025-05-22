@@ -48,7 +48,6 @@ export class LoginComponent {
   this.errorHandler.handleLoginError(error, 'LoginComponent');
   localStorage.removeItem('token'); 
 }
-
       });
     }
   }

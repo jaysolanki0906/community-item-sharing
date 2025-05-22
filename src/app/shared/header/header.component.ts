@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: AuthServiceService,
      private router: Router,
      private breakpointObserver:BreakpointObserver,
-     private translate: TranslateService,private errorservice:ErrorHandlerService) {
+     public translate: TranslateService,private errorservice:ErrorHandlerService) {
     const savedLang = localStorage.getItem('lang') || 'en';
     this.translate.setDefaultLang(savedLang);
     this.translate.use(savedLang);
@@ -50,6 +50,5 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     localStorage.clear();
     this.router.navigate(['/login']);
-    this.errorservice.handleError("User logged out successfully.",'ItemFormDialogComponent')
   }
 }
