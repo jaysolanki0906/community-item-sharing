@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { User } from '../../../core/models/user.model';
 import { UserService } from '../../../core/services/user.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-userinfo',
@@ -10,7 +11,7 @@ import { UserService } from '../../../core/services/user.service';
 })
 export class UserinfoComponent {
   userProfile?: User;
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,private errorservice:ErrorHandlerService) {}
   
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe({
@@ -19,7 +20,7 @@ export class UserinfoComponent {
         this.userProfile = data;
       },
       error: (err) => {
-        console.error('Failed to fetch user data', err);
+        this.errorservice.handleError( err, 'ItemFormDialogComponent')
       }
     });
   }  

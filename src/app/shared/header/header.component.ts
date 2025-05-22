@@ -5,6 +5,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { ErrorHandlerService } from '../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-header',
@@ -17,12 +18,15 @@ export class HeaderComponent implements OnInit {
   isAdmin: boolean = false;
   isSmallScreen = false;
   transalte:TranslateService=inject(TranslateService);
-  constructor(private authService: AuthServiceService, private router: Router,private breakpointObserver:BreakpointObserver,private translate: TranslateService) 
-  {
+  constructor(private authService: AuthServiceService,
+     private router: Router,
+     private breakpointObserver:BreakpointObserver,
+     private translate: TranslateService,private errorservice:ErrorHandlerService) {
     const savedLang = localStorage.getItem('lang') || 'en';
     this.translate.setDefaultLang(savedLang);
     this.translate.use(savedLang);
   }
+
   changeLanguage(lang: string) {
     this.translate.use(lang);
     localStorage.setItem('lang', lang); 
@@ -46,6 +50,6 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     localStorage.clear();
     this.router.navigate(['/login']);
-    console.log('User logged out successfully.');
+    this.errorservice.handleError("User logged out successfully.",'ItemFormDialogComponent')
   }
 }

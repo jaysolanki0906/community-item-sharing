@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 
 @Component({
@@ -72,7 +73,8 @@ columnHeaders = {
     private itemService: ItemService,
     private interestService: InterestService,
     private router: Router,
-    private permissionService: RolePermissionService
+    private permissionService: RolePermissionService,
+    private errorHandler: ErrorHandlerService
   ) {
     this.userRole = (localStorage.getItem('role') || '').toLowerCase();
   }
@@ -100,7 +102,7 @@ columnHeaders = {
       },
     error: (err) => {
       this.loading = false;
-        console.error(err);}
+        this.errorHandler.handleError(err, 'ItemsComponent');}
     });
   }
   
@@ -122,7 +124,7 @@ columnHeaders = {
           console.log(`Interest shown for item ID: ${itemId}`);
         },
         error: (err) => {
-          console.error(`Failed to show interest for item ID: ${itemId}`, err);
+          this.errorHandler.handleError(err, 'ItemsComponent');
         }
       });
     }
@@ -141,7 +143,7 @@ columnHeaders = {
       });
     },
       error: (error) => {
-        console.error('Failed to fetch interests:', error);
+        this.errorHandler.handleError(error, 'ItemsComponent');
       }
     });
   }

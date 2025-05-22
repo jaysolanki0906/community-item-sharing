@@ -5,9 +5,15 @@
       <label class="field-label">Title</label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="title">
-        <mat-error *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched">
-          Title is required.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('required')">
+  Title is required.
+</mat-error>
+<mat-error *ngIf="itemForm.get('title')?.hasError('minlength')">
+  Title must be at least 3 characters long.
+</mat-error>
+<mat-error *ngIf="itemForm.get('title')?.hasError('maxlength')">
+  Title must not exceed 50 characters.
+</mat-error>
       </mat-form-field>
     </div>
 
@@ -58,12 +64,18 @@
     </div>
 
     <div class="form-group">
-      <label class="field-label">Image</label>
-      <input type="file" (change)="onFileChange($event)" accept="image/*" />
-      <div *ngIf="selectedFile">
-        <small>Selected Image: {{ selectedFile.name }}</small>
-      </div>
-    </div>
+  <label class="field-label">Image</label>
+  <input type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
+  
+  <div *ngIf="imageError" class="error-text">
+    <mat-error>{{ imageError }}</mat-error>
+  </div>
+  
+  <div *ngIf="selectedFile && !imageError">
+    <small>Selected Image: {{ selectedFile.name }}</small>
+  </div>
+</div>
+
 
     <div mat-dialog-actions align="end" class="dialog-actions">
       <button mat-button type="button" (click)="cancel()" class="cancel-button">Cancel</button>

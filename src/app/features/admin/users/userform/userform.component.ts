@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ListusersComponent } from '../listusers/listusers.component';
 import { MatInput } from '@angular/material/input';
 import { ApiServiceService } from '../../../../core/services/api-service.service';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-userform',
@@ -21,15 +22,14 @@ export class UserformComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private api: ApiServiceService,  // Injecting the ApiService
+    private api: ApiServiceService, 
+    private errorservice: ErrorHandlerService,
     public dialogRef: MatDialogRef<UserformComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { item: User, mode: string }
   ) {}
 
   ngOnInit(): void {
     this.mode = this.data.mode;
-    
-    // Initialize the form group
     this.userForm = this.fb.group({
       id: [{ value: this.data.item.id, disabled: this.mode === 'view' }, Validators.required],
       name: [{ value: this.data.item.name, disabled: this.mode === 'view' }, Validators.required],
@@ -49,7 +49,7 @@ export class UserformComponent implements OnInit {
           this.dialogRef.close(true);
         },
         error => {
-          console.error('Error updating user', error);
+          this.errorservice.handleError( error, 'ItemFormDialogComponent')
         }
       );
     }

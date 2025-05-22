@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ImageDialogComponent } from '../image-dialog/image-dialog.component';
 import { Item } from '../../core/models/item.model';
+import { ErrorHandlerService } from '../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-tabledesign2',
@@ -27,13 +28,25 @@ export class Tabledesign2Component {
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() filterSelected = new EventEmitter<string>();
 
-  selectedFilter = 'LOST';
-  
+selectedFilter = 'LOST';
 
-  constructor(private dialog: MatDialog) {}
+handleActionClick(btn: { type: string }, element: Item) {
+  try {
+    this.actionClicked.emit({ action: btn.type, row: element });
+  } catch (error) {
+    this.errorHandler.handleError(error, `Action: ${btn.type}`);
+  }
+}
+
+
+  constructor(private dialog: MatDialog,private errorHandler: ErrorHandlerService) {}
 
   onPageChange(event: PageEvent) {
+    try {
     this.pageChange.emit(event);
+  } catch (error) {
+    this.errorHandler.handleError(error, 'Pagination');
+  }
   }
 
   filterClick(type: string) {

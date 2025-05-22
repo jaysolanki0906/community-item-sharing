@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,11 @@ import { RolePermissionService } from '../../../core/services/role-permission.se
 export class LoginComponent {
   loginForm:FormGroup;
   submitted = false;
-  constructor(private fb:FormBuilder,private http: HttpClient,private router: Router,private authService: AuthServiceService ,private rolePermissionService:RolePermissionService)
+  constructor(private fb:FormBuilder,
+    private router: Router,
+    private authService: AuthServiceService ,
+    private rolePermissionService:RolePermissionService,
+    private errorHandler:ErrorHandlerService)
   {
     this.loginForm=this.fb.group({
       email:['',[Validators.required,Validators.email]],
@@ -40,8 +45,7 @@ export class LoginComponent {
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-  console.error('Login failed:', error);
-  alert('Invalid credentials. Please try again.');
+  this.errorHandler.handleLoginError(error, 'LoginComponent');
   localStorage.removeItem('token'); 
 }
 

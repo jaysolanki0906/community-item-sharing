@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private errorHandler: ErrorHandlerService
   ) {
     // Initialize the registration form with name, email, and password fields
     this.registerForm = this.fb.group({
@@ -44,7 +46,7 @@ export class RegisterComponent {
         this.router.navigate(['/login']); 
       },
       error: (error) => {
-        console.error('Registration failed:', error); 
+        this.errorHandler.handleError(error, 'ItemsComponent'); 
         alert(`Error: ${error.message}`); 
       },
     });

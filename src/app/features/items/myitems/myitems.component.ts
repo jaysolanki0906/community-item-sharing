@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.component';
 import Swal from 'sweetalert2';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-myitems',
@@ -48,7 +49,8 @@ export class MyitemsComponent implements OnInit {
 
   constructor(private itemService: ItemService, 
     private dialog: MatDialog,
-  public rolePermissionService: RolePermissionService) {}
+  public rolePermissionService: RolePermissionService,
+private errorHandler:ErrorHandlerService) {}
 
   ngOnInit(): void {
     this.fetchItems();
@@ -71,7 +73,7 @@ export class MyitemsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err: unknown) => {
-        console.error(err);
+        this.errorHandler.handleError(err, 'myitems');
         this.isLoading = false;
       }
     };
@@ -153,7 +155,7 @@ export class MyitemsComponent implements OnInit {
             });
           },
           error: (error) => {
-            console.error('Delete error:', error);
+            this.errorHandler.handleError(error, 'myitems');
             this.isLoading = false;
             Swal.fire('Error', 'Failed to delete item.', 'error');
           }

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { Tabledesign2Component } from "../../../../shared/tabledesign2/tabledesign2.component";
 import { Router } from '@angular/router';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 interface PaginatedUsersResponse {
   data: User[];
@@ -49,8 +50,11 @@ export class ListusersComponent {
     { label: 'Toggle Status', icon: 'toggle_on', type: 'toggleStatus' }
   ];
 
-  constructor(private authService: AuthServiceService, private dialog: MatDialog,private cdr: ChangeDetectorRef,private router: Router
-
+  constructor(private authService: AuthServiceService, 
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit() {
@@ -64,7 +68,7 @@ export class ListusersComponent {
       this.totalItems = response.total;
       this.loading = false;
     },error: (error) => {
-      console.error('Error fetching users:', error);
+      this.errorHandler.handleError(error, 'ItemsComponent');
       this.loading = false;
     }});
   }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/models/item.model';
 import { PageEvent } from '@angular/material/paginator';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-item-list',
@@ -33,7 +34,9 @@ export class ItemListComponent {
     actions: 'TABLE.ACTIONS'
   };
 
-  constructor(private itemService: ItemService) {}
+  constructor(private itemService: ItemService,
+    private errorHandler: ErrorHandlerService,
+  ) {}
 
   ngOnInit(): void {
     this.loadItems();
@@ -51,7 +54,7 @@ export class ItemListComponent {
       this.loading = false;
     },
       error: (err) => {
-        console.error(err);
+        this.errorHandler.handleError(err, 'ItemsComponent');
         this.loading = false;
       }
     });

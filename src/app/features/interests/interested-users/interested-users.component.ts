@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIcon } from '@angular/material/icon';
 import { InterestService } from '../../../core/services/intrest.service';
 import { Tabledesign2Component } from "../../../shared/tabledesign2/tabledesign2.component";
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Component({
   selector: 'app-interested-users',
@@ -30,23 +31,30 @@ export class InterestedUsersComponent {
   actions: 'Actions'
 };
 
-  constructor(private router: Router, private interestService: InterestService) {
+constructor(
+  private router: Router, 
+  private interestService: InterestService,
+  private errorservice: ErrorHandlerService
+) {
   const nav = this.router.getCurrentNavigation();
-  this.itemId = nav?.extras?.state?.['itemId'] || localStorage.getItem('selectedItemId') || '';
-
-  const rawUsers = nav?.extras?.state?.['users'] || [];
-
-  this.interestedUsers = rawUsers.map((entry: any) => ({
-    userId: entry.user.id,
-    name: entry.user.name,
-    email: entry.user.email,
-    role: entry.user.role,
-    interestedOn: entry.createdAt,
-    originalUser: entry.user 
-  }));
+  if (nav && nav.extras && nav.extras.state) {
+    this.itemId = nav.extras.state['itemId'] ?? localStorage.getItem('selectedItemId') ?? '';
+    const rawUsers = nav.extras.state['users'] ?? [];
+    this.interestedUsers = rawUsers.map((entry: any) => ({
+      userId: entry.user.id,
+      name: entry.user.name,
+      email: entry.user.email,
+      role: entry.user.role,
+      interestedOn: entry.createdAt,
+      originalUser: entry.user 
+    }));
+  } else {
+    const storedId = localStorage.getItem('selectedItemId');
+    this.itemId = storedId ? Number(storedId) : 0;
+    this.interestedUsers = [];
+  }
 
   this.totalItems = this.interestedUsers.length;
-
   this.setupActionButtons();
 }
 
@@ -64,14 +72,14 @@ export class InterestedUsersComponent {
   assignReceiver(userId: number) {
     if (!this.itemId) {
       console.error('Cannot assign receiver: itemId is undefined');
+      this.errorservice.handleError( 'Cannot assign receiver: itemId is undefined', 'ItemFormDialogComponent')
       return;
     }
     console.log("Assigning user id", userId);
     this.interestService.assignReceiver(this.itemId, userId).subscribe({
       next: () => alert('Receiver assigned successfully.'),
       error: (err) => {
-        alert('Error assigning receiver.');
-        console.error(err);
+        this.errorservice.handleError( err, 'intrested-users.component.ts')
       }
     });
   }
