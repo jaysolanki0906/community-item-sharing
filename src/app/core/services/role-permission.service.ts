@@ -32,7 +32,7 @@ const ROLES_DATA = [
     "title": "USER",
     "auth_items": {
       "items": {
-        "items_create": true,
+        "items_create": false,
         "items_edit": true,
         "items_delete": false,
         "items_view": true,
@@ -88,6 +88,7 @@ export class RolePermissionService {
   }
   this.updateRoleAuth();
 }
+
   updateRoleAuth() {
     this.roleAuth = this.rolesMap[this.currentRole] || {};
     const permissions = this.generatePermissions(this.roleAuth);

@@ -46,7 +46,7 @@ export class ItemListComponent {
   loadItems(): void {
     this.loading = true;
     this.itemService.getItemsWithPagination(
-      this.pageIndex + 1, // 1-based for API
+      this.pageIndex + 1, 
       this.pageSize,
       this.selectedType,
       'ACTIVE',

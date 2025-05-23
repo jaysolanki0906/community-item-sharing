@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RolepermissionComponent } from './rolepermission.component';
+import { NoauthComponent } from './noauth.component';
 
-describe('RolepermissionComponent', () => {
-  let component: RolepermissionComponent;
-  let fixture: ComponentFixture<RolepermissionComponent>;
+describe('NoauthComponent', () => {
+  let component: NoauthComponent;
+  let fixture: ComponentFixture<NoauthComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RolepermissionComponent]
+      imports: [NoauthComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RolepermissionComponent);
+    fixture = TestBed.createComponent(NoauthComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

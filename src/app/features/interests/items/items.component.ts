@@ -7,8 +7,6 @@ import { Item } from '../../../core/models/item.model';
 import { InterestService } from '../../../core/services/intrest.service';
 import { Interest } from '../../../core/models/interest.model';
 import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCard } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
@@ -64,7 +62,7 @@ columnHeaders = {
   handleAction(event: { action: string, row: Item }) {
   if (event.action === 'interest') {
     this.markInterest(event.row.id);
-  } else if (event.action === 'viewInterested' && this.userRole === 'admin') {
+  } else if (event.action === 'viewInterested' ) {
     this.viewInterested(event.row.id);
   }
 }

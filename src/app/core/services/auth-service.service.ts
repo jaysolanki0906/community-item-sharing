@@ -23,6 +23,9 @@ export class AuthServiceService {
     localStorage.setItem('role', role);
     this.permissionsService.loadPermissions([role]);
   }
+  refreshToken(): Observable<any> {
+    return this.api.post('/api/refresh-token', {});
+  }
 
   clearPermissions() {
     this.permissionsService.flushPermissions();
@@ -46,6 +49,10 @@ export class AuthServiceService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('role');
+    history.pushState(null, '', location.href);
+  window.onpopstate = () => {
+    history.pushState(null, '', location.href);
+  };
     this.clearPermissions();
     this.router.navigate(['login']);
   }

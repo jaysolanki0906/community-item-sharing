@@ -64,6 +64,11 @@ export const routes: Routes = [
       import('./features/notfound/notfound.module').then((m) => m.NotfoundModule),
   },
   {
+    path: 'not-authorized',
+    loadChildren: () =>
+      import('./features/noauthorizotion/noauthorizotion.module').then((m) => m.NoauthorizotionModule),
+  },
+  {
     path: '**',
     redirectTo: 'not-found',
   }
