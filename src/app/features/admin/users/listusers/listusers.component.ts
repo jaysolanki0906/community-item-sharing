@@ -54,7 +54,8 @@ export class ListusersComponent {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+
   ) {}
 
   ngOnInit() {
@@ -109,7 +110,8 @@ export class ListusersComponent {
   this.authService.updateUserStatus(user.id, updatedStatus).subscribe({
     next: () => {
       user.isActive = updatedStatus;
-      console.log(`User ${user.id} is now ${updatedStatus ? 'Active' : 'Inactive'}`);
+      const str=`User ${user.name} is now ${updatedStatus ? 'Active' : 'Inactive'}`;
+      this.errorHandler.handleLoginError(null,str);
       this.cdr.detectChanges();  
     },
     error: (err) => {

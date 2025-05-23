@@ -9,6 +9,6 @@ export const rolebaseGuard: CanActivateFn = (route, state) => {
   if (token && role === 'ADMIN') {
     return true;
   }
-  router.navigate(['/not-authorized']);
+  router.navigate(['/not-authorized'],{ skipLocationChange: true });
   return false;
 };

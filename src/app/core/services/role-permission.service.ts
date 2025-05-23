@@ -9,22 +9,13 @@ const ROLES_DATA = [
         "items_create": true,
         "items_edit": true,
         "items_delete": true,
-        "items_view": true,
-        "mark_interest": true,
-        "view_interest": true
+        "items_view": true
       },
       "manage_user": {
         "manage_user_view": true,
         "manage_user_edit": true,
         "mark_active": true,
         "mark_inactive": true
-      },
-      "user": {
-        "user_create": true,
-        "user_view": true,
-        "user_edit": true,
-        "user_delete": true,
-        "user_resendPassword": true
       }
     }
   },
@@ -35,9 +26,7 @@ const ROLES_DATA = [
         "items_create": false,
         "items_edit": true,
         "items_delete": false,
-        "items_view": true,
-        "mark_interest": true,
-        "view_interest": false
+        "items_view": true
       },
       "manage_user": {
         "manage_user_view": true,
@@ -45,13 +34,7 @@ const ROLES_DATA = [
         "mark_active": false,
         "mark_inactive": false
       },
-      "user": {
-        "user_create": false,
-        "user_view": true,
-        "user_edit": true,
-        "user_delete": false,
-        "user_resendPassword": true
-      }
+      
     }
   }
 ];
@@ -123,6 +106,7 @@ export class RolePermissionService {
   const permissions = JSON.parse(localStorage.getItem('permissions') || '{}');
   console.log('Permissions from localStorage:', permissions);
   console.log('Module:', module);
+  console.log('Permission:', permissions[module]?.includes(permission));
 return permissions[module]?.includes(permission);
 }
   getRoles$() {

@@ -20,7 +20,7 @@ export const authGuard: CanActivateFn = (
   }
 
   if (!token) {
-    router.navigate(['/login']);
+    router.navigate(['/login'],{ replaceUrl: true });
     return false;
   }
 
@@ -34,6 +34,6 @@ export const authGuard: CanActivateFn = (
     return true;
   }
 
-  router.navigate(['/not-authorized']);
+  router.navigate(['/not-authorized'],{ skipLocationChange: true });
   return false;
 };

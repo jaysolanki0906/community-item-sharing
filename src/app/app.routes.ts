@@ -5,6 +5,7 @@ import { loginGuard } from './core/guards/login.guard';
 import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { nofoundguardGuard } from './core/guards/nofoundguard.guard';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,7 @@ export const routes: Routes = [
     path: 'not-found',
     loadChildren: () =>
       import('./features/notfound/notfound.module').then((m) => m.NotfoundModule),
+    canActivate: [nofoundguardGuard],
   },
   {
     path: 'not-authorized',
@@ -71,5 +73,6 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'not-found',
+    pathMatch: 'full',
   }
 ];

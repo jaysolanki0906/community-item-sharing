@@ -37,6 +37,13 @@ export class ErrorHandlerService {
   handleLoginError(error: any, context: string = ''): void {
     let message = 'Login failed. Please try again.';
     let icon: 'error' | 'warning' | 'info' | 'success' = 'error';
+    let tit = 'Login Error';
+
+    if (error === null && context) {
+    tit='';
+    message = context;
+    icon = 'success';
+  }
 
     if (error instanceof HttpErrorResponse) {
       if (error.error && typeof error.error === 'object') {
@@ -60,7 +67,7 @@ export class ErrorHandlerService {
     }
 
     Swal.fire({
-      title: 'Login Error',
+      title: tit,
       text: message,
       icon: icon,
       toast: false,

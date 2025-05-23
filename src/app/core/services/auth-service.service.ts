@@ -49,10 +49,6 @@ export class AuthServiceService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('role');
-    history.pushState(null, '', location.href);
-  window.onpopstate = () => {
-    history.pushState(null, '', location.href);
-  };
     this.clearPermissions();
     this.router.navigate(['login']);
   }
