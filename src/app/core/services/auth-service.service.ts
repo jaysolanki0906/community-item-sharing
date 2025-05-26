@@ -4,8 +4,8 @@ import { ApiServiceService } from './api-service.service';
 import { Observable } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { User } from '../models/user.model';
+import { LoginResponse } from '../models/login-response.model';
 
-// Use PascalCase and ensure it's at the top level
 type Credentials = { email: string; password: string };
 
 @Injectable({
@@ -32,9 +32,10 @@ export class AuthServiceService {
     localStorage.removeItem('role');
   }
 
-  login(credentials: Credentials) {
-    return this.api.post('auth/login', credentials);
-  }
+  login(data: { email: string; password: string }): Observable<LoginResponse> {
+  return this.api.post<LoginResponse>(`auth/login`, data);
+}
+
 
   isAuthorized(allowedRoles: string[]): boolean {
     const userRole = localStorage.getItem('role');

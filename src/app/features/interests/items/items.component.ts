@@ -10,6 +10,12 @@ import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+interface Action {
+  label: string;
+  icon: string;
+  type: string;
+}
+
 
 
 @Component({
@@ -33,10 +39,7 @@ export class ItemsComponent implements OnInit {
   loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  actionButtons = [
-  { label: 'Interest', icon: 'favorite', type: 'interest' },
-  { label: 'View Interested', icon: 'visibility', type: 'viewInterested', showIfAdmin: true }
-];
+  actionButtons:Action[] = [];
 
 columnHeaders = {
     id: 'TABLE.ID',
@@ -80,6 +83,12 @@ columnHeaders = {
   ngOnInit(): void {
     this.fetchItems();
     this.permissionService.setRoleFromStorage(); 
+    if (this.permissionService.getPermission('items', 'mark_interest')) {
+    this.actionButtons.push({ label: 'Interest', icon: 'favorite', type: 'interest' });
+  }
+  if (this.permissionService.getPermission('items', 'view_interest')) {
+    this.actionButtons.push({ label: 'View Interested', icon: 'visibility', type: 'viewInterested' });
+  }
   }
 
   fetchItems(): void {

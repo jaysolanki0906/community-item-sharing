@@ -28,7 +28,9 @@ const ROLES_DATA = [
         "items_create": false,
         "items_edit": true,
         "items_delete": false,
-        "items_view": true
+        "items_view": true,
+        "mark_interest":true,
+        "view_interest": false,
       },
       "manage_user": {
         "manage_user_view": true,

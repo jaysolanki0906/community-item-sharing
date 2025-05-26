@@ -22,7 +22,7 @@ export class ItemListComponent {
   pageSize:number = 5;
   totalItems:number = 0;
   loading:boolean = true;
-  pageIndex = 0;
+  pageIndex:number = 0;
   columnHeaders = {
     id: 'TABLE.ID',
     type: 'TABLE.TYPE',

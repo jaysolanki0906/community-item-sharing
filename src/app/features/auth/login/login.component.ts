@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth-service.service';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoginResponse } from '../../../core/models/login-response.model';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,7 @@ export class LoginComponent {
       const loginData = this.loginForm.value;
 
       this.authService.login(loginData).subscribe({
-        next: (response: any) => {
+        next: (response: LoginResponse) => {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.data.role);

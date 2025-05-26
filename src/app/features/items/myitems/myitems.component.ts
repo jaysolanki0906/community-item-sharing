@@ -6,6 +6,12 @@ import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.co
 import Swal from 'sweetalert2';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+interface Action {
+  label: string;
+  icon: string;
+  type: string;
+}
+
 
 @Component({
   selector: 'app-myitems',
@@ -18,7 +24,7 @@ export class MyitemsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
-  actionButtons: any[] = [];
+  actionButtons: Action[] = [];
   
 
   selectedType: string = 'LOST';
