@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthServiceService } from './auth-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandlerService {
   
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar,private authService:AuthServiceService) {}
 
   handleError(error: any, context: string = ''): void {
     let message = 'An unexpected error occurred. Please try again.';
@@ -20,6 +22,11 @@ export class ErrorHandlerService {
       } else {
         message = error.message || message;
       }
+    }
+    if(message === 'Account deactivated') {
+      this.handleLoginError(null, 'Account deactivated');
+      localStorage.setItem('isActive', 'false');
+      this.authService.logout();
     }
 
     this.snackBar.open(

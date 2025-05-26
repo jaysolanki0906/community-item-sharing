@@ -1,16 +1,14 @@
+// src/app/core/guards/nofoundguard.guard.ts
+import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
 
-export const nofoundguardGuard: CanActivateFn = (route, state) => {
-   const router = inject(Router);
-   const token = localStorage.getItem('token');
-   if(token)
-   {
-     router.navigate(['/not-found'], { skipLocationChange: true });
-   }
-   else
-   {
-      router.navigate(['/login']);
-   }
-  return false;
+export const nofoundguardGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const router = inject(Router);
+
+  // Instead of just returning a URL Tree, navigate with replaceUrl to clear history and then return false to block the route.
+  router.navigate(['/not-found'], { replaceUrl: true });
+  return false;  // block activation of wildcard route itself
 };

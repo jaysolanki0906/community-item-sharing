@@ -25,6 +25,7 @@ export class HeaderComponent implements OnInit {
     const savedLang = localStorage.getItem('lang') || 'en';
     this.translate.setDefaultLang(savedLang);
     this.translate.use(savedLang);
+    
   }
 
   changeLanguage(lang: string) {
@@ -51,4 +52,5 @@ export class HeaderComponent implements OnInit {
     localStorage.clear();
     this.router.navigate(['/login']);
   }
+  
 }

@@ -9,7 +9,9 @@ const ROLES_DATA = [
         "items_create": true,
         "items_edit": true,
         "items_delete": true,
-        "items_view": true
+        "items_view": true,
+        "mark_interest":true,
+        "view_interest": true
       },
       "manage_user": {
         "manage_user_view": true,
@@ -104,9 +106,6 @@ export class RolePermissionService {
 
   getPermission(module: string, permission: string): boolean {
   const permissions = JSON.parse(localStorage.getItem('permissions') || '{}');
-  console.log('Permissions from localStorage:', permissions);
-  console.log('Module:', module);
-  console.log('Permission:', permissions[module]?.includes(permission));
 return permissions[module]?.includes(permission);
 }
   getRoles$() {

@@ -10,6 +10,7 @@ export const authGuard: CanActivateFn = (
   const authService = inject(AuthServiceService);
   const token = localStorage.getItem('token');
   const requestedUrl = state.url;
+  const isActive = localStorage.getItem('isActive');
 
   if (requestedUrl.startsWith('/auth')) {
     if (token) {

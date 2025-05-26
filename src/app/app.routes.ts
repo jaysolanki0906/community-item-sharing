@@ -60,19 +60,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'not-found',
-    loadChildren: () =>
-      import('./features/notfound/notfound.module').then((m) => m.NotfoundModule),
-    canActivate: [nofoundguardGuard],
-  },
+  path: 'not-found',
+  loadComponent: () =>
+    import('./features/notfound/notfound/notfound.component').then((m) => m.NotfoundComponent),
+}
+,
   {
     path: 'not-authorized',
     loadChildren: () =>
       import('./features/noauthorizotion/noauthorizotion.module').then((m) => m.NoauthorizotionModule),
   },
   {
-    path: '**',
-    redirectTo: 'not-found',
-    pathMatch: 'full',
-  }
+  path: '**',
+  loadComponent: () =>
+    import('./features/notfound/wildcard/wildcard.component').then(m => m.WildcardComponent)
+}
+
 ];

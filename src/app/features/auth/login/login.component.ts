@@ -41,6 +41,9 @@ export class LoginComponent {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.data.role);
+          localStorage.setItem('isActive', response.data.isActive.toString());
+          const isActive = localStorage.getItem('isActive');
+          console.log('isactive', isActive);
           this.rolePermissionService.setRoleFromStorage();
           this.router.navigate(['/dashboard']);
         },
