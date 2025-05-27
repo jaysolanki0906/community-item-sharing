@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiServiceService } from './api-service.service';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { User } from '../models/user.model';
 import { LoginResponse } from '../models/login-response.model';
@@ -19,10 +19,6 @@ export class AuthServiceService {
     private permissionsService: NgxPermissionsService
   ) {}
 
-  setUserRole(role: string) {
-    localStorage.setItem('role', role);
-    this.permissionsService.loadPermissions([role]);
-  }
   refreshToken(): Observable<any> {
     return this.api.post('/api/refresh-token', {});
   }
@@ -33,13 +29,30 @@ export class AuthServiceService {
   }
 
   login(data: { email: string; password: string }): Observable<LoginResponse> {
-  return this.api.post<LoginResponse>(`auth/login`, data);
+  return this.api.post<LoginResponse>('auth/login', data).pipe(
+    map((response: LoginResponse) => {
+      // Access role like this:
+      if (response && response.data && response.data.role) {
+        // Use response.data.role as needed
+        this.permissionsService.loadPermissions([response.data.role]);
+      }
+      return response;
+    })
+  );
 }
 
+  // Fetch current user's role from the API
+  getCurrentUserRole(): Observable<string> {
+    return this.api.get<User>('users/me').pipe(
+      map((user: User) => user.role || 'USER')
+    );
+  }
 
-  isAuthorized(allowedRoles: string[]): boolean {
-    const userRole = localStorage.getItem('role');
-    return allowedRoles.includes(userRole || '');
+  isAuthorized(allowedRoles: string[]): Observable<boolean> {
+    // Now checks via API, not localStorage
+    return this.getCurrentUserRole().pipe(
+      map(role => allowedRoles.includes(role.toUpperCase()))
+    );
   }
 
   register(data: any) {
@@ -78,5 +91,4 @@ export class AuthServiceService {
     const url = `users/${userId}/status`;
     return this.api.patch(url, { isActive });
   }
-
 }

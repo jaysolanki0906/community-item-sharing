@@ -16,37 +16,32 @@ export class Tabledesign2Component {
   @Input() displayedColumns: string[] = [];
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;
-  @Input() pageIndex: number = 0; 
+  @Input() pageIndex: number = 0;
   @Input() showFilterMenu = false;
   @Input() actionButtons: { label: string, icon?: string, type: string }[] = [];
   @Input() Loading = false;
   @Input() filterOptions: any[] = [];
-@Input() columnHeaders: { [key: string]: string } = {};
-
+  @Input() columnHeaders: { [key: string]: string } = {};
+  @Input() selectedFilter: string = 'LOST';
 
   @Output() actionClicked = new EventEmitter<{ action: string, row: Item }>();
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() filterSelected = new EventEmitter<string>();
 
-selectedFilter = 'LOST';
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
-handleActionClick(btn: { type: string }, element: Item) {
-  try {
-    this.actionClicked.emit({ action: btn.type, row: element });
-  } catch (error) {
-    this.errorHandler.handleError(error, `Action: ${btn.type}`);
-  }
-}
-
-
-  constructor(private dialog: MatDialog,private errorHandler: ErrorHandlerService) {}
+  constructor(
+    private dialog: MatDialog,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   onPageChange(event: PageEvent) {
     try {
-    this.pageChange.emit(event);
-  } catch (error) {
-    this.errorHandler.handleError(error, 'Pagination');
-  }
+      this.pageChange.emit(event);
+    } catch (error) {
+      this.errorHandler.handleError(error, 'Pagination');
+    }
   }
 
   filterClick(type: string) {
@@ -58,10 +53,53 @@ handleActionClick(btn: { type: string }, element: Item) {
     this.filterClick(value);
   }
 
-  openImageDialog(imageUrl: string) {
-    this.dialog.open(ImageDialogComponent, {
-      data: { imageUrl },
-      width: '2500px'
+  handleActionClick(btn: { type: string }, element: Item) {
+    try {
+      this.actionClicked.emit({ action: btn.type, row: element });
+    } catch (error) {
+      this.errorHandler.handleError(error, `Action: ${btn.type}`);
+    }
+  }
+
+  openImageDialog(imageUrl: string): void {
+    try {
+      this.dialog.open(ImageDialogComponent, {
+        data: { imageUrl },
+        width: '600px',
+        maxHeight: '80vh'
+      });
+    } catch (error) {
+      this.errorHandler.handleError(error, 'OpenImageDialog');
+    }
+  }
+
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      // Toggle sort direction
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    const sortedData = [...this.dataSource].sort((a, b) => {
+      let aValue = a[column];
+      let bValue = b[column];
+
+      // Handle null/undefined
+      if (aValue == null) aValue = '';
+      if (bValue == null) bValue = '';
+
+      // Use localeCompare for strings, normal comparison for numbers
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return this.sortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      } else {
+        return this.sortDirection === 'asc'
+          ? (aValue > bValue ? 1 : aValue < bValue ? -1 : 0)
+          : (aValue < bValue ? 1 : aValue > bValue ? -1 : 0);
+      }
     });
+    this.dataSource = sortedData;
   }
 }

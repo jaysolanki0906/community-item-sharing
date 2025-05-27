@@ -1,14 +1,8 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AuthServiceService } from '../../../../core/services/auth-service.service';
-import { HeaderComponent } from '../../../../shared/header/header.component';
-import { MatCell, MatHeaderCell, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
 import { UserformComponent } from '../userform/userform.component';
 import { User } from '../../../../core/models/user.model';
-import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { Tabledesign2Component } from "../../../../shared/tabledesign2/tabledesign2.component";
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
@@ -35,6 +29,7 @@ export class ListusersComponent {
   pageSize: number = 5;
   totalItems: number = 0;
   loading: boolean = true;
+  
 
   columnHeaders = {
     id: 'ID',

@@ -1,4 +1,5 @@
 <mat-card class="table-container mat-elevation-z4">
+  
   <div *ngIf="(filterOptions?.length ?? 0) > 0" class="segmented-button-group">
     <button 
       *ngFor="let option of filterOptions"
@@ -15,7 +16,14 @@
 
       <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
         <th mat-header-cell *matHeaderCellDef class="custom-header">
-           {{ columnHeaders[col] |translate }}
+          <span (click)="sortData(col)" style="cursor:pointer;user-select:none;">
+            {{ columnHeaders[col] || col | translate }}
+            <ng-container *ngIf="sortColumn === col">
+              <mat-icon style="font-size:16px;vertical-align:middle;">
+                {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </mat-icon>
+            </ng-container>
+          </span>
         </th>
 
         <td mat-cell *matCellDef="let element">
@@ -26,22 +34,34 @@
                 <mat-icon>image</mat-icon> View Image
               </button>
             </ng-container>
+            <ng-container *ngSwitchCase="'role'">
+      <span 
+        [ngStyle]="{
+          'background': element[col] === 'ADMIN' ? '#e53935' : '#43a047',
+          'color': 'white',
+          'padding': '2px 12px',
+          'border-radius': '4px',
+          'font-weight': '500',
+          'display': 'inline-block'
+        }">
+        {{ element[col] }}
+      </span>
+    </ng-container>
 
             <ng-container *ngSwitchCase="'actions'">
-               <button *ngFor="let btn of actionButtons"
-          mat-icon-button
-          [color]="btn.type === 'delete' ? 'warn' : null"
-          matTooltip="{{ btn.label }}"
-          (click)="actionClicked.emit({ action: btn.type, row: element })"
-          [ngStyle]="btn.type === 'toggleStatus' 
-            ? { 'color': element.isActive ? 'green' : 'red' } 
-            : null">
+              <button *ngFor="let btn of actionButtons"
+                      mat-icon-button
+                      [color]="btn.type === 'delete' ? 'warn' : null"
+                      matTooltip="{{ btn.label }}"
+                      (click)="actionClicked.emit({ action: btn.type, row: element })"
+                      [ngStyle]="btn.type === 'toggleStatus' 
+                        ? { 'color': element.isActive ? 'green' : 'red' } 
+                        : null">
                 <mat-icon>
-      {{ btn.type === 'toggleStatus' ? (element.isActive ? 'toggle_on' : 'toggle_off') : (btn.icon || 'more_vert') }}
-    </mat-icon>
+                  {{ btn.type === 'toggleStatus' ? (element.isActive ? 'toggle_on' : 'toggle_off') : (btn.icon || 'more_vert') }}
+                </mat-icon>
               </button>
             </ng-container>
-
             <ng-container *ngSwitchDefault>
               {{ element[col] }}
             </ng-container>
@@ -54,20 +74,24 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>
+
+
   <ng-template #loader>
-  <div class="loader-container" style="text-align: center; padding: 40px;">
-    <mat-spinner diameter="40"></mat-spinner>
+    <div class="loader-container" style="text-align: center; padding: 40px;">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </ng-template>
+
+
+  <div *ngIf="!Loading && dataSource.length === 0" class="no-data-message">
+    Sorry! There is no data.
   </div>
-</ng-template>
-<div *ngIf="!Loading && dataSource.length === 0" class="no-data-message">
-  Sorry! There is no data.
-</div>
 
   <mat-paginator
-  [length]="totalItems"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  [pageSizeOptions]="[5, 10, 20]"
-  (page)="onPageChange($event)">
-</mat-paginator>
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </mat-card>

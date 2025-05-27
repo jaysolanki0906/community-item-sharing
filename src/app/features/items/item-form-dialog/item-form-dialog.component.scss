@@ -55,8 +55,52 @@
     border-radius: 8px;
     transition: background-color 0.3s ease;
   }
+
+  .header-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.cancel-button-another {
+  font-weight: bold;
+  color: red;
+}
+
   
   .cancel-button:hover {
     background-color: #c0392b;
   }
-  
+  .right-by-pixels {
+  margin-left: 50px; 
+}
+.image-preview-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+}
+
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.remove-image-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 2px;
+}
+.required-star {
+  color: red;
+  margin-right: 2px;
+  font-size: 15px;
+  vertical-align: middle;
+}

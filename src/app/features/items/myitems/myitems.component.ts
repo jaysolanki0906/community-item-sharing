@@ -12,7 +12,6 @@ interface Action {
   type: string;
 }
 
-
 @Component({
   selector: 'app-myitems',
   templateUrl: './myitems.component.html',
@@ -20,12 +19,11 @@ interface Action {
   standalone: false,
 })
 export class MyitemsComponent implements OnInit {
-  
+
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
   actionButtons: Action[] = [];
-  
 
   selectedType: string = 'LOST';
   searchText: string = '';
@@ -40,7 +38,7 @@ export class MyitemsComponent implements OnInit {
     { label: 'Found', value: 'FOUND' },
     { label: 'Free', value: 'FREE' },
     { label: 'My Items', value: 'MY_ITEMS' },
-    { label: 'Shared By Me', value: 'SHARED' }
+    { label: 'Shared With Me', value: 'SHARED' }
   ];
   columnHeaders = {
     id: 'TABLE.ID',
@@ -53,12 +51,15 @@ export class MyitemsComponent implements OnInit {
     actions: 'TABLE.ACTIONS'
   };
 
-  constructor(private itemService: ItemService, 
+  constructor(
+    private itemService: ItemService,
     private dialog: MatDialog,
-  public rolePermissionService: RolePermissionService,
-private errorHandler:ErrorHandlerService) {}
+    public rolePermissionService: RolePermissionService,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
+    
     this.fetchItems();
     this.setPermittedActionButtons();
   }
@@ -71,14 +72,18 @@ private errorHandler:ErrorHandlerService) {}
     const search = this.searchText;
     this.isLoading = true;
 
+    
+
     const callback = {
       next: (response: { data: Item[], total: number }) => {
+      
         this.items = response.data;
         this.filteredItems = this.items;
         this.totalItems = response.total;
         this.isLoading = false;
       },
       error: (err: unknown) => {
+        console.error('Error fetching items:', err);
         this.errorHandler.handleError(err, 'myitems');
         this.isLoading = false;
       }
@@ -94,29 +99,34 @@ private errorHandler:ErrorHandlerService) {}
   }
 
   applyFilter(selectedType: string): void {
+    
     this.selectedType = selectedType;
     this.pageIndex = 0;
     this.fetchItems();
   }
 
   onSearchChange(): void {
+    console.log(`Search text changed: "${this.searchText}"`);
     this.pageIndex = 0;
     this.fetchItems();
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
-  this.pageIndex = event.pageIndex;
-  this.pageSize = event.pageSize;
-  this.fetchItems();
-}
+    console.log(`Page changed: pageIndex=${event.pageIndex}, pageSize=${event.pageSize}`);
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchItems();
+  }
 
   addItem(): void {
+    
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: {}, mode: 'add' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      
       if (result) {
         this.fetchItems();
       }
@@ -124,12 +134,14 @@ private errorHandler:ErrorHandlerService) {}
   }
 
   editItem(item: Item): void {
+    
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: item, mode: 'edit' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      
       if (result) {
         this.fetchItems();
       }
@@ -137,6 +149,7 @@ private errorHandler:ErrorHandlerService) {}
   }
 
   viewItem(item: Item): void {
+    console.log('Opening View Item dialog for item:', item);
     this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: item, mode: 'view' }
@@ -144,6 +157,7 @@ private errorHandler:ErrorHandlerService) {}
   }
 
   deleteItem(id: string): void {
+    console.log('Delete item requested for id:', id);
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this item?',
@@ -156,16 +170,20 @@ private errorHandler:ErrorHandlerService) {}
         this.isLoading = true;
         this.itemService.deleteItem(id).subscribe({
           next: () => {
+            console.log('Item deleted successfully:', id);
             Swal.fire('Deleted!', 'The item has been deleted.', 'success').then(() => {
               this.fetchItems();
             });
           },
           error: (error) => {
+            console.error('Failed to delete item:', error);
             this.errorHandler.handleError(error, 'myitems');
             this.isLoading = false;
             Swal.fire('Error', 'Failed to delete item.', 'error');
           }
         });
+      } else {
+        console.log('Delete cancelled');
       }
     });
   }
@@ -181,11 +199,14 @@ private errorHandler:ErrorHandlerService) {}
       case 'view':
         this.viewItem(event.row);
         break;
+      default:
     }
   }
-  setPermittedActionButtons():void {
+
+  setPermittedActionButtons(): void {
+    
     const actions = [];
-     
+
     if (this.rolePermissionService.getPermission('items', 'items_edit')) {
       actions.push({ label: 'Edit', icon: 'edit', type: 'edit' });
     }
@@ -196,5 +217,6 @@ private errorHandler:ErrorHandlerService) {}
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
     this.actionButtons = actions;
+    
   }
 }

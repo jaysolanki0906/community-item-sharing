@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { UserService } from "./user.service"; // <-- Make sure this path is correct
 
 const ROLES_DATA = [
   {
@@ -10,15 +11,9 @@ const ROLES_DATA = [
         "items_edit": true,
         "items_delete": true,
         "items_view": true,
-        "mark_interest":true,
+        "mark_interest": true,
         "view_interest": true
       },
-      "manage_user": {
-        "manage_user_view": true,
-        "manage_user_edit": true,
-        "mark_active": true,
-        "mark_inactive": true
-      }
     }
   },
   {
@@ -29,16 +24,9 @@ const ROLES_DATA = [
         "items_edit": true,
         "items_delete": false,
         "items_view": true,
-        "mark_interest":true,
+        "mark_interest": false,
         "view_interest": false,
       },
-      "manage_user": {
-        "manage_user_view": true,
-        "manage_user_edit": false,
-        "mark_active": false,
-        "mark_inactive": false
-      },
-      
     }
   }
 ];
@@ -49,11 +37,11 @@ export class RolePermissionService {
   private rolesMap: any = {};
   private rolesSubject = new BehaviorSubject<any[]>([]);
   private currentRole: string = 'USER';
-  public roleAuth: any = {}; 
+  public roleAuth: any = {};
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.loadRoles();
-    this.setRoleFromStorage();
+    this.setRoleFromApi();
   }
 
   loadRoles() {
@@ -66,15 +54,21 @@ export class RolePermissionService {
     this.updateRoleAuth();
   }
 
-  setRoleFromStorage() {
-  const storedRole = localStorage.getItem('role'); 
-  if (storedRole) {
-    this.currentRole = storedRole.toUpperCase(); 
-  } else {
-    this.currentRole = 'USER'; 
+  setRole(role: string) {
+    this.currentRole = (role || 'USER').toUpperCase();
+    this.updateRoleAuth();
   }
-  this.updateRoleAuth();
-}
+
+  setRoleFromApi() {
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.setRole(user.role);
+      },
+      error: () => {
+        this.setRole('USER');
+      }
+    });
+  }
 
   updateRoleAuth() {
     this.roleAuth = this.rolesMap[this.currentRole] || {};
@@ -86,12 +80,12 @@ export class RolePermissionService {
     return this.rolesArray;
   }
 
- getallRolesandpermission() {
+  getallRolesandpermission() {
     return this.rolesArray.map(role => ({
       title: role.title,
       auth_items: this.generatePermissions(role.auth_items)
     }));
- }
+  }
 
   private generatePermissions(authItems: any): { [key: string]: string[] } {
     const permissions: { [key: string]: string[] } = {};
@@ -107,9 +101,10 @@ export class RolePermissionService {
   }
 
   getPermission(module: string, permission: string): boolean {
-  const permissions = JSON.parse(localStorage.getItem('permissions') || '{}');
-return permissions[module]?.includes(permission);
-}
+    const permissions = this.generatePermissions(this.roleAuth);
+    return permissions[module]?.includes(permission);
+  }
+
   getRoles$() {
     return this.rolesSubject.asObservable();
   }

@@ -1,81 +1,79 @@
 <div class="main-content">
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer mode="over" [opened]="false" class="sidenav" *ngIf="isSmallScreen">
-    <button mat-button routerLink="/dashboard" routerLinkActive="active" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
-      <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
-    </button>
-    <button mat-button routerLink="/items" routerLinkActive="active" 
-        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
-      <mat-icon>view_list</mat-icon> {{'Items'|translate}}
-    </button>
-    <button mat-button routerLink="/interests" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }" (click)="drawer.close()">
-      <mat-icon>favorite</mat-icon> {{'Interests'|translate}}
-    </button>
-    <button *ngIf="isAdmin" mat-button routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" routerLink="/manage-users" (click)="drawer.close()">
-      <mat-icon>group</mat-icon> {{'Manage Users'|translate}}
-    </button>
-    <button mat-button routerLink="/profile" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
-      <mat-icon>person</mat-icon> {{'Profile'|translate}}
-    </button>
-    <mat-menu #langMenu="matMenu">
-  <button mat-menu-item (click)="changeLanguage('en');drawer.close()">English</button>
-  <button mat-menu-item (click)="changeLanguage('hi');drawer.close()">हिंदी</button>
-</mat-menu>
-      <button mat-button color="accent"  [matMenuTriggerFor]="langMenu">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="over" [opened]="false" class="sidenav" *ngIf="isSmallScreen">
+
+      <a mat-button routerLink="/dashboard" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
+        <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
+      </a>
+      <a mat-button routerLink="/items" *ngIf="canShowItems" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
+        <mat-icon>view_list</mat-icon> {{ 'Items' | translate }}
+      </a>
+      <a mat-button routerLink="/interests" *ngIf="canShowInterests" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: false }" (click)="drawer.close()">
+        <mat-icon>favorite</mat-icon> {{ 'Interests' | translate }}
+      </a>
+      <a *ngIf="isAdmin" mat-button routerLink="/manage-users" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
+        <mat-icon>group</mat-icon> {{ 'Manage Users' | translate }}
+      </a>
+      <a mat-button routerLink="/profile" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
+        <mat-icon>person</mat-icon> {{ 'Profile' | translate }}
+      </a>
+      <mat-menu #langMenu="matMenu">
+        <button mat-menu-item (click)="changeLanguage('en');drawer.close()">English</button>
+        <button mat-menu-item (click)="changeLanguage('hi');drawer.close()">हिंदी</button>
+      </mat-menu>
+      <button mat-button color="accent" [matMenuTriggerFor]="langMenu">
         <mat-icon>language</mat-icon> {{ 'Select Language' | translate }}
-
       </button>
-    <button mat-button color="warn" routerLinkActive="active" (click)="logout(); drawer.close()">
-      <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
-    </button>
-  </mat-sidenav>
+      <a mat-button color="warn" routerLinkActive="active" (click)="logout(); drawer.close()">
+        <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
+      </a>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
-  <button *ngIf="isSmallScreen" mat-icon-button (click)="drawer.toggle()" class="menu-button">
-    <mat-icon>menu</mat-icon>
-  </button>
-
-  <span class="app-title">{{ 'COMMUNITY_ITEM_SHARING' | translate }}</span>
-
-  <span class="spacer"></span>
-
-  <ng-container *ngIf="!isSmallScreen">
-    <button mat-button class="toolbar-button" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
-    </button>
-    <button mat-button class="toolbar-button" routerLink="/items" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon>view_list</mat-icon> {{ 'Items' | translate }}
-    </button>
-    <button mat-button class="toolbar-button" routerLink="/interests" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-      <mat-icon>favorite</mat-icon> {{ 'Interests' | translate }}
-    </button>
-    <button *ngIf="isAdmin" mat-button class="toolbar-button" routerLink="/manage-users" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon>group</mat-icon> {{ 'Manage Users' | translate }}
-    </button>
-    <button mat-button class="toolbar-button" routerLink="/profile" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon>person</mat-icon> {{ 'Profile' | translate }}
-    </button>
-
-    <mat-menu #langMenu="matMenu">
-      <button mat-menu-item (click)="changeLanguage('en')">English</button>
-      <button mat-menu-item (click)="changeLanguage('hi')">हिंदी</button>
-    </mat-menu>
-
-    <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Language switcher">
-      <mat-icon>language</mat-icon>
-    </button>
-
-    <button mat-button color="warn" class="toolbar-button" (click)="logout()">
-      <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
-    </button>
-  </ng-container>
-</mat-toolbar>
-
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="toolbar">
+        <button *ngIf="isSmallScreen" mat-icon-button (click)="drawer.toggle()" class="menu-button">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="app-title">{{ 'COMMUNITY_ITEM_SHARING' | translate }}</span>
+        <span class="spacer"></span>
+        <ng-container *ngIf="!isSmallScreen">
+          <a mat-button class="toolbar-button" routerLink="/dashboard" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }">
+            <mat-icon>dashboard</mat-icon> {{ 'DASHBOARD' | translate }}
+          </a>
+          <a mat-button class="toolbar-button" *ngIf="canShowItems" routerLink="/items" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }">
+            <mat-icon>view_list</mat-icon> {{ 'Items' | translate }}
+          </a>
+          <a mat-button class="toolbar-button" *ngIf="canShowInterests" routerLink="/interests" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: false }">
+            <mat-icon>favorite</mat-icon> {{ 'Interests' | translate }}
+          </a>
+          <a *ngIf="isAdmin" mat-button class="toolbar-button" routerLink="/manage-users" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }">
+            <mat-icon>group</mat-icon> {{ 'Manage Users' | translate }}
+          </a>
+          <a mat-button class="toolbar-button" routerLink="/profile" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }">
+            <mat-icon>person</mat-icon> {{ 'Profile' | translate }}
+          </a>
+          <mat-menu #langMenu="matMenu">
+            <button mat-menu-item (click)="changeLanguage('en')">English</button>
+            <button mat-menu-item (click)="changeLanguage('hi')">हिंदी</button>
+          </mat-menu>
+          <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Language switcher">
+            <mat-icon>language</mat-icon>
+          </button>
+          <a mat-button color="warn" class="toolbar-button" (click)="logout()">
+            <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
+          </a>
+        </ng-container>
+      </mat-toolbar>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

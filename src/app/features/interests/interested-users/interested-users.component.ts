@@ -38,7 +38,7 @@ constructor(
 ) {
   const nav = this.router.getCurrentNavigation();
   if (nav && nav.extras && nav.extras.state) {
-    this.itemId = nav.extras.state['itemId'] ?? localStorage.getItem('selectedItemId') ?? '';
+    this.itemId = nav.extras.state['itemId'];
     const rawUsers = nav.extras.state['users'] ?? [];
     this.interestedUsers = rawUsers.map((entry: any) => ({
       userId: entry.user.id,
@@ -49,8 +49,7 @@ constructor(
       originalUser: entry.user 
     }));
   } else {
-    const storedId = localStorage.getItem('selectedItemId');
-    this.itemId = storedId ? Number(storedId) : 0;
+    this.itemId = 0;
     this.interestedUsers = [];
   }
 

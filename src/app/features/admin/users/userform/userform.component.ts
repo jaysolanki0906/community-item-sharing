@@ -26,17 +26,22 @@ export class UserformComponent implements OnInit {
     private errorservice: ErrorHandlerService,
     public dialogRef: MatDialogRef<UserformComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { item: User, mode: string }
-  ) {}
+  ) {
+    
+  }
 
   ngOnInit(): void {
-    this.mode = this.data.mode;
-    this.userForm = this.fb.group({
-      id: [{ value: this.data.item.id, disabled: this.mode === 'view' }, Validators.required],
-      name: [{ value: this.data.item.name, disabled: this.mode === 'view' }, Validators.required],
-      email: [{ value: this.data.item.email, disabled: this.mode === 'view' }, [Validators.required, Validators.email]],
-      role: [{ value: this.data.item.role, disabled: this.mode === 'view' }, Validators.required]
-    });
-  }
+  this.mode = this.data.mode;
+
+  this.userForm = this.fb.group({
+    id: [{ value: this.data.item.id, disabled: this.mode === 'view' }, Validators.required],
+    name: [{ value: this.data.item.name, disabled: this.mode === 'view' }, Validators.required],
+    email: [{ value: this.data.item.email, disabled: this.mode === 'view' }, [Validators.required, Validators.email]],
+    role: [{ value: this.data.item.role, disabled: this.mode === 'view' }, Validators.required]  
+  });
+}
+
+
 
   onSubmit(): void {
     if (this.userForm.valid) {

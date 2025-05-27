@@ -1,34 +1,51 @@
-<h1 mat-dialog-title class="form-title">{{ modeTitle }}</h1>
+<h1 mat-dialog-title class="form-title header-with-button">
+  <div class="right-by-pixels">{{ modeTitle }}</div>
+  <button mat-button type="button" (click)="cancel()" class="cancel-button-another">X</button>
+</h1>
+
 <div mat-dialog-content class="form-container">
   <form [formGroup]="itemForm" (ngSubmit)="submit()">
     <div class="form-group">
-      <label class="field-label">Title</label>
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Title
+      </label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="title">
         <mat-error *ngIf="itemForm.get('title')?.hasError('required')">
-  Title is required.
-</mat-error>
-<mat-error *ngIf="itemForm.get('title')?.hasError('minlength')">
-  Title must be at least 3 characters long.
-</mat-error>
-<mat-error *ngIf="itemForm.get('title')?.hasError('maxlength')">
-  Title must not exceed 50 characters.
-</mat-error>
+          Title is required.
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('minlength')">
+          Title must be at least 3 characters long.
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('maxlength')">
+          Title must not exceed 50 characters.
+        </mat-error>
       </mat-form-field>
     </div>
 
     <div class="form-group">
-      <label class="field-label">Description</label>
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Description
+      </label>
       <mat-form-field appearance="fill" class="full-width">
         <textarea matInput formControlName="description"></textarea>
         <mat-error *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched">
           Description is required.
         </mat-error>
       </mat-form-field>
+      <div *ngIf="itemForm.get('description')?.value" class="description-preview">
+        <label>Preview:</label>
+        <div [innerHTML]="descriptionHtml"></div>
+      </div>
     </div>
 
     <div class="form-group">
-      <label class="field-label">Location</label>
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Location
+      </label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="location">
         <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">
@@ -38,7 +55,10 @@
     </div>
 
     <div class="form-group">
-      <label class="field-label">Type</label>
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Type
+      </label>
       <mat-form-field appearance="fill" class="full-width">
         <mat-select formControlName="type">
           <mat-option value="LOST">Lost</mat-option>
@@ -51,7 +71,10 @@
     </div>
 
     <div class="form-group">
-      <label class="field-label">Status</label>
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Status
+      </label>
       <mat-form-field appearance="fill" class="full-width">
         <mat-select formControlName="status">
           <mat-option value="ACTIVE">Active</mat-option>
@@ -64,18 +87,19 @@
     </div>
 
     <div class="form-group">
-  <label class="field-label">Image</label>
-  <input type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
-  
-  <div *ngIf="imageError" class="error-text">
-    <mat-error>{{ imageError }}</mat-error>
-  </div>
-  
-  <div *ngIf="selectedFile && !imageError">
-    <small>Selected Image: {{ selectedFile.name }}</small>
-  </div>
-</div>
-
+      <label class="field-label">
+        <span class="required-star">*</span>
+        Image
+      </label>
+      <input #fileInput formControlName="image" type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
+      <div *ngIf="imageError" class="error-text">
+        <mat-error>{{ imageError }}</mat-error>
+      </div>
+      <div *ngIf="imagePreviewUrl && !imageError" class="image-preview-wrapper">
+        <img [src]="imagePreviewUrl" width="50" height="50" alt="Preview" class="image-preview" />
+        <button mat-button color="warn" (click)="removeImage()" type="button">X</button>
+      </div>
+    </div>
 
     <div mat-dialog-actions align="end" class="dialog-actions">
       <button mat-button type="button" (click)="cancel()" class="cancel-button">Cancel</button>

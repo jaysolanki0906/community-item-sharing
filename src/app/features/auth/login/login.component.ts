@@ -19,6 +19,7 @@ import { LoginResponse } from '../../../core/models/login-response.model';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+  
   loginForm:FormGroup;
   submitted = false;
   constructor(private fb:FormBuilder,
@@ -41,11 +42,6 @@ export class LoginComponent {
         next: (response: LoginResponse) => {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.access_token);
-          localStorage.setItem('role', response.data.role);
-          localStorage.setItem('isActive', response.data.isActive.toString());
-          const isActive = localStorage.getItem('isActive');
-          console.log('isactive', isActive);
-          this.rolePermissionService.setRoleFromStorage();
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

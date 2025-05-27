@@ -13,4 +13,7 @@ export class UserService {
   getCurrentUser(): Observable<User> {
     return this.api.get<User>('users/me');
   }
+   getUserById(id: string): Observable<User> {
+    return this.api.get<User>(`users/${id}`);
+  }
 }

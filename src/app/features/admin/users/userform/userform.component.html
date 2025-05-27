@@ -21,13 +21,16 @@
     <input matInput formControlName="email" placeholder="Enter Email" [attr.disabled]="mode === 'view' ? true : null">
   </mat-form-field>
 
-  <mat-form-field class="full-width" style="margin-bottom: 16px; display: block;">
-    <mat-label>Role</mat-label>
-    <mat-select formControlName="role" [attr.disabled]="mode === 'view' ? true : null">
-      <mat-option value="Admin">Admin</mat-option>
-      <mat-option value="User">User</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <!-- Role -->
+<mat-form-field class="full-width" style="margin-bottom: 16px;">
+  <mat-label>Role</mat-label>
+  <mat-select formControlName="role" [disabled]="mode === 'view'">
+    <mat-option value="ADMIN">Admin</mat-option>
+<mat-option value="USER">User</mat-option>
+
+  </mat-select>
+</mat-form-field>
+
 
   <!-- Action Buttons -->
   <div style="text-align: center; margin-top: 20px;">

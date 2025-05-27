@@ -19,6 +19,7 @@ import { Tabledesign2Component } from './tabledesign2/tabledesign2.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSortModule } from '@angular/material/sort';
 
 
 
@@ -28,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     HttpClientModule,
   MatToolbarModule,
+  MatSortModule,
   MatButtonModule,
   MatIconModule,
   RouterModule,
