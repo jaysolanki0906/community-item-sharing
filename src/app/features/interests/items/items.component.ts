@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { UserService } from '../../../core/services/user.service';
+import { RoleService } from '../../../core/services/role.service';
 
 interface Action {
   label: string;
@@ -59,19 +59,14 @@ export class ItemsComponent implements OnInit {
     private router: Router,
     private permissionService: RolePermissionService,
     private errorHandler: ErrorHandlerService,
-    private userService: UserService
+    private roleService: RoleService // Use RoleService instead of UserService
   ) {}
 
   ngOnInit(): void {
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userRole = (user.role || 'USER').toUpperCase();
-        this.setupActionButtons();
-      },
-      error: () => {
-        this.userRole = 'USER';
-        this.setupActionButtons();
-      }
+    // Subscribe to RoleService's BehaviorSubject for the current user role
+    this.roleService.role$.subscribe(role => {
+      this.userRole = (role || 'USER').toUpperCase();
+      this.setupActionButtons();
     });
 
     this.fetchItems();

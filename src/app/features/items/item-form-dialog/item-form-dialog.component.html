@@ -77,13 +77,14 @@
     <div class="form-group">
       <mat-checkbox formControlName="isFeatured">Featured Item</mat-checkbox>
     </div>
-    <!-- Tags (Multiple Checkbox) -->
     <div class="form-group">
-      <label class="field-label">Tags</label>
-      <div class="checkbox-group" formArrayName="tags">
-        <mat-checkbox *ngFor="let opt of tagOptions; let i = index" [formControlName]="i">{{ opt.label }}</mat-checkbox>
-      </div>
-    </div>
+  <label class="field-label">Tags</label>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-select formControlName="tags" [multiple]="true" [disabled]="isViewMode">
+      <mat-option *ngFor="let opt of tagOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
     <!-- Image -->
     <div class="form-group">
       <label class="field-label"><span class="required-star">*</span> Image</label>

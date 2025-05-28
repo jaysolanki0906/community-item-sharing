@@ -6,7 +6,7 @@ import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.co
 import Swal from 'sweetalert2';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { UserService } from '../../../core/services/user.service';
+import { RoleService } from '../../../core/services/role.service';
 
 interface Action {
   label: string;
@@ -21,7 +21,6 @@ interface Action {
   standalone: false,
 })
 export class MyitemsComponent implements OnInit {
-
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
@@ -34,6 +33,8 @@ export class MyitemsComponent implements OnInit {
   pageSize: number = 5;
   pageIndex: number = 0;
   isLoading: boolean = true;
+
+  currentRole: string = 'USER';
 
   myFilterOptions = [
     { label: 'Lost', value: 'LOST' },
@@ -58,22 +59,15 @@ export class MyitemsComponent implements OnInit {
     private dialog: MatDialog,
     public rolePermissionService: RolePermissionService,
     private errorHandler: ErrorHandlerService,
-    private userService: UserService
+    private roleService: RoleService
   ) {}
 
   ngOnInit(): void {
-    // Make absolutely sure permissions are set after refresh
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.rolePermissionService.setRole(user.role);
-        this.setPermittedActionButtons();
-        this.fetchItems();
-      },
-      error: () => {
-        this.rolePermissionService.setRole('USER');
-        this.setPermittedActionButtons();
-        this.fetchItems();
-      }
+    this.roleService.role$.subscribe(role => {
+      this.currentRole = (role || 'USER').toUpperCase();
+      this.rolePermissionService.setRole(this.currentRole);
+      this.setPermittedActionButtons();
+      this.fetchItems();
     });
   }
 
@@ -108,32 +102,26 @@ export class MyitemsComponent implements OnInit {
     }
   }
 
-  applyFilter(selectedType: string): void {
-    this.selectedType = selectedType;
-    this.pageIndex = 0;
-    this.fetchItems();
-  }
-
-  onSearchChange(): void {
-    this.pageIndex = 0;
-    this.fetchItems();
-  }
-
-  onPageChange(event: { pageIndex: number; pageSize: number }): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.fetchItems();
-  }
-
   addItem(): void {
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: {}, mode: 'add' }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.fetchItems();
+    dialogRef.afterClosed().subscribe(formData => {
+      if (formData) {
+        this.isLoading = true;
+        this.itemService.addItem(formData).subscribe({
+          next: () => {
+            Swal.fire('Success', 'Item added successfully.', 'success');
+            this.fetchItems();
+          },
+          error: (e) => {
+            this.errorHandler.handleError(e, 'addItem');
+            this.isLoading = false;
+            Swal.fire('Error', 'Failed to add item.', 'error');
+          }
+        });
       }
     });
   }
@@ -144,9 +132,20 @@ export class MyitemsComponent implements OnInit {
       data: { item: item, mode: 'edit' }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.fetchItems();
+    dialogRef.afterClosed().subscribe(formData => {
+      if (formData && item.id) {
+        this.isLoading = true;
+        this.itemService.updateItem(item.id, formData).subscribe({
+          next: () => {
+            Swal.fire('Success', 'Item updated successfully.', 'success');
+            this.fetchItems();
+          },
+          error: (e) => {
+            this.errorHandler.handleError(e, 'editItem');
+            this.isLoading = false;
+            Swal.fire('Error', 'Failed to update item.', 'error');
+          }
+        });
       }
     });
   }
@@ -185,6 +184,23 @@ export class MyitemsComponent implements OnInit {
     });
   }
 
+  applyFilter(selectedType: string): void {
+    this.selectedType = selectedType;
+    this.pageIndex = 0;
+    this.fetchItems();
+  }
+
+  onSearchChange(): void {
+    this.pageIndex = 0;
+    this.fetchItems();
+  }
+
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchItems();
+  }
+
   handleAction(event: { action: string, row: Item }) {
     switch (event.action) {
       case 'edit':
@@ -196,7 +212,6 @@ export class MyitemsComponent implements OnInit {
       case 'view':
         this.viewItem(event.row);
         break;
-      default:
     }
   }
 

@@ -7,13 +7,12 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(private api: ApiServiceService) {}
 
   getCurrentUser(): Observable<User> {
     return this.api.get<User>('users/me');
   }
-   getUserById(id: string): Observable<User> {
+  getUserById(id: string): Observable<User> {
     return this.api.get<User>(`users/${id}`);
   }
 }

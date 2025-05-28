@@ -7,8 +7,6 @@ export const nofoundguardGuard: CanActivateFn = (
   state: RouterStateSnapshot
 ) => {
   const router = inject(Router);
-
-  // Instead of just returning a URL Tree, navigate with replaceUrl to clear history and then return false to block the route.
   router.navigate(['/not-found'], { replaceUrl: true });
-  return false;  // block activation of wildcard route itself
+  return false;  
 };

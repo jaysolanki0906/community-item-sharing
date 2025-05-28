@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -19,20 +19,22 @@ import { LoginResponse } from '../../../core/models/login-response.model';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  
-  loginForm:FormGroup;
+  loginForm: FormGroup;
   submitted = false;
-  constructor(private fb:FormBuilder,
+
+  constructor(
+    private fb: FormBuilder,
     private router: Router,
-    private authService: AuthServiceService ,
-    private rolePermissionService:RolePermissionService,
-    private errorHandler:ErrorHandlerService)
-  {
-    this.loginForm=this.fb.group({
-      email:['',[Validators.required,Validators.email]],
-      password:['',[Validators.required,Validators.minLength(3)]],
+    private authService: AuthServiceService,
+    private rolePermissionService: RolePermissionService,
+    private errorHandler: ErrorHandlerService
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
+
   onSubmit() {
     this.submitted = true;
     if (this.loginForm.valid) {
@@ -40,14 +42,20 @@ export class LoginComponent {
 
       this.authService.login(loginData).subscribe({
         next: (response: LoginResponse) => {
-          console.log('Login successful:', response);
+          if (response.data && response.data.id) {
+            // localStorage.setItem('userId', response.data.id);        
+localStorage.setItem('token', response.access_token);    
+          } else {
+            localStorage.removeItem('userId');
+          }
           localStorage.setItem('token', response.access_token);
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-  this.errorHandler.handleLoginError(error, 'LoginComponent');
-  localStorage.removeItem('token'); 
-}
+          this.errorHandler.handleLoginError(error, 'LoginComponent');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+        }
       });
     }
   }

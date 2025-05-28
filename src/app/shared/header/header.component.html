@@ -54,8 +54,11 @@
              [routerLinkActiveOptions]="{ exact: false }">
             <mat-icon>favorite</mat-icon> {{ 'Interests' | translate }}
           </a>
-          <a *ngIf="isAdmin" mat-button class="toolbar-button" routerLink="/manage-users" routerLinkActive="active"
-             [routerLinkActiveOptions]="{ exact: true }">
+          <a *ngIf="canManageUsers"
+            mat-button class="toolbar-button"
+            routerLink="/manage-users"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
             <mat-icon>group</mat-icon> {{ 'Manage Users' | translate }}
           </a>
           <a mat-button class="toolbar-button" routerLink="/profile" routerLinkActive="active"

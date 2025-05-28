@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TitleCasePipe } from '../../../shared/titlecase.pipe';
 
 @Component({
@@ -35,7 +34,6 @@ export class ItemFormDialogComponent {
 
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog,
     private dialogRef: MatDialogRef<ItemFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { item: any, mode: 'add' | 'edit' | 'view' },
     private titleCasePipe: TitleCasePipe,
@@ -55,6 +53,10 @@ export class ItemFormDialogComponent {
 
     if (this.isViewMode) {
       this.itemForm.disable();
+    }
+
+    if (data.item?.imageUrl) {
+      this.imagePreviewUrl = data.item.imageUrl;
     }
   }
 
@@ -120,15 +122,22 @@ export class ItemFormDialogComponent {
       return;
     }
 
-    const formValue = {
-      ...this.itemForm.getRawValue(),
-      itemImage: this.selectedFile,
-      tags: this.getSelectedTags()
-    };
+    const rawValue = this.itemForm.getRawValue();
+    const formData = new FormData();
 
-    of(formValue).subscribe(
-      (result) => this.dialogRef.close(result)
-    );
+    formData.append('title', rawValue.title);
+    formData.append('description', rawValue.description);
+    formData.append('location', rawValue.location);
+    formData.append('type', rawValue.type);
+    formData.append('status', rawValue.status);
+    if (rawValue.category) formData.append('category', rawValue.category);
+    if (rawValue.urgency) formData.append('urgency', rawValue.urgency);
+    if (rawValue.isFeatured) formData.append('isFeatured', rawValue.isFeatured.toString());
+    const selectedTags = this.getSelectedTags();
+    if (selectedTags.length > 0) formData.append('tags', JSON.stringify(selectedTags));
+    if (this.selectedFile) formData.append('itemImage', this.selectedFile);
+
+    this.dialogRef.close(formData); // Pass the FormData back to parent
   }
 
   cancel(): void {

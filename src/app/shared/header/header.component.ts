@@ -8,6 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ErrorHandlerService } from '../../core/services/error-handler.service';
 import { RolePermissionService } from '../../core/services/role-permission.service';
 import { UserService } from '../../core/services/user.service';
+import { RoleService } from '../../core/services/role.service';
 
 @Component({
   selector: 'app-header',
@@ -29,7 +30,8 @@ export class HeaderComponent implements OnInit {
     public translate: TranslateService,
     private errorservice: ErrorHandlerService,
     public rolePermissionService: RolePermissionService,
-    public userService: UserService
+    public userService: UserService,
+    public roleService: RoleService
   ) {
     const savedLang = localStorage.getItem('lang') || 'en';
     this.translate.setDefaultLang(savedLang);
@@ -37,18 +39,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.currentRole = (user.role || 'USER').toUpperCase();
-        this.isAdmin = this.currentRole === 'ADMIN';
-        // THIS LINE IS CRITICAL!
-        this.rolePermissionService.setRole(this.currentRole);
-      },
-      error: () => {
-        this.currentRole = 'USER';
-        this.isAdmin = false;
-        this.rolePermissionService.setRole('USER');
-      }
+    this.roleService.role$.subscribe(role => {
+      this.currentRole = (role || 'USER').toUpperCase();
+      this.isAdmin = this.currentRole === 'ADMIN';
+      this.rolePermissionService.setRole(this.currentRole);
     });
 
     this.breakpointObserver
@@ -88,4 +82,7 @@ export class HeaderComponent implements OnInit {
       this.rolePermissionService.getPermission('items', 'view_interest')
     );
   }
+  get canManageUsers(): boolean {
+  return this.rolePermissionService.getPermission('manage-user', 'users_manage');
+}
 }

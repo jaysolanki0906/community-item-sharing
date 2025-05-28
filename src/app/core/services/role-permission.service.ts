@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { UserService } from "./user.service"; // <-- Make sure this path is correct
+import { RoleService } from "./role.service"; // <-- Import RoleService
 
 const ROLES_DATA = [
   {
@@ -14,6 +14,9 @@ const ROLES_DATA = [
         "mark_interest": true,
         "view_interest": true
       },
+      "manage-user":{
+        "users_manage" : true,
+      }
     }
   },
   {
@@ -27,6 +30,9 @@ const ROLES_DATA = [
         "mark_interest": false,
         "view_interest": false,
       },
+      "manage-user":{
+        "users_manage" : false,
+      }
     }
   }
 ];
@@ -39,9 +45,14 @@ export class RolePermissionService {
   private currentRole: string = 'USER';
   public roleAuth: any = {};
 
-  constructor(private userService: UserService) {
+  constructor(private roleService: RoleService) {
     this.loadRoles();
-    // Don't call setRoleFromApi here, do it explicitly in component after user info is loaded
+
+    // Subscribe to RoleService BehaviorSubject for role updates
+    this.roleService.role$.subscribe(role => {
+      this.currentRole = (role || 'USER').toUpperCase();
+      this.updateRoleAuth();
+    });
   }
 
   loadRoles() {
@@ -54,21 +65,10 @@ export class RolePermissionService {
     this.updateRoleAuth();
   }
 
+  // Call this ONLY if you want to set role manually (not recommended if using RoleService everywhere)
   setRole(role: string) {
     this.currentRole = (role || 'USER').toUpperCase();
     this.updateRoleAuth();
-  }
-
-  // Not called in constructor! Call this from app component or after user session is ready
-  setRoleFromApi() {
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.setRole(user.role);
-      },
-      error: () => {
-        this.setRole('USER');
-      }
-    });
   }
 
   updateRoleAuth() {

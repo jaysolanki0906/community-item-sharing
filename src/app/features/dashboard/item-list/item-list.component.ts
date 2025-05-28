@@ -3,6 +3,7 @@ import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/models/item.model';
 import { PageEvent } from '@angular/material/paginator';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { RoleService } from '../../../core/services/role.service';
 
 @Component({
   selector: 'app-item-list',
@@ -12,6 +13,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 })
 export class ItemListComponent {
   items: Item[] = [];
+  role: string = 'USER';
   selectedType: 'LOST' | 'FOUND' | 'FREE' = 'LOST';
   displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status'];
   searchText: string = '';
@@ -36,9 +38,14 @@ export class ItemListComponent {
 
   constructor(private itemService: ItemService,
     private errorHandler: ErrorHandlerService,
+    private roleService: RoleService,
   ) {}
 
   ngOnInit(): void {
+    this.roleService.role$.subscribe(role => {
+    this.role = role;
+    // You can now use this.role for role-based logic in your component
+  });
     this.loadItems();
     this.itemcard();
   }
