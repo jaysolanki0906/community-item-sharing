@@ -6,6 +6,8 @@ import { ItemFormDialogComponent } from '../item-form-dialog/item-form-dialog.co
 import Swal from 'sweetalert2';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { UserService } from '../../../core/services/user.service';
+
 interface Action {
   label: string;
   icon: string;
@@ -55,13 +57,24 @@ export class MyitemsComponent implements OnInit {
     private itemService: ItemService,
     private dialog: MatDialog,
     public rolePermissionService: RolePermissionService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    
-    this.fetchItems();
-    this.setPermittedActionButtons();
+    // Make absolutely sure permissions are set after refresh
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.rolePermissionService.setRole(user.role);
+        this.setPermittedActionButtons();
+        this.fetchItems();
+      },
+      error: () => {
+        this.rolePermissionService.setRole('USER');
+        this.setPermittedActionButtons();
+        this.fetchItems();
+      }
+    });
   }
 
   fetchItems(): void {
@@ -72,11 +85,8 @@ export class MyitemsComponent implements OnInit {
     const search = this.searchText;
     this.isLoading = true;
 
-    
-
     const callback = {
       next: (response: { data: Item[], total: number }) => {
-      
         this.items = response.data;
         this.filteredItems = this.items;
         this.totalItems = response.total;
@@ -99,34 +109,29 @@ export class MyitemsComponent implements OnInit {
   }
 
   applyFilter(selectedType: string): void {
-    
     this.selectedType = selectedType;
     this.pageIndex = 0;
     this.fetchItems();
   }
 
   onSearchChange(): void {
-    console.log(`Search text changed: "${this.searchText}"`);
     this.pageIndex = 0;
     this.fetchItems();
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
-    console.log(`Page changed: pageIndex=${event.pageIndex}, pageSize=${event.pageSize}`);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.fetchItems();
   }
 
   addItem(): void {
-    
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: {}, mode: 'add' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
       if (result) {
         this.fetchItems();
       }
@@ -134,14 +139,12 @@ export class MyitemsComponent implements OnInit {
   }
 
   editItem(item: Item): void {
-    
     const dialogRef = this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: item, mode: 'edit' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
       if (result) {
         this.fetchItems();
       }
@@ -149,7 +152,6 @@ export class MyitemsComponent implements OnInit {
   }
 
   viewItem(item: Item): void {
-    console.log('Opening View Item dialog for item:', item);
     this.dialog.open(ItemFormDialogComponent, {
       width: '500px',
       data: { item: item, mode: 'view' }
@@ -157,7 +159,6 @@ export class MyitemsComponent implements OnInit {
   }
 
   deleteItem(id: string): void {
-    console.log('Delete item requested for id:', id);
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this item?',
@@ -170,20 +171,16 @@ export class MyitemsComponent implements OnInit {
         this.isLoading = true;
         this.itemService.deleteItem(id).subscribe({
           next: () => {
-            console.log('Item deleted successfully:', id);
             Swal.fire('Deleted!', 'The item has been deleted.', 'success').then(() => {
               this.fetchItems();
             });
           },
           error: (error) => {
-            console.error('Failed to delete item:', error);
             this.errorHandler.handleError(error, 'myitems');
             this.isLoading = false;
             Swal.fire('Error', 'Failed to delete item.', 'error');
           }
         });
-      } else {
-        console.log('Delete cancelled');
       }
     });
   }
@@ -204,7 +201,6 @@ export class MyitemsComponent implements OnInit {
   }
 
   setPermittedActionButtons(): void {
-    
     const actions = [];
 
     if (this.rolePermissionService.getPermission('items', 'items_edit')) {
@@ -217,6 +213,5 @@ export class MyitemsComponent implements OnInit {
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
     this.actionButtons = actions;
-    
   }
 }

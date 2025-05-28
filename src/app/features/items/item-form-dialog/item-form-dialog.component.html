@@ -5,93 +5,89 @@
 
 <div mat-dialog-content class="form-container">
   <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <!-- Title -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Title
-      </label>
+      <label class="field-label"><span class="required-star">*</span> Title</label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="title">
-        <mat-error *ngIf="itemForm.get('title')?.hasError('required')">
-          Title is required.
-        </mat-error>
-        <mat-error *ngIf="itemForm.get('title')?.hasError('minlength')">
-          Title must be at least 3 characters long.
-        </mat-error>
-        <mat-error *ngIf="itemForm.get('title')?.hasError('maxlength')">
-          Title must not exceed 50 characters.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('required')">Title is required.</mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('minlength')">Title must be at least 3 characters.</mat-error>
+        <mat-error *ngIf="itemForm.get('title')?.hasError('maxlength')">Title must not exceed 50 characters.</mat-error>
       </mat-form-field>
     </div>
-
+    <!-- Description -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Description
-      </label>
+      <label class="field-label"><span class="required-star">*</span> Description</label>
       <mat-form-field appearance="fill" class="full-width">
         <textarea matInput formControlName="description"></textarea>
-        <mat-error *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched">
-          Description is required.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched">Description is required.</mat-error>
       </mat-form-field>
       <div *ngIf="itemForm.get('description')?.value" class="description-preview">
         <label>Preview:</label>
         <div [innerHTML]="descriptionHtml"></div>
       </div>
     </div>
-
+    <!-- Location -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Location
-      </label>
+      <label class="field-label"><span class="required-star">*</span> Location</label>
       <mat-form-field appearance="fill" class="full-width">
         <input matInput formControlName="location">
-        <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">
-          Location is required.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">Location is required.</mat-error>
       </mat-form-field>
     </div>
-
+    <!-- Type -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Type
-      </label>
+      <label class="field-label"><span class="required-star">*</span> Type</label>
       <mat-form-field appearance="fill" class="full-width">
         <mat-select formControlName="type">
           <mat-option value="LOST">Lost</mat-option>
           <mat-option value="FOUND">Found</mat-option>
         </mat-select>
-        <mat-error *ngIf="itemForm.get('type')?.hasError('required') && itemForm.get('type')?.touched">
-          Type is required.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('type')?.hasError('required') && itemForm.get('type')?.touched">Type is required.</mat-error>
       </mat-form-field>
     </div>
-
+    <!-- Status -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Status
-      </label>
+      <label class="field-label"><span class="required-star">*</span> Status</label>
       <mat-form-field appearance="fill" class="full-width">
         <mat-select formControlName="status">
           <mat-option value="ACTIVE">Active</mat-option>
           <mat-option value="RESOLVED">Resolved</mat-option>
         </mat-select>
-        <mat-error *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched">
-          Status is required.
-        </mat-error>
+        <mat-error *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched">Status is required.</mat-error>
       </mat-form-field>
     </div>
-
+    <!-- Category (Select/Dropdown) -->
     <div class="form-group">
-      <label class="field-label">
-        <span class="required-star">*</span>
-        Image
-      </label>
-      <input #fileInput formControlName="image" type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
+      <label class="field-label">Category</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let option of categoryOptions" [value]="option.value">{{ option.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <!-- Urgency (Radio Button) -->
+    <div class="form-group">
+      <label class="field-label">Urgency</label>
+      <mat-radio-group formControlName="urgency">
+        <mat-radio-button *ngFor="let option of radioOptions" [value]="option.value">{{ option.label }}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <!-- Is Featured (Checkbox) -->
+    <div class="form-group">
+      <mat-checkbox formControlName="isFeatured">Featured Item</mat-checkbox>
+    </div>
+    <!-- Tags (Multiple Checkbox) -->
+    <div class="form-group">
+      <label class="field-label">Tags</label>
+      <div class="checkbox-group" formArrayName="tags">
+        <mat-checkbox *ngFor="let opt of tagOptions; let i = index" [formControlName]="i">{{ opt.label }}</mat-checkbox>
+      </div>
+    </div>
+    <!-- Image -->
+    <div class="form-group">
+      <label class="field-label"><span class="required-star">*</span> Image</label>
+      <input #fileInput type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
       <div *ngIf="imageError" class="error-text">
         <mat-error>{{ imageError }}</mat-error>
       </div>
@@ -100,7 +96,6 @@
         <button mat-button color="warn" (click)="removeImage()" type="button">X</button>
       </div>
     </div>
-
     <div mat-dialog-actions align="end" class="dialog-actions">
       <button mat-button type="button" (click)="cancel()" class="cancel-button">Cancel</button>
       <button mat-button color="primary" type="submit" *ngIf="!isViewMode" class="save-button">Save</button>

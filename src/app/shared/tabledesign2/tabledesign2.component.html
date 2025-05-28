@@ -35,18 +35,18 @@
               </button>
             </ng-container>
             <ng-container *ngSwitchCase="'role'">
-      <span 
-        [ngStyle]="{
-          'background': element[col] === 'ADMIN' ? '#e53935' : '#43a047',
-          'color': 'white',
-          'padding': '2px 12px',
-          'border-radius': '4px',
-          'font-weight': '500',
-          'display': 'inline-block'
-        }">
-        {{ element[col] }}
-      </span>
-    </ng-container>
+              <span 
+                [ngStyle]="{
+                  'background': element[col] === 'ADMIN' ? '#e53935' : '#43a047',
+                  'color': 'white',
+                  'padding': '2px 12px',
+                  'border-radius': '4px',
+                  'font-weight': '500',
+                  'display': 'inline-block'
+                }">
+                {{ element[col] }}
+              </span>
+            </ng-container>
 
             <ng-container *ngSwitchCase="'actions'">
               <button *ngFor="let btn of actionButtons"
@@ -62,6 +62,11 @@
                 </mat-icon>
               </button>
             </ng-container>
+            
+            <ng-container *ngSwitchCase="'description'">
+              <div [innerHTML]="element[col]"></div>
+            </ng-container>
+
             <ng-container *ngSwitchDefault>
               {{ element[col] }}
             </ng-container>
@@ -75,13 +80,11 @@
     </table>
   </div>
 
-
   <ng-template #loader>
     <div class="loader-container" style="text-align: center; padding: 40px;">
       <mat-spinner diameter="40"></mat-spinner>
     </div>
   </ng-template>
-
 
   <div *ngIf="!Loading && dataSource.length === 0" class="no-data-message">
     Sorry! There is no data.

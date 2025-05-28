@@ -41,7 +41,7 @@ export class RolePermissionService {
 
   constructor(private userService: UserService) {
     this.loadRoles();
-    this.setRoleFromApi();
+    // Don't call setRoleFromApi here, do it explicitly in component after user info is loaded
   }
 
   loadRoles() {
@@ -59,6 +59,7 @@ export class RolePermissionService {
     this.updateRoleAuth();
   }
 
+  // Not called in constructor! Call this from app component or after user session is ready
   setRoleFromApi() {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
