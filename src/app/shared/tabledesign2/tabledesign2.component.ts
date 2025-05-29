@@ -30,11 +30,22 @@ export class Tabledesign2Component {
 
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+  filterText: string = '';
+  filterField: 'title' | 'description' = 'title';
 
   constructor(
     private dialog: MatDialog,
     private errorHandler: ErrorHandlerService
   ) {}
+
+  get filteredDataSource(): any[] {
+    if (!this.filterText) return this.dataSource;
+    const field = this.filterField;
+    const filterTextLower = this.filterText.toLowerCase();
+    return this.dataSource.filter(item =>
+      (item[field] || '').toLowerCase().includes(filterTextLower)
+    );
+  }
 
   onPageChange(event: PageEvent) {
     try {
@@ -74,8 +85,8 @@ export class Tabledesign2Component {
   }
 
   sortData(column: string) {
+    if (column !== 'title' && column !== 'description') return;
     if (this.sortColumn === column) {
-      // Toggle sort direction
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortColumn = column;
@@ -85,21 +96,36 @@ export class Tabledesign2Component {
       let aValue = a[column];
       let bValue = b[column];
 
-      // Handle null/undefined
       if (aValue == null) aValue = '';
       if (bValue == null) bValue = '';
 
-      // Use localeCompare for strings, normal comparison for numbers
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return this.sortDirection === 'asc'
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       } else {
-        return this.sortDirection === 'asc'
-          ? (aValue > bValue ? 1 : aValue < bValue ? -1 : 0)
-          : (aValue < bValue ? 1 : aValue > bValue ? -1 : 0);
+        return 0;
       }
     });
     this.dataSource = sortedData;
+  }
+
+  onFilterTextChange(text: string) {
+    this.filterText = text;
+  }
+
+  onFilterFieldChange(field: 'title' | 'description') {
+    this.filterField = field;
+  }
+
+  
+  getColumnStyle(col: string) {
+    if (col === '#') return { width: '40px', 'max-width': '40px', 'min-width': '40px', 'text-align': 'center' };
+    if (col === 'type' || col === 'status' || col === 'role') return { width: '80px', 'max-width': '100px', 'min-width': '60px', 'text-align': 'center' };
+    if (col === 'actions') return { width: '110px', 'max-width': '210px', 'min-width': '80px' };
+    if (col === 'imageUrl') return { width: '110px', 'max-width': '110px', 'min-width': '90px', 'text-align': 'center' };
+    if (col === 'description') return { width: '240px', 'max-width': '240px', 'min-width': '140px' };
+    if (col === 'title' || col === 'location' || col === 'name' || col === 'email') return { width: '180px', 'max-width': '180px', 'min-width': '100px' };
+    return { 'max-width': '140px', 'min-width': '80px' };
   }
 }

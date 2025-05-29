@@ -21,3 +21,21 @@
     width: 100%;
     margin-top: 20px;
   }
+  .add-item-container {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 10px 20px;
+  text-align: right;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.add-item-container button {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+  transition: background 0.2s, color 0.2s;
+}
+
+.add-item-container button:hover {
+  background: var(--accent-color) !important;
+}

@@ -28,7 +28,7 @@ export class ItemsComponent implements OnInit {
   items: Item[] = [];
   interestedItems: string[] = [];
   dataSource = new MatTableDataSource<Item>();
-  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'imageUrl', 'status', 'actions'];
+  displayedColumns: string[] = ['#', 'type', 'title', 'description', 'location', 'imageUrl', 'status', 'actions'];
   interestedUsers: Interest[] = [];
   userRole: string = '';
   selectedType: string = 'LOST';
@@ -43,7 +43,6 @@ export class ItemsComponent implements OnInit {
   actionButtons: Action[] = [];
 
   columnHeaders = {
-    id: 'TABLE.ID',
     type: 'TABLE.TYPE',
     title: 'TABLE.TITLE',
     description: 'TABLE.DESCRIPTION',
@@ -59,11 +58,10 @@ export class ItemsComponent implements OnInit {
     private router: Router,
     private permissionService: RolePermissionService,
     private errorHandler: ErrorHandlerService,
-    private roleService: RoleService // Use RoleService instead of UserService
+    private roleService: RoleService 
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to RoleService's BehaviorSubject for the current user role
     this.roleService.role$.subscribe(role => {
       this.userRole = (role || 'USER').toUpperCase();
       this.setupActionButtons();

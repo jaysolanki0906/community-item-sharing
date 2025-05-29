@@ -20,6 +20,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -41,9 +44,13 @@ import { MatSortModule } from '@angular/material/sort';
   MatCardModule,
   MatTableModule,
   FormsModule,
+  MatFormFieldModule,
+  FormsModule,
   MatPaginatorModule,
   MatMenuModule,
   TranslateModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   exports:[HeaderComponent,
     TitleCasePipe,

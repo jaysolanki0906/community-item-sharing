@@ -24,7 +24,7 @@ interface ActionEvent {
 })
 export class ListusersComponent {
  users: User[] = [];
-  displayedColumns: string[] = ['id', 'name', 'email', 'role', 'actions'];
+  displayedColumns: string[] = ['#', 'name', 'email', 'role', 'actions'];
   pageIndex: number = 0;
   pageSize: number = 5;
   totalItems: number = 0;

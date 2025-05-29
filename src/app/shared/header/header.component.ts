@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
   isAdmin: boolean = false;
   isSmallScreen = false;
   currentRole: string = 'USER';
+  isDarkTheme = false;
   transalte: TranslateService = inject(TranslateService);
 
   constructor(
@@ -39,6 +40,13 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let storedTheme = localStorage.getItem('theme');
+    if (!storedTheme) {
+      storedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : '';
+    }
+    this.isDarkTheme = storedTheme === 'dark-theme';
+    document.body.classList.toggle('dark-theme', this.isDarkTheme);
+
     this.roleService.role$.subscribe(role => {
       this.currentRole = (role || 'USER').toUpperCase();
       this.isAdmin = this.currentRole === 'ADMIN';
@@ -54,6 +62,12 @@ export class HeaderComponent implements OnInit {
       .subscribe(isSmall => {
         this.isSmallScreen = isSmall;
       });
+  }
+
+  toggleTheme() {
+    this.isDarkTheme = !this.isDarkTheme;
+    document.body.classList.toggle('dark-theme', this.isDarkTheme);
+    localStorage.setItem('theme', this.isDarkTheme ? 'dark-theme' : '');
   }
 
   changeLanguage(lang: string) {
@@ -82,7 +96,8 @@ export class HeaderComponent implements OnInit {
       this.rolePermissionService.getPermission('items', 'view_interest')
     );
   }
+
   get canManageUsers(): boolean {
-  return this.rolePermissionService.getPermission('manage-user', 'users_manage');
-}
+    return this.rolePermissionService.getPermission('manage-user', 'users_manage');
+  }
 }

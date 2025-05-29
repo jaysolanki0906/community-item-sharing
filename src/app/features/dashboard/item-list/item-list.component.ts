@@ -15,7 +15,7 @@ export class ItemListComponent {
   items: Item[] = [];
   role: string = 'USER';
   selectedType: 'LOST' | 'FOUND' | 'FREE' = 'LOST';
-  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status'];
+  displayedColumns: string[] = ['#', 'type', 'title', 'description', 'location', 'status'];
   searchText: string = '';
   lostCount: number = 0;
   foundCount: number = 0;
@@ -26,7 +26,7 @@ export class ItemListComponent {
   loading:boolean = true;
   pageIndex:number = 0;
   columnHeaders = {
-    id: 'TABLE.ID',
+    '#' : '#',
     type: 'TABLE.TYPE',
     title: 'TABLE.TITLE',
     description: 'TABLE.DESCRIPTION',
@@ -44,7 +44,6 @@ export class ItemListComponent {
   ngOnInit(): void {
     this.roleService.role$.subscribe(role => {
     this.role = role;
-    // You can now use this.role for role-based logic in your component
   });
     this.loadItems();
     this.itemcard();

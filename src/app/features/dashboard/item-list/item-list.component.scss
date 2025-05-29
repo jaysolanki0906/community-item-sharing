@@ -1,101 +1,69 @@
-.search-field {
-    width: 300px;
-    margin: 16px 0;
+:root {
+  --card-bg: #fff;
+  --card-text: #212121;
+  --lost-bg: #ffefc1;   /* soft yellow for lost */
+  --found-bg: #c1eaff;  /* soft blue for found */
+  --free-bg: #d2ffd1;   /* soft green for free */
+  --lost-selected: #d32f2f;
+  --found-selected: #0097a7;
+  --free-selected: #43a047;
+}
+
+body.dark-theme {
+  --card-bg: #23272b;
+  --card-text: #fafafa;
+  --lost-bg: #3e2323;
+  --found-bg: #1a2c32;
+  --free-bg: #233227;
+  --lost-selected: #ff5252;
+  --found-selected: #4dd0e1;
+  --free-selected: #66bb6a;
+}
+
+.count-cards {
+  display: flex;
+  gap: 24px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+mat-card.count-card.lost {
+  background: var(--lost-bg) !important;
+}
+mat-card.count-card.found {
+  background: var(--found-bg) !important;
+}
+mat-card.count-card.free {
+  background: var(--free-bg) !important;
+}
+
+.count-card {
+  color: var(--card-text);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+  min-width: 220px;
+  flex: 1 1 240px;
+  text-align: center;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    filter: brightness(0.97);
   }
-  
-  mat-card {
-    padding: 20px;
-    margin: 20px;
-  }
-  
-  table {
-    width: 100%;
-    margin-top: 20px;
-  }
+}
+
+@media (max-width: 900px) {
   .count-cards {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-  
-    .count-card {
-      flex: 1;
-      text-align: center;
-      padding: 16px;
-      border-radius: 8px;
-  
-      &.lost { background-color: #ffe0e0; }
-      &.found { background-color: #e0f7fa; }
-      &.free { background-color: #e8f5e9; }
-  
-      .count {
-        font-size: 24px;
-        font-weight: bold;
-        margin-top: 8px;
-      }
-    }
-  }
-  .count-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 1rem;
-    margin: 1rem 0;
-  }
-  
-  .count-card {
-    flex: 1 1 200px;
-    min-width: 200px;
-    max-width: 300px;
-    text-align: center;
-    padding: 1rem;
-    font-size: 1.2rem;
-  }
-  
-  .search-field {
-    width: 100%;
-    margin: 1rem 0;
-  }
-  
-  mat-card {
-    margin: 1rem;
-    padding: 1rem;
-  }
-  
-  @media (max-width: 768px) {
-    .count-cards {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .mat-table {
-      overflow-x: auto;
-      display: block;
-    }
-  
-    table {
-      width: 100%;
-    }
-  
-    .mat-header-cell, .mat-cell {
-      white-space: nowrap;
-    }
-  }
-  .mat-responsive-table {
-    overflow-x: auto;
-  }
-  .controls-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
-    justify-content: space-between;
-  
-    .type-toggle {
-      flex: 1 1 250px;
-    }
-  
-    .search-field {
-      flex: 2 1 300px;
-    }
   }
-      
+  .count-card {
+    width: 100%;
+    max-width: 450px;
+  }
+}

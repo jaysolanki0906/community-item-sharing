@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { RoleService } from '../../../core/services/role.service';
+import { Subscription } from 'rxjs';
 
 interface Action {
   label: string;
@@ -21,10 +22,11 @@ interface Action {
   standalone: false,
 })
 export class MyitemsComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
+  displayedColumns: string[] = ['#', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
   actionButtons: Action[] = [];
+  private roleSubscription!: Subscription;
 
   selectedType: string = 'LOST';
   searchText: string = '';
@@ -44,7 +46,7 @@ export class MyitemsComponent implements OnInit {
     { label: 'Shared With Me', value: 'SHARED' }
   ];
   columnHeaders = {
-    id: 'TABLE.ID',
+    '#': '#',
     type: 'TABLE.TYPE',
     title: 'TABLE.TITLE',
     description: 'TABLE.DESCRIPTION',
@@ -63,7 +65,7 @@ export class MyitemsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.roleService.role$.subscribe(role => {
+    this.roleSubscription =this.roleService.role$.subscribe(role => {
       this.currentRole = (role || 'USER').toUpperCase();
       this.rolePermissionService.setRole(this.currentRole);
       this.setPermittedActionButtons();
@@ -228,5 +230,10 @@ export class MyitemsComponent implements OnInit {
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
     this.actionButtons = actions;
+  }
+  ngOnDestroy(): void {
+    if (this.roleSubscription) {
+      this.roleSubscription.unsubscribe();
+    }
   }
 }

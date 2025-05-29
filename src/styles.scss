@@ -1,10 +1,147 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  .swal2-soft-alert {
-  font-size: 16px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+:root {
+  --bg-color: #f7f9fa;
+  --card-bg: #fff;
+  --primary-color: #1976d2;
+  --accent-color: #e91e63;
+  --text-color: #212121;
+  --header-bg: #f8fafbf9;
+  --header-text: #0a0a0a;
+  --border-color: #e0e0e0;
+  --lost-bg: #d890d8;
+  --found-bg: #90c6d8;
+  --free-bg: #99e1ac;
+}
+
+body.dark-theme {
+  --bg-color: #181A1B;
+  --card-bg: #23272b;
+  --primary-color: #90caf9;
+  --accent-color: #ffab91;
+  --text-color: #fafafa;
+  --header-bg: #23272b;
+  --header-text: #90caf9;
+  --border-color: #3a3a3a;
+  --card-text: #fafafa;
+  --lost-bg: #3e2323;
+  --found-bg: #1a2c32;
+  --free-bg: #233227;
+  --lost-selected: #ff5252;
+  --found-selected: #4dd0e1;
+  --free-selected: #66bb6a;
+}
+
+body {
+  background: var(--bg-color) !important;
+  color: var(--text-color);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Mat-select dark theme overrides */
+body.dark-theme .mat-select-value,
+body.dark-theme .mat-select-arrow,
+body.dark-theme .mat-select-placeholder,
+body.dark-theme .mat-select-trigger {
+  color: #fafafa !important;
+}
+body.dark-theme .mat-select-panel {
+  background: #23272b !important;
+  color: #fafafa !important;
+}
+body.dark-theme .mat-select-panel .mat-option,
+body.dark-theme .mat-select-panel .mat-option.mat-active {
+  color: #fafafa !important;
+  background: #23272b !important;
+}
+body.dark-theme .mat-select-panel .mat-option.mat-selected {
+  background: #333 !important;
+  color: #fff !important;
+}
+
+/* Mat-form-field label (mat-label) color fix for dark theme */
+body.dark-theme .mat-form-field-label,
+body.dark-theme .mat-form-field-appearance-outline .mat-form-field-label,
+body.dark-theme ::ng-deep .mat-form-field-label,
+body.dark-theme ::ng-deep .mat-form-field-appearance-outline .mat-form-field-label {
+  color: #fff !important;
+}
+
+/* Outline and outline-thick border color in dark theme */
+body.dark-theme .mat-form-field-appearance-outline .mat-form-field-outline,
+body.dark-theme .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #fafafa !important;
+}
+
+/* Mat-input dark theme */
+body.dark-theme input.mat-input-element,
+body.dark-theme .mat-input-element {
+  color: #fafafa !important;
+}
+body.dark-theme .mat-input-element::placeholder {
+  color: #bdbdbd !important;
+}
+
+.mat-form-field-label,
+.mat-form-field-appearance-outline .mat-form-field-label {
+  color: var(--text-color) !important;
+}
+
+body.dark-theme .mat-mdc-select-value {
+  color: #fff !important;
+}
+
+body.dark-theme .mat-mdc-select-value,
+body.dark-theme .mat-mdc-select-placeholder,
+body.dark-theme .mat-mdc-select-arrow {
+  color: #fff !important;
+}
+
+body.dark-theme ::ng-deep .mat-mdc-select-value,
+body.dark-theme ::ng-deep .mat-mdc-select-placeholder,
+body.dark-theme ::ng-deep .mat-mdc-select-arrow {
+  color: #fff !important;
+}
+
+.mdc-text-field--no-label:not(.mdc-text-field--textarea) .mat-mdc-form-field-input-control.mdc-text-field__input,
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
+  height: auto;
+}
+
+body.dark-theme .mat-mdc-form-field-input-control,
+body.dark-theme .mdc-text-field__input {
+  color: #fff !important;
+}
+
+body.dark-theme ::ng-deep .mat-mdc-form-field-input-control,
+body.dark-theme ::ng-deep .mdc-text-field__input {
+  color: #fff !important;
+}
+
+/* Height fix for input fields (from your snippet) */
+.mdc-text-field--no-label:not(.mdc-text-field--textarea) .mat-mdc-form-field-input-control.mdc-text-field__input,
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
+  height: auto;
+}
+
+body.dark-theme .mat-mdc-form-field-input-control,
+body.dark-theme .mdc-text-field__input {
+  color: #fff !important;
+}
+body.dark-theme ::ng-deep .mat-mdc-form-field-input-control,
+body.dark-theme ::ng-deep .mdc-text-field__input {
+  color: #fff !important;
+}
+body.dark-theme .mat-mdc-paginator,
+body.dark-theme .mat-mdc-paginator-outer-container,
+body.dark-theme .mat-mdc-paginator-container {
+  background: #181A1B !important; /* Or #000 for pure black */
+  color: #fafafa !important;
+  border-top: 1px solid #333 !important;
+}
+
+body.dark-theme ::ng-deep .mat-mdc-paginator,
+body.dark-theme ::ng-deep .mat-mdc-paginator-outer-container,
+body.dark-theme ::ng-deep .mat-mdc-paginator-container {
+  background: #181A1B !important; /* Or #000 for pure black */
+  color: #fafafa !important;
+  border-top: 1px solid #333 !important;
 }

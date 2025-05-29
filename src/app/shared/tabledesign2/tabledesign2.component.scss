@@ -1,76 +1,67 @@
-.segmented-button-group {
-    display: inline-flex;
-    border: 1px solid #ccc;
-    border-radius: 30px;
-    overflow: hidden;
-    background-color: #f5f5f5;
-  
-    button {
-      border: none;
-      padding: 10px 16px;
-      background: transparent;
-      font-weight: 500;
-      cursor: pointer;
-      outline: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 14px;
-  
-      &:not(:last-child) {
-        border-right: 1px solid #ccc;
-      }
-  
-      &:hover {
-        background-color: #e0e0e0;
-      }
-  
-      &.active {
-        background-color: #dbe4ff;
-        font-weight: bold;
-        color: #1a237e;
-      }
-  
-      mat-icon {
-        font-size: 16px;
-      }
-    }
-  }
-  .table-container {
-  padding: 24px;
-  border-radius: 12px;
-  background-color: #fff;
-  margin: 20px auto;
-  max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+:root {
+  --card-bg: #fff;
+  --text-color: #212121;
+  --border-color: #e0e0e0;
+  --primary-color: #3f51b5;
 }
 
+body.dark-theme {
+  --card-bg: #23272b;
+  --text-color: #fafafa;
+  --border-color: #333;
+  --primary-color: #3f51b5;
+}
+
+/* Segmented button group styles (merged in) */
 .segmented-button-group {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  background: var(--card-bg);
+  padding: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
 .filter-button {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  margin-right: 8px;
   padding: 6px 14px;
   border-radius: 20px;
-  background-color: #f1f1f1;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  outline: none;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 14px;
+
+  &:hover, &:focus {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+  }
+
+  &.active {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+  }
 }
 
-.filter-button.active {
-  background-color: #3f51b5;
-  color: #fff;
-}
-
-.filter-button:hover {
-  background-color: #e0e0e0;
+.table-container {
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  margin: 24px 0;
+  max-width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s, color 0.2s;
 }
 
 .table-wrapper {
@@ -83,12 +74,20 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 16px;
+  background: var(--card-bg);
+  color: var(--text-color);
+
+  th, td, tr {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+  }
 }
 
 .custom-header {
   font-weight: 600;
-  background-color: #f5f5f5;
-  color: #333;
+  background: var(--primary-color) !important;
+  color: #fff !important;
   text-align: left;
   padding: 12px;
 }
@@ -100,6 +99,16 @@ mat-header-cell, mat-cell {
 
 mat-row:hover {
   background-color: #f9f9f9;
+}
+
+/* For description and other long fields (ellipsis) */
+.description-cell,
+.ellipsis-cell {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
 }
 
 .thumbnail {
@@ -114,26 +123,15 @@ mat-row:hover {
   font-style: italic;
   color: #999;
 }
-@media (max-width: 768px) {
-  .custom-table {
-    font-size: 13px;
-  }
 
-  .filter-button {
-    font-size: 12px;
-  }
-
-  .thumbnail {
-    width: 50px;
-    height: 70px;
-  }
-}
 .no-data-message {
   text-align: center;
   font-size: 1.2rem;
   color: #999;
   padding: 20px;
 }
+
+/* Role badge styling */
 .role-badge {
   color: white;
   padding: 2px 12px;
@@ -144,4 +142,74 @@ mat-row:hover {
   &.USER { background: #43a047; }
 }
 
-  
+/* Loader styling */
+.loader-container {
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* Mat elevation overrides */
+.mat-elevation-z4, .mat-elevation-z1 {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* Mat paginator dark theme overrides for MDC paginator */
+body.dark-theme .mat-mdc-paginator,
+body.dark-theme .mat-mdc-paginator-outer-container,
+body.dark-theme .mat-mdc-paginator-container {
+  background: #181A1B !important;
+  color: #fafafa !important;
+  border-top: 1px solid #333 !important;
+}
+
+body.dark-theme .mat-mdc-paginator .mat-mdc-button-base,
+body.dark-theme .mat-mdc-paginator .mat-mdc-icon-button {
+  color: #fafafa !important;
+}
+
+/* Mat-select and input dark theme fixes for MDC */
+body.dark-theme .mat-mdc-select-value,
+body.dark-theme .mat-mdc-select-placeholder,
+body.dark-theme .mat-mdc-select-arrow,
+body.dark-theme .mat-mdc-form-field-input-control,
+body.dark-theme .mdc-text-field__input,
+body.dark-theme .mat-mdc-input-element::placeholder,
+body.dark-theme .mdc-text-field__input::placeholder,
+body.dark-theme .mat-mdc-floating-label {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .custom-table {
+    font-size: 13px;
+  }
+  .filter-button {
+    font-size: 12px;
+  }
+  .thumbnail {
+    width: 50px;
+    height: 70px;
+  }
+  .description-cell,
+  .ellipsis-cell {
+    max-width: 120px;
+  }
+}
+.ellipsis-cell {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+.ellipsis-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;    // number of lines to show
+  line-clamp: 2;            // standard property for compatibility
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}

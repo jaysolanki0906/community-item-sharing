@@ -14,7 +14,7 @@
          [routerLinkActiveOptions]="{ exact: false }" (click)="drawer.close()">
         <mat-icon>favorite</mat-icon> {{ 'Interests' | translate }}
       </a>
-      <a *ngIf="isAdmin" mat-button routerLink="/manage-users" routerLinkActive="active"
+      <a *ngIf="canManageUsers" mat-button routerLink="/manage-users" routerLinkActive="active"
          [routerLinkActiveOptions]="{ exact: true }" (click)="drawer.close()">
         <mat-icon>group</mat-icon> {{ 'Manage Users' | translate }}
       </a>
@@ -28,6 +28,9 @@
       </mat-menu>
       <button mat-button color="accent" [matMenuTriggerFor]="langMenu">
         <mat-icon>language</mat-icon> {{ 'Select Language' | translate }}
+      </button>
+      <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
+        <mat-icon>{{ isDarkTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
       </button>
       <a mat-button color="warn" routerLinkActive="active" (click)="logout(); drawer.close()">
         <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}
@@ -71,6 +74,9 @@
           </mat-menu>
           <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Language switcher">
             <mat-icon>language</mat-icon>
+          </button>
+          <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
+            <mat-icon>{{ isDarkTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
           </button>
           <a mat-button color="warn" class="toolbar-button" (click)="logout()">
             <mat-icon>logout</mat-icon> {{ 'LOGOUT' | translate }}

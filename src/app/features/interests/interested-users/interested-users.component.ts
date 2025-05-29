@@ -15,7 +15,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
   styleUrls: ['./interested-users.component.scss']
 })
 export class InterestedUsersComponent {
-  displayedColumns: string[] = ['userId', 'name', 'email', 'role', 'interestedOn', 'actions'];
+  displayedColumns: string[] = ['#', 'name', 'email', 'role', 'interestedOn', 'actions'];
   interestedUsers: any[] = [];
   actionButtons: any[] = [];
   itemId!: number;
