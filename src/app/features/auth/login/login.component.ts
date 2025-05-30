@@ -7,16 +7,14 @@ import { AuthServiceService } from '../../../core/services/auth-service.service'
 import { RolePermissionService } from '../../../core/services/role-permission.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { LoginResponse } from '../../../core/models/login-response.model';
+import { UserService } from '../../../core/services/user.service';
+import { RoleService } from '../../../core/services/role.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-  ],
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -27,7 +25,9 @@ export class LoginComponent {
     private router: Router,
     private authService: AuthServiceService,
     private rolePermissionService: RolePermissionService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private userService: UserService,
+    private roleService: RoleService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -43,15 +43,26 @@ export class LoginComponent {
       this.authService.login(loginData).subscribe({
         next: (response: LoginResponse) => {
           if (response.data && response.data.id) {
-            // localStorage.setItem('userId', response.data.id);        
-localStorage.setItem('token', response.access_token);    
+            localStorage.setItem('token', response.access_token);
           } else {
             localStorage.removeItem('userId');
           }
           localStorage.setItem('token', response.access_token);
-          this.router.navigate(['/dashboard']);
+
+          this.userService.fetchAndStoreCurrentUser().subscribe({
+            next: (user) => {
+              this.roleService.setRole(user.role); 
+              this.rolePermissionService.setRole(user.role, user.auth_items); 
+              this.router.navigate(['/dashboard']);
+            },
+            error: () => {
+              this.roleService.setRole('USER');
+              this.rolePermissionService.setRole('USER', {}); 
+              this.router.navigate(['/dashboard']);
+            }
+          });
         },
-        error: (error) => {
+        error: (error: any) => {
           this.errorHandler.handleLoginError(error, 'LoginComponent');
           localStorage.removeItem('token');
           localStorage.removeItem('userId');

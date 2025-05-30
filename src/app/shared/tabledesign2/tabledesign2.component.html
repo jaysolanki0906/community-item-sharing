@@ -89,9 +89,15 @@
                   </div>
                 </ng-container>
                 <ng-container *ngSwitchCase="'location'">
-                  <div class="ellipsis-cell" [matTooltip]="element[col]">
-                    {{ element[col] }}
-                  </div>
+                  <ng-container *ngIf="element.location && element.location.x && element.location.y; else noLocation">
+                    <button mat-button color="accent" (click)="openLocationMap(element.location)">
+                      <mat-icon>location_on</mat-icon>
+                      View on Map
+                    </button>
+                  </ng-container>
+                  <ng-template #noLocation>
+                    <span>No Location</span>
+                  </ng-template>
                 </ng-container>
                 <ng-container *ngSwitchCase="'email'">
                   <div class="ellipsis-cell" [matTooltip]="element[col]">
@@ -123,7 +129,7 @@
     </div>
   </ng-template>
 
-  <div *ngIf="!Loading && filteredDataSource.length === 0" class="no-data-message">
+  <div *ngIf="!Loading && ((filteredDataSource?.length || 0) === 0)" class="no-data-message">
     Sorry! There is no data.
   </div>
 

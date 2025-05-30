@@ -17,7 +17,7 @@ export class UserinfoComponent {
     this.userService.getCurrentUser().subscribe({
       next: (data) => {
         console.log('User data:', data);
-        this.userProfile = data;
+        this.userProfile = data === null ? undefined : data;
       },
       error: (err) => {
         this.errorservice.handleError( err, 'ItemFormDialogComponent')

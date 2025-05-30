@@ -1,96 +1,55 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { RoleService } from "./role.service"; // <-- Import RoleService
-
-const ROLES_DATA = [
-  {
-    "title": "ADMIN",
-    "auth_items": {
-      "items": {
-        "items_create": true,
-        "items_edit": true,
-        "items_delete": true,
-        "items_view": true,
-        "mark_interest": true,
-        "view_interest": true
-      },
-      "manage-user":{
-        "users_manage" : true,
-      }
-    }
-  },
-  {
-    "title": "USER",
-    "auth_items": {
-      "items": {
-        "items_create": false,
-        "items_edit": true,
-        "items_delete": false,
-        "items_view": true,
-        "mark_interest": false,
-        "view_interest": false,
-      },
-      "manage-user":{
-        "users_manage" : false,
-      }
-    }
-  }
-];
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, BehaviorSubject } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class RolePermissionService {
-  private rolesArray: any[] = [];
-  private rolesMap: any = {};
-  private rolesSubject = new BehaviorSubject<any[]>([]);
-  private currentRole: string = 'USER';
+  private baseUrl = '/api/roles'; // Adjust as needed
+  public currentRole: string = 'USER';
   public roleAuth: any = {};
 
-  constructor(private roleService: RoleService) {
-    this.loadRoles();
+  constructor(private http: HttpClient) {}
 
-    // Subscribe to RoleService BehaviorSubject for role updates
-    this.roleService.role$.subscribe(role => {
-      this.currentRole = (role || 'USER').toUpperCase();
-      this.updateRoleAuth();
-    });
-  }
-
-  loadRoles() {
-    this.rolesArray = ROLES_DATA;
-    this.rolesMap = {};
-    for (const role of this.rolesArray) {
-      this.rolesMap[role.title.toUpperCase()] = role.auth_items;
-    }
-    this.rolesSubject.next(this.rolesArray);
-    this.updateRoleAuth();
-  }
-
-  // Call this ONLY if you want to set role manually (not recommended if using RoleService everywhere)
-  setRole(role: string) {
+  setRole(role: string, auth_items?: any): void {
     this.currentRole = (role || 'USER').toUpperCase();
-    this.updateRoleAuth();
+    if (auth_items) {
+      // If the backend returns auth_items.auth_items (as in your example):
+      this.roleAuth = auth_items.auth_items || {};
+    }
   }
 
-  updateRoleAuth() {
-    this.roleAuth = this.rolesMap[this.currentRole] || {};
+  getPermission(module: string, permission: string): boolean {
     const permissions = this.generatePermissions(this.roleAuth);
-    localStorage.setItem('permissions', JSON.stringify(permissions));
+    return permissions[module]?.includes(permission);
   }
 
-  getRoles() {
-    return this.rolesArray;
+  getRoles(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
   }
 
-  getallRolesandpermission() {
-    return this.rolesArray.map(role => ({
-      title: role.title,
-      auth_items: this.generatePermissions(role.auth_items)
-    }));
+  createRole(payload: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl, payload, this.httpOptions());
+  }
+
+  updateRole(roleId: string, payload: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${roleId}`, payload, this.httpOptions());
+  }
+
+  patchRole(roleId: string, payload: any): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/${roleId}`, payload, this.httpOptions());
+  }
+
+  deleteRole(roleId: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${roleId}`, this.httpOptions());
+  }
+
+  setRoleAuth(authItems: any): void {
+    this.roleAuth = authItems;
   }
 
   private generatePermissions(authItems: any): { [key: string]: string[] } {
     const permissions: { [key: string]: string[] } = {};
-    for (const module of Object.keys(authItems)) {
+    for (const module of Object.keys(authItems || {})) {
       permissions[module] = [];
       for (const perm of Object.keys(authItems[module])) {
         if (authItems[module][perm] === true) {
@@ -101,12 +60,11 @@ export class RolePermissionService {
     return permissions;
   }
 
-  getPermission(module: string, permission: string): boolean {
-    const permissions = this.generatePermissions(this.roleAuth);
-    return permissions[module]?.includes(permission);
-  }
-
-  getRoles$() {
-    return this.rolesSubject.asObservable();
+  private httpOptions() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
   }
 }

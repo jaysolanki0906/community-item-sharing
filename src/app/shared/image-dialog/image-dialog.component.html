@@ -1,9 +1,14 @@
 <h2 mat-dialog-title>Item Image</h2>
-<mat-dialog-content>
-  <img [src]="data.imageUrl" alt="Item Image" style="width: 100%;" *ngIf="data.imageUrl; else noImage">
-  <ng-template #noImage><p>No image available</p></ng-template>
+<mat-dialog-content style="text-align:center">
+  <img 
+    [src]="data.imageUrl" 
+    alt="Item Image"
+    style="max-width:100%; max-height:70vh; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.18);" 
+    *ngIf="data.imageUrl; else noImage">
+  <ng-template #noImage>
+    <p>No image available</p>
+  </ng-template>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-raised-button color="warn" (click)="closeDialog()">Close</button>
 </mat-dialog-actions>
-

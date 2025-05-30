@@ -87,7 +87,7 @@ export class AuthServiceService {
 
   updateUserStatus(userId: number, isActive: boolean) {
     const url = `users/${userId}/status`;
-    return this.api.patch(url, { isActive });
+    return this.api.patch(url, { is_active:isActive });
   }
   refreshUserRoleFromApi(): Observable<string> {
     return this.api.get<User>('users/me').pipe(
@@ -98,4 +98,9 @@ export class AuthServiceService {
       })
     );
   }
+  getCurrentUserId(): string | null {
+  const userJson = localStorage.getItem('user');
+  const user: User | null = userJson ? JSON.parse(userJson) : null;
+  return user ? String(user.id) : null; // always a string
+}
 }

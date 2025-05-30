@@ -18,13 +18,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { HttpClientModule } from '@angular/common/http';
 import { MatOptionModule } from '@angular/material/core';
+import { RolesPermissionComponent } from './users/rolespermission/rolespermission.component';
 
 const routes: Routes = [
   { path: '', component: ListusersComponent },
+{ path: 'rolesandpermission', component: RolesPermissionComponent },
 ];
 
 @NgModule({
-  declarations: [ListusersComponent,UserformComponent],
+  declarations: [ListusersComponent,UserformComponent,RolesPermissionComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -46,6 +48,6 @@ const routes: Routes = [
     MatExpansionModule,
     HttpClientModule,
   ],
-  exports: [ListusersComponent,UserformComponent,RouterModule],
+  exports: [ListusersComponent,UserformComponent,RouterModule,RolesPermissionComponent],
 })
 export class AdminModule { }

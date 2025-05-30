@@ -52,6 +52,7 @@ export class UserformComponent implements OnInit {
         response => {
           console.log('User updated successfully', response);
           this.dialogRef.close(true);
+          
         },
         error => {
           this.errorservice.handleError( error, 'ItemFormDialogComponent')

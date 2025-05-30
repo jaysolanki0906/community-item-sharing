@@ -57,6 +57,6 @@ import { MatSelectModule } from '@angular/material/select';
     HeaderComponent,
     ImageDialogComponent,
     Tabledesign2Component,
-    TranslateModule]
+    TranslateModule,]
 })
 export class SharedModule { }

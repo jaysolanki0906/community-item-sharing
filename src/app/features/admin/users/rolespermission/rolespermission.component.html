@@ -1,0 +1,37 @@
+<app-header/>
+<div class="role-management-container">
+  <div class="role-management-card">
+    <div class="role-list">
+      <div class="role-list-header">
+        <button class="create-role-btn" (click)="createRole()">
+          <span class="icon">+</span> Create Role
+        </button>
+      </div>
+      <div class="role-list-group">
+        <div *ngFor="let role of roles"
+             [ngClass]="{'selected-role': role.selected}"
+             class="role-list-item"
+             (click)="selectRole(role)">
+          <span>{{ role.name }}</span>
+          <span class="role-actions">
+            <button class="edit-btn" (click)="editRole(role); $event.stopPropagation()" title="Edit">
+              <span class="icon">&#9998;</span>
+            </button>
+            <button class="delete-btn" (click)="deleteRole(role); $event.stopPropagation()" title="Delete">
+              <span class="icon">&#10006;</span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="permission-list">
+      <div *ngFor="let permission of permissions" class="permission-item">
+        <input type="checkbox" [checked]="permission.checked" disabled />
+        <span class="permission-name">{{ permission.name }}</span>
+        <button class="add-permission-btn" (click)="addPermission(permission)">
+          <span class="icon">+</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

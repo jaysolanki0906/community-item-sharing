@@ -2,10 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { rolebaseGuard } from './core/guards/rolebase.guard';
 import { loginGuard } from './core/guards/login.guard';
-import { InterestedUsersComponent } from './features/interests/interested-users/interested-users.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
-import { nofoundguardGuard } from './core/guards/nofoundguard.guard';
 
 export const routes: Routes = [
   {
@@ -44,7 +42,6 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
-  
   {
     path: 'dashboard',
     loadChildren: () =>
@@ -60,20 +57,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-  path: 'not-found',
-  loadComponent: () =>
-    import('./features/notfound/notfound/notfound.component').then((m) => m.NotfoundComponent),
-}
-,
+    path: 'not-found',
+    loadComponent: () =>
+      import('./features/notfound/notfound/notfound.component').then((m) => m.NotfoundComponent),
+  },
   {
     path: 'not-authorized',
     loadChildren: () =>
       import('./features/noauthorizotion/noauthorizotion.module').then((m) => m.NoauthorizotionModule),
   },
   {
-  path: '**',
-  loadComponent: () =>
-    import('./features/notfound/wildcard/wildcard.component').then(m => m.WildcardComponent)
-}
-
+    path: '**',
+    loadComponent: () =>
+      import('./features/notfound/wildcard/wildcard.component').then(m => m.WildcardComponent)
+  }
 ];

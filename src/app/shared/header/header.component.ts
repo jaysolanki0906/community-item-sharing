@@ -48,10 +48,11 @@ export class HeaderComponent implements OnInit {
     document.body.classList.toggle('dark-theme', this.isDarkTheme);
 
     this.roleService.role$.subscribe(role => {
-      this.currentRole = (role || 'USER').toUpperCase();
-      this.isAdmin = this.currentRole === 'ADMIN';
-      this.rolePermissionService.setRole(this.currentRole);
-    });
+  this.currentRole = (role || 'USER').toUpperCase();
+  this.isAdmin = this.currentRole === 'ADMIN';
+  this.rolePermissionService.setRole(this.currentRole);
+  
+});
 
     this.breakpointObserver
       .observe([Breakpoints.Handset, '(max-width: 960px)'])

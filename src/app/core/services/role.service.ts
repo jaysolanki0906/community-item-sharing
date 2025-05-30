@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
-  private roleSubject = new BehaviorSubject<string>('USER'); // Default role
-  public role$ = this.roleSubject.asObservable();
+  private roleSubject = new BehaviorSubject<string>('USER'); 
+  public role$: Observable<string> = this.roleSubject.asObservable();
 
-  setRole(role: string) {
+  
+  setRole(role: string): void {
     this.roleSubject.next(role);
   }
 
