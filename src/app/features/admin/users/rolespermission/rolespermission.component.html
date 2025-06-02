@@ -27,7 +27,7 @@
     <div class="permission-list">
       <div *ngFor="let permission of permissions" class="permission-item">
         <input type="checkbox" [checked]="permission.checked" disabled />
-        <span class="permission-name">{{ permission.name }}</span>
+        <span class="permission-name">{{ permission.module }}:{{ permission.name }}</span>
         <button class="add-permission-btn" (click)="addPermission(permission)">
           <span class="icon">+</span>
         </button>

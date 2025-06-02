@@ -2,6 +2,7 @@ import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } fr
 import { inject } from '@angular/core';
 import { AuthServiceService } from '../services/auth-service.service';
 import { UserService } from '../services/user.service';
+import { RolePermissionService } from '../services/role-permission.service';
 import { firstValueFrom } from 'rxjs';
 
 export const authGuard: CanActivateFn = async (
@@ -11,6 +12,7 @@ export const authGuard: CanActivateFn = async (
   const router = inject(Router);
   const authService = inject(AuthServiceService);
   const userService = inject(UserService);
+  const rolePermissionService = inject(RolePermissionService); // <-- inject permission service
   const token = localStorage.getItem('token');
   const requestedUrl = state.url;
 
@@ -18,11 +20,8 @@ export const authGuard: CanActivateFn = async (
     router.navigate(['/login'], { replaceUrl: true });
     return false;
   }
-
-  // Get the cached user (will be null if not loaded yet)
   let user = await firstValueFrom(userService.getCurrentUser());
 
-  // If user is null (not loaded yet), try to fetch and store it ONCE
   if (!user) {
     try {
       user = await firstValueFrom(userService.fetchAndStoreCurrentUser());
@@ -32,23 +31,30 @@ export const authGuard: CanActivateFn = async (
     }
   }
 
-  // If user is inactive, log out
   if (user && user.is_active === false) {
     authService.logout();
     return false;
   }
 
   const allowedRoles = route.data['roles'] as string[];
-  if (!allowedRoles || allowedRoles.length === 0) {
-    return true;
+  if (allowedRoles && allowedRoles.length > 0) {
+    const authorized = await firstValueFrom(authService.isAuthorized(allowedRoles));
+    if (!authorized) {
+      router.navigate(['/not-authorized'], { skipLocationChange: true });
+      return false;
+    }
   }
 
-  // Use isAuthorized (returns Observable<boolean>)
-  const authorized = await firstValueFrom(authService.isAuthorized(allowedRoles));
-  if (authorized) {
-    return true;
+  const requiredPermissions = route.data['permissions'] as { module: string, permission: string }[];
+  if (requiredPermissions && requiredPermissions.length > 0) {
+    const hasPermission = requiredPermissions.every(req =>
+      rolePermissionService.getPermission(req.module, req.permission)
+    );
+    if (!hasPermission) {
+      router.navigate(['/not-authorized'], { skipLocationChange: true });
+      return false;
+    }
   }
 
-  router.navigate(['/not-authorized'], { skipLocationChange: true });
-  return false;
+  return true;
 };

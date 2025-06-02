@@ -70,10 +70,10 @@ export class ItemsComponent implements OnInit {
 
   setupActionButtons() {
     this.actionButtons = [];
-    if (this.permissionService.getPermission('items', 'mark_interest')) {
+    if (this.permissionService.getPermission('interest', 'interest_create')) {
       this.actionButtons.push({ label: 'Interest', icon: 'favorite', type: 'interest' });
     }
-    if (this.permissionService.getPermission('items', 'view_interest')) {
+    if (this.permissionService.getPermission('interest', 'interest_list')) {
       this.actionButtons.push({ label: 'View Interested', icon: 'visibility', type: 'viewInterested' });
     }
   }
@@ -126,7 +126,7 @@ export class ItemsComponent implements OnInit {
   }
 
   markInterest(itemId: string): void {
-    if (!this.permissionService.getPermission('items', 'mark_interest')) {
+    if (!this.permissionService.getPermission('interest', 'interest_create')) {
       console.warn('User does not have permission to mark interest.');
       return;
     }
@@ -144,7 +144,7 @@ export class ItemsComponent implements OnInit {
   }
 
   viewInterested(itemId: string): void {
-    if (!this.permissionService.getPermission('items', 'view_interest')) {
+    if (!this.permissionService.getPermission('interest', 'interest_list')) {
       console.warn('User does not have permission to view interest.');
       return;
     }

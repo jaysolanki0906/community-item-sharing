@@ -77,7 +77,7 @@ export class MyitemsComponent implements OnInit, OnDestroy {
       this.setPermittedActionButtons();
       this.fetchItems();
     });
-    this.fetchRoles();
+    // this.fetchRoles();
   }
 
   fetchItems(): void {
@@ -254,104 +254,19 @@ export class MyitemsComponent implements OnInit, OnDestroy {
   setPermittedActionButtons(): void {
     const actions = [];
 
-    if (this.rolePermissionService.getPermission('items', 'items_edit')) {
+    if (this.rolePermissionService.getPermission('item', 'item_update')) {
       actions.push({ label: 'Edit', icon: 'edit', type: 'edit' });
     }
-    if (this.rolePermissionService.getPermission('items', 'items_delete')) {
+    if (this.rolePermissionService.getPermission('item', 'item_delete')) {
       actions.push({ label: 'Delete', icon: 'delete', type: 'delete' });
     }
-    if (this.rolePermissionService.getPermission('items', 'items_view')) {
+    if (this.rolePermissionService.getPermission('item', 'item_view')) {
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
     this.actionButtons = actions;
   }
 
-  // ---------- ROLES & PERMISSIONS CRUD SECTION ----------
-  fetchRoles(): void {
-    this.rolePermissionService.getRoles().subscribe({
-      next: (data) => {
-        this.roles = data;
-      },
-      error: (err) => {
-        this.errorHandler.handleError(err, 'fetchRoles');
-      }
-    });
-  }
-
-  createRole(): void {
-    const payload = { name: 'New Role', auth_items: {} };
-    this.rolePermissionService.createRole(payload).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Role created successfully.', 'success');
-        this.fetchRoles();
-      },
-      error: (e) => {
-        this.errorHandler.handleError(e, 'createRole');
-        Swal.fire('Error', 'Failed to create role.', 'error');
-      }
-    });
-  }
-
-  editRole(role: any): void {
-    // Example: only updating name
-    const payload = { name: 'Updated Name' };
-    this.rolePermissionService.updateRole(role.id, payload).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Role updated successfully.', 'success');
-        this.fetchRoles();
-      },
-      error: (e) => {
-        this.errorHandler.handleError(e, 'editRole');
-        Swal.fire('Error', 'Failed to update role.', 'error');
-      }
-    });
-  }
-
-  patchRole(role: any, updatedPermissions: any): void {
-    // Partial update for permissions (auth_items)
-    const payload = { auth_items: updatedPermissions };
-    this.rolePermissionService.patchRole(role.id, payload).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Role permissions updated successfully.', 'success');
-        this.fetchRoles();
-      },
-      error: (e) => {
-        this.errorHandler.handleError(e, 'patchRole');
-        Swal.fire('Error', 'Failed to update role permissions.', 'error');
-      }
-    });
-  }
-
-  deleteRole(role: any): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this role?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.rolePermissionService.deleteRole(role.id).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'The role has been deleted.', 'success').then(() => {
-              this.fetchRoles();
-            });
-          },
-          error: (error) => {
-            this.errorHandler.handleError(error, 'deleteRole');
-            Swal.fire('Error', 'Failed to delete role.', 'error');
-          }
-        });
-      }
-    });
-  }
-
-  updateRolePermissions(role: any): void {
-    const updatedPermissions = role.auth_items; // In real use, get from dialog/form
-
-    this.patchRole(role, updatedPermissions);
-  }
+ 
 
   ngOnDestroy(): void {
     if (this.roleSubscription) {

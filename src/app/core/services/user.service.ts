@@ -12,20 +12,14 @@ export class UserService {
   user$ = this.userSubject.asObservable();
 
   constructor(private api: ApiServiceService) {
-    // Optionally restore from localStorage on init
     const userJson = localStorage.getItem('user');
     if (userJson) {
       this.userSubject.next(JSON.parse(userJson));
     }
   }
 
-  /** Fetch user info from API and store in BehaviorSubject and localStorage */
   fetchAndStoreCurrentUser(): Observable<User> {
-    return this.api.get<any>('auth/user_info').pipe(
-      map(apiUser => ({
-        ...apiUser,
-        isActive: apiUser.is_active // map snake_case to camelCase
-      })),
+    return this.api.get<User>('auth/user_info').pipe(
       tap(user => {
         this.userSubject.next(user);
         localStorage.setItem('user', JSON.stringify(user));
@@ -35,19 +29,23 @@ export class UserService {
   }
 
   getCurrentUser(): Observable<User | null> {
-    return this.user$;
+    if (this.userSubject.value) {
+      return of(this.userSubject.value);
+    } else {
+      return this.fetchAndStoreCurrentUser();
+    }
   }
 
-  clearUser() {
+  clearUser(): void {
     this.userSubject.next(null);
     localStorage.removeItem('user');
   }
 
   getUserById(id: string): Observable<User> {
-    return this.api.get<any>(`users/${id}`).pipe(
+    return this.api.get<User>(`users/${id}`).pipe(
       map(apiUser => ({
         ...apiUser,
-        isActive: apiUser.is_active 
+        is_active: apiUser.is_active
       }))
     );
   }

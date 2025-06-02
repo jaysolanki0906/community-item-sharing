@@ -1,46 +1,72 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable, BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
+import { ApiServiceService } from "./api-service.service";
 
 @Injectable({ providedIn: 'root' })
 export class RolePermissionService {
-  private baseUrl = '/api/roles'; // Adjust as needed
+  private baseUrl = 'roles'; 
   public currentRole: string = 'USER';
   public roleAuth: any = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiServiceService) {}
 
-  setRole(role: string, auth_items?: any): void {
-    this.currentRole = (role || 'USER').toUpperCase();
-    if (auth_items) {
-      // If the backend returns auth_items.auth_items (as in your example):
-      this.roleAuth = auth_items.auth_items || {};
-    }
+  private roleSubject = new BehaviorSubject<string>('USER');
+public currentRole$ = this.roleSubject.asObservable();
+
+setRole(role: string, auth_items?: any): void {
+  this.currentRole = (role || 'USER').toUpperCase();
+  this.roleSubject.next(this.currentRole);
+  if (auth_items) {
+    this.roleAuth = auth_items.auth_items || {};
   }
+}
+
+  private moduleMap: { [key: string]: string } = {
+    items: 'item',
+    interests: 'interest',
+    users: 'user'
+  };
 
   getPermission(module: string, permission: string): boolean {
     const permissions = this.generatePermissions(this.roleAuth);
-    return permissions[module]?.includes(permission);
+    const backendModule = this.moduleMap[module] || module;
+
+    if (!permissions[backendModule]) {
+      console.error(
+        `[RolePermissionService] Module "${backendModule}" not found in permissions for role "${this.currentRole}".`
+      );
+      return false;
+    }
+    if (!permissions[backendModule].includes(permission)) {
+      const rawPermissions = this.roleAuth[backendModule] ? Object.keys(this.roleAuth[backendModule]) : [];
+      if (!rawPermissions.includes(permission)) {
+        console.error(
+          `[RolePermissionService] Permission "${permission}" not found in module "${backendModule}" for role "${this.currentRole}".`
+        );
+      }
+      return false;
+    }
+    return true;
   }
 
   getRoles(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+    return this.api.get<any[]>(this.baseUrl);
   }
 
   createRole(payload: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, payload, this.httpOptions());
+    return this.api.post<any>(this.baseUrl, payload, );
   }
 
   updateRole(roleId: string, payload: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${roleId}`, payload, this.httpOptions());
+    return this.api.patch<any>(`${this.baseUrl}/${roleId}`, payload);
   }
 
   patchRole(roleId: string, payload: any): Observable<any> {
-    return this.http.patch<any>(`${this.baseUrl}/${roleId}`, payload, this.httpOptions());
+    return this.api.patch<any>(`${this.baseUrl}/${roleId}`, payload);
   }
 
   deleteRole(roleId: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${roleId}`, this.httpOptions());
+    return this.api.delete<any>(`${this.baseUrl}/${roleId}`);
   }
 
   setRoleAuth(authItems: any): void {
@@ -60,11 +86,5 @@ export class RolePermissionService {
     return permissions;
   }
 
-  private httpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-  }
+ 
 }

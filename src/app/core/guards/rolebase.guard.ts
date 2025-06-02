@@ -31,21 +31,21 @@ export const rolebaseGuard: CanActivateFn = (route, state) => {
   }
 
   return userService.getUserById(userId).pipe(
-  map(userFromList => {
-    rolePermissionService.setRole(userFromList.role);
-    const canManageUsers = rolePermissionService.getPermission('manage-user', 'users_manage');
-    const isActive = userFromList.is_active === true ;
-    if (canManageUsers && isActive) {
-      return true;
-    } else {
-      
+    map(userFromList => {
+      rolePermissionService.setRole(userFromList.role);
+      const canManageUsers = rolePermissionService.getPermission('user', 'user_status_update');
+      const isActive = userFromList.is_active === true;
+
+      if (canManageUsers && isActive) {
+        return true;
+      } else {
+        router.navigate(['/not-authorized'], { skipLocationChange: true });
+        return false;
+      }
+    }),
+    catchError((error) => {
       router.navigate(['/not-authorized'], { skipLocationChange: true });
-      return false;
-    }
-  }),
-  catchError((error) => {
-    router.navigate(['/not-authorized'], { skipLocationChange: true });
-    return of(false);
-  })
-);
+      return of(false);
+    })
+  );
 };

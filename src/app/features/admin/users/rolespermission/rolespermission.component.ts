@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RolePermissionService } from '../../../../core/services/role-permission.service';
 import Swal from 'sweetalert2';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 interface Permission {
-  name: string;
+  module: string;   
+  name: string;     
   checked: boolean;
 }
 
@@ -17,19 +19,38 @@ export class RolesPermissionComponent implements OnInit {
   roles: any[] = [];
   selectedRole: any = null;
   permissions: Permission[] = [
-    { name: 'items_create', checked: false },
-    { name: 'items_edit', checked: false },
-    { name: 'items_delete', checked: false },
-    { name: 'items_view', checked: false },
-    // Add more permissions here as needed
+    { module: 'item', name: 'item_create', checked: false },
+    { module: 'item', name: 'item_update', checked: false },
+    { module: 'item', name: 'item_delete', checked: false },
+    { module: 'item', name: 'item_view', checked: false },
+    { module: 'user', name: 'user_list', checked: false },
+    { module: 'user', name: 'user_update', checked: false },
+    { module: 'user', name: 'user_view', checked: false },
+    { module: 'interest', name: 'interest_create', checked: false },
+    { module: 'interest', name: 'interest_list', checked: false }
   ];
 
   constructor(
-    public rolePermissionService: RolePermissionService
+    public rolePermissionService: RolePermissionService,
+    public errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
-    this.loadRoles();
+    this.rolePermissionService.getRoles().subscribe({
+      next: (roles) => {
+        console.log('Roles and Permissions:', roles); // <--- Display in 
+        this.roles = roles.map((role: any) => ({ ...role, selected: false }));
+        if (this.selectedRole) {
+          const found = this.roles.find(r => r.id === this.selectedRole.id);
+          if (found) {
+            this.selectRole(found);
+          }
+        }
+      },
+      error: (e) => {
+        this.errorHandler.handleError(e, 'Failed to load roles.');
+      }
+    });
   }
 
   loadRoles(): void {
@@ -43,8 +64,8 @@ export class RolesPermissionComponent implements OnInit {
           }
         }
       },
-      error: () => {
-        Swal.fire('Error', 'Failed to load roles.', 'error');
+      error: (e) => {
+        this.errorHandler.handleError(e, 'Failed to load roles.');
       }
     });
   }
@@ -122,7 +143,6 @@ export class RolesPermissionComponent implements OnInit {
     role.selected = true;
     this.selectedRole = role;
     this.updatePermissionChecks();
-    // Set current permissions in the service for other components if needed
     this.rolePermissionService.setRoleAuth(role.auth_items || {});
   }
 
@@ -131,23 +151,25 @@ export class RolesPermissionComponent implements OnInit {
       Swal.fire('Error', 'Select a role first.', 'warning');
       return;
     }
-    // Assume permissions are stored under items module. Adjust as per your backend
-    const items = this.selectedRole.auth_items?.items || {};
-    if (items[permission.name]) {
-      Swal.fire('Info', `"${permission.name}" permission already exists for this role.`, 'info');
+    // Use correct backend module!
+    const moduleName = permission.module;
+    const permName = permission.name;
+    const perms = this.selectedRole.auth_items?.[moduleName] || {};
+    if (perms[permName]) {
+      Swal.fire('Info', `"${permName}" permission already exists for this role.`, 'info');
       return;
     }
     if (!this.selectedRole.auth_items) {
       this.selectedRole.auth_items = {};
     }
-    if (!this.selectedRole.auth_items['items']) {
-      this.selectedRole.auth_items['items'] = {};
+    if (!this.selectedRole.auth_items[moduleName]) {
+      this.selectedRole.auth_items[moduleName] = {};
     }
-    this.selectedRole.auth_items['items'][permission.name] = true;
+    this.selectedRole.auth_items[moduleName][permName] = true;
 
     this.rolePermissionService.patchRole(this.selectedRole.id, { auth_items: this.selectedRole.auth_items }).subscribe({
       next: () => {
-        Swal.fire('Success', `"${permission.name}" permission added.`, 'success');
+        Swal.fire('Success', `"${permName}" permission added.`, 'success');
         this.updatePermissionChecks();
       },
       error: () => {
@@ -157,13 +179,13 @@ export class RolesPermissionComponent implements OnInit {
   }
 
   updatePermissionChecks(): void {
-    if (!this.selectedRole || !this.selectedRole.auth_items || !this.selectedRole.auth_items['items']) {
+    if (!this.selectedRole || !this.selectedRole.auth_items) {
       this.permissions.forEach(p => p.checked = false);
       return;
     }
-    const itemsPerms = this.selectedRole.auth_items['items'];
     this.permissions.forEach(p => {
-      p.checked = !!itemsPerms[p.name];
+      const perms = this.selectedRole.auth_items[p.module] || {};
+      p.checked = !!perms[p.name];
     });
   }
 }
