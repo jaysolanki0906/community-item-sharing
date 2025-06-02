@@ -27,15 +27,20 @@
         <div [innerHTML]="descriptionHtml"></div>
       </div>
     </div>
-    <!-- Location -->
-    <div class="form-group">
-      <label class="field-label"><span class="required-star">*</span> Location</label>
-      <mat-form-field appearance="fill" class="full-width">
-        <input matInput formControlName="location">
-        <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">Location is required.</mat-error>
-      </mat-form-field>
+    <!--Location-->
+      <div class="form-group">
+  <label class="field-label"><span class="required-star">*</span> Location</label>
+  <div style="display: flex; gap: 8px; align-items: center;">
+    <mat-form-field appearance="fill" class="full-width" style="flex:1;">
+      <input matInput formControlName="location" [readonly]="true" placeholder="Select location from map">
+      <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">Location is required.</mat-error>
+    </mat-form-field>
+    <button mat-stroked-button color="primary" type="button" (click)="openMapDialog()">
+      <mat-icon>map</mat-icon>
+      Select from Map
+    </button>
+  </div>
     </div>
-    <!-- Type -->
     <div class="form-group">
       <label class="field-label"><span class="required-star">*</span> Type</label>
       <mat-form-field appearance="fill" class="full-width">
@@ -73,22 +78,20 @@
         <mat-radio-button *ngFor="let option of radioOptions" [value]="option.value">{{ option.label }}</mat-radio-button>
       </mat-radio-group>
     </div>
-    <!-- Is Featured (Checkbox) -->
     <div class="form-group">
       <mat-checkbox formControlName="isFeatured">Featured Item</mat-checkbox>
     </div>
     <div class="form-group">
-  <label class="field-label">Tags</label>
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-select formControlName="tags" [multiple]="true" [disabled]="isViewMode">
-      <mat-option *ngFor="let opt of tagOptions" [value]="opt.value">{{ opt.label }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-    <!-- Image -->
+      <label class="field-label">Tags</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-select formControlName="tags" [multiple]="true">
+          <mat-option *ngFor="let opt of tagOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div class="form-group">
       <label class="field-label"><span class="required-star">*</span> Image</label>
-      <input #fileInput type="file" (change)="onFileChange($event)" accept="image/*" [disabled]="isViewMode" />
+      <input #fileInput type="file" (change)="onFileChange($event)" accept="image/*" />
       <div *ngIf="imageError" class="error-text">
         <mat-error>{{ imageError }}</mat-error>
       </div>

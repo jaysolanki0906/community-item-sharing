@@ -6,6 +6,7 @@ import { NgxPermissionsService } from 'ngx-permissions';
 import { User } from '../models/user.model';
 import { LoginResponse } from '../models/login-response.model';
 import { RoleService } from './role.service'; 
+import { TokenService } from './token.service';
 
 type Credentials = { email: string; password: string };
 
@@ -18,12 +19,11 @@ export class AuthServiceService {
     private api: ApiServiceService,
     private router: Router,
     private permissionsService: NgxPermissionsService,
-    private roleService: RoleService 
+    private roleService: RoleService,
+    private tokenService: TokenService 
   ) {}
 
-  refreshToken(): Observable<any> {
-    return this.api.post('/api/refresh-token', {});
-  }
+ 
 
   clearPermissions() {
     this.permissionsService.flushPermissions();
@@ -87,7 +87,7 @@ export class AuthServiceService {
 
   updateUserStatus(userId: number, isActive: boolean) {
     const url = `users/${userId}/status`;
-    return this.api.patch(url, { isActive });
+    return this.api.patch(url, { is_active:isActive });
   }
   refreshUserRoleFromApi(): Observable<string> {
     return this.api.get<User>('users/me').pipe(
@@ -97,5 +97,15 @@ export class AuthServiceService {
         return role;
       })
     );
+  }
+  getCurrentUserId(): string | null {
+  const userJson = localStorage.getItem('user');
+  const user: User | null = userJson ? JSON.parse(userJson) : null;
+  return user ? String(user.id) : null; // always a string
+}
+ refreshToken(): Observable<any> {
+    return this.api.post('/auth/refresh', {
+      refreshToken: this.tokenService.getRefreshToken()
+    });
   }
 }

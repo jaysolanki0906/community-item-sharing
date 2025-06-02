@@ -11,7 +11,8 @@ function getUserIdFromToken(): string | null {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.id || payload.sub || null;
-  } catch {
+  } catch (err) {
+    console.error('Token decode error:', err);
     return null;
   }
 }
@@ -31,17 +32,18 @@ export const rolebaseGuard: CanActivateFn = (route, state) => {
 
   return userService.getUserById(userId).pipe(
     map(userFromList => {
-      // Now check using rolePermissionService!
-      const canManageUsers = rolePermissionService.getPermission('manage-user', 'users_manage');
-      // Optionally, check isActive as well
-      if (canManageUsers && userFromList.isActive === true) {
+      rolePermissionService.setRole(userFromList.role);
+      const canManageUsers = rolePermissionService.getPermission('user', 'user_status_update');
+      const isActive = userFromList.is_active === true;
+
+      if (canManageUsers && isActive) {
         return true;
       } else {
         router.navigate(['/not-authorized'], { skipLocationChange: true });
         return false;
       }
     }),
-    catchError(() => {
+    catchError((error) => {
       router.navigate(['/not-authorized'], { skipLocationChange: true });
       return of(false);
     })

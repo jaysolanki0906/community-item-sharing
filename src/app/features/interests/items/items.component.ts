@@ -1,7 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/models/item.model';
 import { InterestService } from '../../../core/services/intrest.service';
@@ -20,8 +18,8 @@ interface Action {
 
 @Component({
   selector: 'app-items',
-  standalone: false,
   templateUrl: './items.component.html',
+  standalone: false,
   styleUrls: ['./items.component.scss']
 })
 export class ItemsComponent implements OnInit {
@@ -72,10 +70,10 @@ export class ItemsComponent implements OnInit {
 
   setupActionButtons() {
     this.actionButtons = [];
-    if (this.permissionService.getPermission('items', 'mark_interest')) {
+    if (this.permissionService.getPermission('interest', 'interest_create')) {
       this.actionButtons.push({ label: 'Interest', icon: 'favorite', type: 'interest' });
     }
-    if (this.permissionService.getPermission('items', 'view_interest')) {
+    if (this.permissionService.getPermission('interest', 'interest_list')) {
       this.actionButtons.push({ label: 'View Interested', icon: 'visibility', type: 'viewInterested' });
     }
   }
@@ -108,9 +106,9 @@ export class ItemsComponent implements OnInit {
 
     this.itemService.getItemsWithPagination(page, limit, type, status, search)
       .subscribe({
-        next: (response: { data: Item[], total: number }) => {
-          this.items = response.data;
-          this.totalItems = response.total;
+        next: (response) => {
+          this.items = response.items ?? [];
+          this.totalItems = response.page_context?.total ?? 0;
           this.dataSource.data = this.items;
           this.loading = false;
         },
@@ -128,7 +126,7 @@ export class ItemsComponent implements OnInit {
   }
 
   markInterest(itemId: string): void {
-    if (!this.permissionService.getPermission('items', 'mark_interest')) {
+    if (!this.permissionService.getPermission('interest', 'interest_create')) {
       console.warn('User does not have permission to mark interest.');
       return;
     }
@@ -146,15 +144,15 @@ export class ItemsComponent implements OnInit {
   }
 
   viewInterested(itemId: string): void {
-    if (!this.permissionService.getPermission('items', 'view_interest')) {
+    if (!this.permissionService.getPermission('interest', 'interest_list')) {
       console.warn('User does not have permission to view interest.');
       return;
     }
-    this.itemService.getItemInterests(itemId).subscribe({
+    this.interestService.getItemInterests(itemId, 1, 10, '', {}).subscribe({
       next: (response) => {
-        this.interestedUsersRequested.emit({ users: response, itemId });
+        this.interestedUsersRequested.emit({ users: response.interests, itemId });
         this.router.navigate(['/interests/interested-users'], {
-          state: { users: response, itemId: itemId }
+          state: { users: response.interests, itemId: itemId }
         });
       },
       error: (error) => {

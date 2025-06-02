@@ -3,31 +3,31 @@
   <div class="count-cards mat-responsive-table">
 
     <mat-card
-  class="count-card lost"
-  [class.selected]="selectedType === 'LOST'"
-  (click)="onTypeChange('LOST')"
->
-  <div>Lost Items</div>
-  <div class="count">{{ lostCount }}</div>
-</mat-card>
+      class="count-card lost"
+      [class.selected]="selectedType === 'LOST'"
+      (click)="onTypeChange('LOST')"
+    >
+      <div>Lost Items</div>
+      <div class="count">{{ lostCount }}</div>
+    </mat-card>
 
-<mat-card
-  class="count-card found"
-  [class.selected]="selectedType === 'FOUND'"
-  (click)="onTypeChange('FOUND')"
->
-  <div>Found Items</div>
-  <div class="count">{{ foundCount }}</div>
-</mat-card>
+    <mat-card
+      class="count-card found"
+      [class.selected]="selectedType === 'FOUND'"
+      (click)="onTypeChange('FOUND')"
+    >
+      <div>Found Items</div>
+      <div class="count">{{ foundCount }}</div>
+    </mat-card>
 
-<mat-card
-  class="count-card free"
-  [class.selected]="selectedType === 'FREE'"
-  (click)="onTypeChange('FREE')"
->
-  <div>Free Items</div>
-  <div class="count">{{ freeCount }}</div>
-</mat-card>
+    <mat-card
+      class="count-card free"
+      [class.selected]="selectedType === 'FREE'"
+      (click)="onTypeChange('FREE')"
+    >
+      <div>Free Items</div>
+      <div class="count">{{ freeCount }}</div>
+    </mat-card>
 
   </div>
 </ng-container>

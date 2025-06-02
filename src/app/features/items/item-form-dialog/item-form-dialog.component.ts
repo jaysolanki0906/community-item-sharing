@@ -1,13 +1,14 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { TitleCasePipe } from '../../../shared/titlecase.pipe';
+import { MapDialogComponent } from '../map-dialog/map-dialog.component';
 
 @Component({
   selector: 'app-item-form-dialog',
   templateUrl: './item-form-dialog.component.html',
-  styleUrls: ['./item-form-dialog.component.scss'],
   standalone: false,
+  styleUrls: ['./item-form-dialog.component.scss'],
 })
 export class ItemFormDialogComponent {
   itemForm: FormGroup;
@@ -35,24 +36,35 @@ export class ItemFormDialogComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ItemFormDialogComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { item: any, mode: 'add' | 'edit' | 'view' },
     private titleCasePipe: TitleCasePipe,
   ) {
-    const tagsFromData = data.item?.tags || [];
+    const tagsFromData: string[] = Array.isArray(data.item?.tags) ? data.item.tags : [];
+
+    let locationString = '';
+    if (typeof data.item?.location === 'string') {
+      locationString = data.item.location;
+    } else if (data.item?.location && typeof data.item.location === 'object' && 'x' in data.item.location && 'y' in data.item.location) {
+      locationString = `${data.item.location.y},${data.item.location.x}`;
+    }
+
     this.itemForm = this.fb.group({
       title: [data.item?.title || '', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       description: [data.item?.description || '', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
-      location: [data.item?.location || '', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      location: [locationString, [Validators.required]],
       type: [data.item?.type || '', Validators.required],
       status: [data.item?.status || 'ACTIVE', Validators.required],
       category: [data.item?.category || ''],
       urgency: [data.item?.urgency || 'normal'],
       isFeatured: [!!data.item?.isFeatured],
-      tags: this.fb.array(this.tagOptions.map(opt => tagsFromData.includes(opt.value))),
+      tags: [tagsFromData], 
     });
 
     if (this.isViewMode) {
       this.itemForm.disable();
+    } else {
+      this.itemForm.enable();
     }
 
     if (data.item?.imageUrl) {
@@ -68,18 +80,8 @@ export class ItemFormDialogComponent {
     return this.titleCasePipe.transform(this.data.mode) + ' Item';
   }
 
-  get tags(): FormArray {
-    return this.itemForm.get('tags') as FormArray;
-  }
-
   get descriptionHtml(): string {
     return this.itemForm.get('description')?.value || '';
-  }
-
-  getSelectedTags(): string[] {
-    return this.tags.controls
-      .map((ctrl, i) => ctrl.value ? this.tagOptions[i].value : null)
-      .filter((v): v is string => v !== null);
   }
 
   onFileChange(event: Event): void {
@@ -116,6 +118,31 @@ export class ItemFormDialogComponent {
     }
   }
 
+  openMapDialog(): void {
+    let lat: number | null = null;
+    let lng: number | null = null;
+    // Parse current value if present
+    const locValue = this.itemForm.get('location')?.value;
+    if (locValue && typeof locValue === 'string' && locValue.includes(',')) {
+      const parts = locValue.split(',').map(Number);
+      if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+        lat = parts[0];
+        lng = parts[1];
+      }
+    }
+    const dialogRef = this.dialog.open(MapDialogComponent, {
+      width: '700px',
+      data: { lat, lng }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // result is now a string like "lat,lng"
+      if (typeof result === 'string' && result.includes(',')) {
+        this.itemForm.patchValue({ location: result });
+      }
+    });
+  }
+
   submit(): void {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched();
@@ -127,17 +154,20 @@ export class ItemFormDialogComponent {
 
     formData.append('title', rawValue.title);
     formData.append('description', rawValue.description);
+
     formData.append('location', rawValue.location);
+
     formData.append('type', rawValue.type);
     formData.append('status', rawValue.status);
     if (rawValue.category) formData.append('category', rawValue.category);
     if (rawValue.urgency) formData.append('urgency', rawValue.urgency);
     if (rawValue.isFeatured) formData.append('isFeatured', rawValue.isFeatured.toString());
-    const selectedTags = this.getSelectedTags();
-    if (selectedTags.length > 0) formData.append('tags', JSON.stringify(selectedTags));
+    if (rawValue.tags && rawValue.tags.length > 0) {
+      formData.append('tags', JSON.stringify(rawValue.tags));
+    }
     if (this.selectedFile) formData.append('itemImage', this.selectedFile);
 
-    this.dialogRef.close(formData); // Pass the FormData back to parent
+    this.dialogRef.close(formData); 
   }
 
   cancel(): void {

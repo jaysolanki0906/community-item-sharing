@@ -7,30 +7,45 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { catchError, switchMap } from 'rxjs/operators'; // ✅ import switchMap here
+import { AuthServiceService } from '../services/auth-service.service';
+import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class HttpInspectorService implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(
+    private tokenService: TokenService,
+    private authService: AuthServiceService
+  ) {}
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const accessToken = this.tokenService.getAccessToken();
 
-    const cloned = token
-      ? req.clone({
-          headers: req.headers.set('Authorization', `Bearer ${token}`)
-        })
+    const clonedReq = accessToken
+      ? req.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } })
       : req;
 
-    return next.handle(cloned).pipe(
+    return next.handle(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 && !req.url.includes('auth/refresh')) {
+          return this.authService.refreshToken().pipe(
+            switchMap((res: any) => {
+              this.tokenService.saveTokens(res.access_token, res.refresh_token);
+              const retryReq = req.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${res.access_token}`
+                }
+              });
+              return next.handle(retryReq);
+            }),
+            catchError((refreshError) => {
+              this.tokenService.clearTokens();
+              return throwError(() => refreshError);
+            })
+          );
+        }
         return throwError(() => error);
       })
     );
   }
-
 }

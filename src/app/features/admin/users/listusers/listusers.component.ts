@@ -5,6 +5,7 @@ import { User } from '../../../../core/models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
+import { DialogRef } from '@angular/cdk/dialog';
 
 interface PaginatedUsersResponse {
   data: User[];
@@ -13,23 +14,23 @@ interface PaginatedUsersResponse {
 
 interface ActionEvent {
   action: string;
-  row: User;
+  row: User; 
 }
 
+// In your template, [dataSource]="users" must be User[]
 @Component({
   selector: 'app-listusers',
-  standalone:false,
+  standalone: false,
   templateUrl: './listusers.component.html',
   styleUrl: './listusers.component.scss'
 })
 export class ListusersComponent {
- users: User[] = [];
+  users: User[] = [];
   displayedColumns: string[] = ['#', 'name', 'email', 'role', 'actions'];
   pageIndex: number = 0;
   pageSize: number = 5;
   totalItems: number = 0;
   loading: boolean = true;
-  
 
   columnHeaders = {
     id: 'ID',
@@ -45,12 +46,12 @@ export class ListusersComponent {
     { label: 'Toggle Status', icon: 'toggle_on', type: 'toggleStatus' }
   ];
 
-  constructor(private authService: AuthServiceService, 
+  constructor(
+    private authService: AuthServiceService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private errorHandler: ErrorHandlerService,
-
+    private errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit() {
@@ -59,14 +60,20 @@ export class ListusersComponent {
 
   fetchItems(): void {
     this.authService.getPaginatedUsers(this.pageIndex + 1, this.pageSize).subscribe({
-      next:(response: PaginatedUsersResponse) => {
-      this.users = response.data;
-      this.totalItems = response.total;
-      this.loading = false;
-    },error: (error) => {
-      this.errorHandler.handleError(error, 'ItemsComponent');
-      this.loading = false;
-    }});
+      next: (response: any) => {
+        const usersRaw = response.users || response.data || [];
+        this.users = usersRaw.map((u: any) => ({
+          ...u,
+          isActive: u.is_active
+        }));
+        this.totalItems = response.page_context?.total || response.total || usersRaw.length;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.errorHandler.handleError(error, 'ItemsComponent');
+        this.loading = false;
+      }
+    });
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
@@ -85,9 +92,14 @@ export class ListusersComponent {
         });
         break;
       case 'update':
-        this.dialog.open(UserformComponent, {
+        const dialogRef = this.dialog.open(UserformComponent, {
           width: '500px',
           data: { item: user, mode: 'edit' }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.fetchItems(); 
+          }
         });
         break;
       case 'toggleStatus':
@@ -95,23 +107,32 @@ export class ListusersComponent {
         break;
     }
   }
+
   goToRolesPermissions(): void {
-  this.router.navigate(['/manage-users/roleandpermission']);
-}
+    this.router.navigate(['/manage-users/roleandpermission']);
+  }
 
-  toggleStatus(user: User): void {
-  const updatedStatus = !user.isActive;
-
+  toggleStatus(user: any): void {
+  const updatedStatus = !user.is_active;
   this.authService.updateUserStatus(user.id, updatedStatus).subscribe({
     next: () => {
-      user.isActive = updatedStatus;
-      const str=`User ${user.name} is now ${updatedStatus ? 'Active' : 'Inactive'}`;
-      this.errorHandler.handleLoginError(null,str);
-      this.cdr.detectChanges();  
+      user.is_active = updatedStatus;
+      const str = `User ${user.name} is now ${updatedStatus ? 'Active' : 'Inactive'}`;
+      this.errorHandler.handleLoginError(null, str);
+
+      const currentUserId = this.authService.getCurrentUserId();
+      if (String(user.id) === currentUserId && !updatedStatus) {
+        this.authService.logout();
+        return;
+      }
+      this.fetchItems();
     },
     error: (err) => {
       console.error('Failed to update user status', err);
     }
   });
+}
+goToRolesPermission() {
+  this.router.navigate(['/manage-users/rolesandpermission']);
 }
 }

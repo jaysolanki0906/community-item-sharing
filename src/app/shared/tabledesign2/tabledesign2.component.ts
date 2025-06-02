@@ -84,6 +84,13 @@ export class Tabledesign2Component {
     }
   }
 
+  openLocationMap(location: { x: number, y: number }): void {
+    if (location && typeof location.x === 'number' && typeof location.y === 'number') {
+      const url = `https://www.google.com/maps?q=${location.y},${location.x}`;
+      window.open(url, '_blank');
+    }
+  }
+
   sortData(column: string) {
     if (column !== 'title' && column !== 'description') return;
     if (this.sortColumn === column) {
@@ -118,7 +125,6 @@ export class Tabledesign2Component {
     this.filterField = field;
   }
 
-  
   getColumnStyle(col: string) {
     if (col === '#') return { width: '40px', 'max-width': '40px', 'min-width': '40px', 'text-align': 'center' };
     if (col === 'type' || col === 'status' || col === 'role') return { width: '80px', 'max-width': '100px', 'min-width': '60px', 'text-align': 'center' };

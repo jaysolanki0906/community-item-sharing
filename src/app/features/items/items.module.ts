@@ -16,10 +16,11 @@ import { ItemFormDialogComponent } from './item-form-dialog/item-form-dialog.com
 import { ItemsRoutingModule } from './items-routing.module';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MapDialogComponent } from './map-dialog/map-dialog.component';
 
 
 @NgModule({
-  declarations: [ItemFormDialogComponent,MyitemsComponent],
+  declarations: [ItemFormDialogComponent,MyitemsComponent,MapDialogComponent],
   imports: [
     CommonModule,
   FormsModule,
@@ -38,6 +39,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   ItemsRoutingModule,
   SweetAlert2Module.forRoot()
   ],
-  providers: [TitleCasePipe]
+  providers: [TitleCasePipe,]
 })
 export class ItemsModule { }

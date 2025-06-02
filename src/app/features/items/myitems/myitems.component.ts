@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Item } from '../../../core/models/item.model';
 import { ItemService } from '../../../core/services/item.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,8 @@ import { RolePermissionService } from '../../../core/services/role-permission.se
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { RoleService } from '../../../core/services/role.service';
 import { Subscription } from 'rxjs';
+// If you have a dialog for updating permissions, import it here
+// import { RolePermissionsDialogComponent } from '../rolespermission/role-permissions-dialog.component';
 
 interface Action {
   label: string;
@@ -21,8 +23,8 @@ interface Action {
   styleUrls: ['./myitems.component.scss'],
   standalone: false,
 })
-export class MyitemsComponent implements OnInit {
-  displayedColumns: string[] = ['#', 'type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions'];
+export class MyitemsComponent implements OnInit, OnDestroy {
+  displayedColumns: string[] = ['#', 'type', 'title', 'description', 'status', 'imageUrl', 'actions'];
   items: Item[] = [];
   filteredItems: Item[] = [];
   actionButtons: Action[] = [];
@@ -56,6 +58,10 @@ export class MyitemsComponent implements OnInit {
     actions: 'TABLE.ACTIONS'
   };
 
+  // For demonstration, manage roles here (in reality, this would be in a dedicated component)
+  roles: any[] = [];
+  selectedRole: any = null;
+
   constructor(
     private itemService: ItemService,
     private dialog: MatDialog,
@@ -65,12 +71,13 @@ export class MyitemsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.roleSubscription =this.roleService.role$.subscribe(role => {
+    this.roleSubscription = this.roleService.role$.subscribe(role => {
       this.currentRole = (role || 'USER').toUpperCase();
       this.rolePermissionService.setRole(this.currentRole);
       this.setPermittedActionButtons();
       this.fetchItems();
     });
+    // this.fetchRoles();
   }
 
   fetchItems(): void {
@@ -81,26 +88,54 @@ export class MyitemsComponent implements OnInit {
     const search = this.searchText;
     this.isLoading = true;
 
-    const callback = {
-      next: (response: { data: Item[], total: number }) => {
-        this.items = response.data;
-        this.filteredItems = this.items;
-        this.totalItems = response.total;
-        this.isLoading = false;
-      },
-      error: (err: unknown) => {
-        console.error('Error fetching items:', err);
-        this.errorHandler.handleError(err, 'myitems');
-        this.isLoading = false;
-      }
-    };
+    const mapImageUrl = (items: any[]) =>
+      (items ?? []).map(item => ({
+        ...item,
+        imageUrl: item.image_url // map API field to what template expects
+      }));
 
     if (type === 'MY_ITEMS') {
-      this.itemService.getMyItems(page, limit, status, search).subscribe(callback);
+      this.itemService.getMyItems(page, limit, status, search).subscribe({
+        next: (response) => {
+          this.items = mapImageUrl(response.items);
+          this.filteredItems = this.items;
+          this.totalItems = response.page_context?.total ?? 0;
+          this.isLoading = false;
+        },
+        error: (err: unknown) => {
+          console.error('Error fetching items:', err);
+          this.errorHandler.handleError(err, 'myitems');
+          this.isLoading = false;
+        }
+      });
     } else if (type === 'SHARED') {
-      this.itemService.getSharedItems(page, limit, status, search).subscribe(callback);
+      this.itemService.getSharedItems(page, limit, status, search).subscribe({
+        next: (response) => {
+          this.items = mapImageUrl(response.items);
+          this.filteredItems = this.items;
+          this.totalItems = response.page_context?.total ?? 0;
+          this.isLoading = false;
+        },
+        error: (err: unknown) => {
+          console.error('Error fetching items:', err);
+          this.errorHandler.handleError(err, 'myitems');
+          this.isLoading = false;
+        }
+      });
     } else {
-      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe(callback);
+      this.itemService.getItemsWithPagination(page, limit, type, status, search).subscribe({
+        next: (response) => {
+          this.items = mapImageUrl(response.items);
+          this.filteredItems = this.items;
+          this.totalItems = response.page_context?.total ?? 0;
+          this.isLoading = false;
+        },
+        error: (err: unknown) => {
+          console.error('Error fetching items:', err);
+          this.errorHandler.handleError(err, 'myitems');
+          this.isLoading = false;
+        }
+      });
     }
   }
 
@@ -143,9 +178,8 @@ export class MyitemsComponent implements OnInit {
             this.fetchItems();
           },
           error: (e) => {
-            this.errorHandler.handleError(e, 'editItem');
             this.isLoading = false;
-            Swal.fire('Error', 'Failed to update item.', 'error');
+            Swal.fire(e, 'Failed to update item.', 'error');
           }
         });
       }
@@ -220,17 +254,20 @@ export class MyitemsComponent implements OnInit {
   setPermittedActionButtons(): void {
     const actions = [];
 
-    if (this.rolePermissionService.getPermission('items', 'items_edit')) {
+    if (this.rolePermissionService.getPermission('item', 'item_update')) {
       actions.push({ label: 'Edit', icon: 'edit', type: 'edit' });
     }
-    if (this.rolePermissionService.getPermission('items', 'items_delete')) {
+    if (this.rolePermissionService.getPermission('item', 'item_delete')) {
       actions.push({ label: 'Delete', icon: 'delete', type: 'delete' });
     }
-    if (this.rolePermissionService.getPermission('items', 'items_view')) {
+    if (this.rolePermissionService.getPermission('item', 'item_view')) {
       actions.push({ label: 'View', icon: 'visibility', type: 'view' });
     }
     this.actionButtons = actions;
   }
+
+ 
+
   ngOnDestroy(): void {
     if (this.roleSubscription) {
       this.roleSubscription.unsubscribe();

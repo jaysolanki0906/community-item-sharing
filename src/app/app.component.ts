@@ -19,14 +19,7 @@ export class AppComponent implements OnInit {
   translate.use(browserLang.match(/en|hi/) ? browserLang : 'en');
 }
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.roleService.setRole(user.role); 
-      },
-      error: () => {
-        this.roleService.setRole('USER'); 
-      }
-    });
+    
   }
   title = 'community-item-sharing';
   

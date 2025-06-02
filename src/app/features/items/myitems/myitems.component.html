@@ -1,7 +1,7 @@
 <app-header/>
 
 <div class="add-item-container"
-     *ngIf="rolePermissionService.getPermission('items', 'items_create')">
+     *ngIf="rolePermissionService.getPermission('item', 'item_create')">
   <button mat-raised-button color="primary" (click)="addItem()">
     <mat-icon>add</mat-icon>
     Add Item
@@ -10,7 +10,7 @@
 
 <app-tabledesign2
   [dataSource]="filteredItems"
-  [displayedColumns]="['#','type', 'title', 'description', 'location', 'status', 'imageUrl', 'actions']"
+  [displayedColumns]="['#','type', 'title', 'description','location', 'status', 'imageUrl', 'actions']"
   [actionButtons]="actionButtons"
   [totalItems]="totalItems"
   [pageSize]="pageSize"
